@@ -16,6 +16,10 @@ package utils
 		}
 		
 		public var parameters:Object;
+		public var game:Game;
+		
+		public function Globals() {
+		}
 		
 	}
 

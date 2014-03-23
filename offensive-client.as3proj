@@ -56,6 +56,7 @@
     <element path="lib\feathers.swc" />
     <element path="lib\protobuf.swc" />
     <element path="lib\starling.swc" />
+    <element path="lib\MonsterDebugger.swc" />
   </libraryPaths>
   <!-- External Libraries -->
   <externalLibraryPaths>

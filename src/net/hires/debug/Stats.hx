@@ -172,6 +172,8 @@ class Stats extends Sprite {
 }
 
 class Colors {
+	
+	}
 
 	public static inline var bg : Int = 0x000033;
 	public static inline var fps : Int = 0xffff00;

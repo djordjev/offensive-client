@@ -171,6 +171,9 @@ package net.hires.debug {
 }
 
 class Colors {
+	
+	public function Colors() {
+	}
 
 	public var bg : uint = 0x000033;
 	public var fps : uint = 0xffff00;
