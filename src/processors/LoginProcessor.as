@@ -1,8 +1,9 @@
 package processors 
 {
-	import modules.control.ControllScreenController;
 	import modules.friends.FriendsController;
 	import modules.friends.FriendsModel;
+	import modules.main.MainControlsController;
+	import modules.main.MainControlsModel;
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
 	/**
@@ -49,12 +50,13 @@ package processors
 		
 		public function initializeModels():void {
 			FriendsModel.instance.intialize();
+			MainControlsModel.instance;
 			initializeControllers();
 		}
 		
 		public function initializeControllers():void {
 			FriendsController.instance;
-			ControllScreenController.instance;
+			MainControlsController.instance;
 			this.dispatchEvent(new Event(LOGIN_COMPLETED));
 		}
 		

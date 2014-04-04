@@ -1,6 +1,7 @@
 package modules.control {
 	import feathers.controls.LayoutGroup;
 	import modules.friends.FriendsView;
+	import modules.main.MainControlsView;
 	
 	/**
 	 * ...
@@ -9,6 +10,7 @@ package modules.control {
 	public class ControllScreenView extends LayoutGroup {
 				
 		public var friendsView:FriendsView;
+		public var mainControlsView:MainControlsView;
 		
 		public function ControllScreenView() {
 			super();
@@ -18,6 +20,9 @@ package modules.control {
 		{
 			super.initialize();
 			// add MainControlls
+			mainControlsView = new MainControlsView();
+			this.addChild(mainControlsView);
+			
 			// add friends view
 			friendsView = new FriendsView();
 			friendsView.y = 618;

@@ -5,10 +5,12 @@ package
 	import feathers.controls.Label;
 	import feathers.system.DeviceCapabilities;
 	import feathers.themes.AeonDesktopTheme;
+	import flash.system.Security;
 	import modules.control.ControllScreenView;
 	import processors.LoginProcessor;
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import utils.FacebookCommunicator;
 	import utils.Globals;
 	
 	public class Game extends Sprite
@@ -27,13 +29,19 @@ package
 			new AeonDesktopTheme();
 			// initialize monster debugger
 			MonsterDebugger.initialize(this);
+			// allowed domains
+			Security.allowDomain("*");
+			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
 			// store reference in globals
 			Globals.instance.game = this;
-			// populate view
-			populateView();
-			
-			LoginProcessor.instance.addEventListener(LoginProcessor.LOGIN_COMPLETED, loginFinished);
-			LoginProcessor.instance.processLogin();
+			// init facebook communicator
+			FacebookCommunicator.instance.initialize(Globals.instance.parameters["facebookId"], function mineFacebookInfoInitialized():void {
+				// populate view
+				populateView();
+				
+				LoginProcessor.instance.addEventListener(LoginProcessor.LOGIN_COMPLETED, loginFinished);
+				LoginProcessor.instance.processLogin();
+			});
 		}
 		
 		private function loginFinished(e:Event):void {
