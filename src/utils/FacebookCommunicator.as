@@ -35,6 +35,8 @@ package utils
 			
 			if(facebookId != null && facebookId != "") {
 				ExternalInterface.addCallback("playerInfoReceived", playerInfoReceived);
+				_initializedCallback = callback;
+				ExternalInterface.call("getMyInfo");
 			} else {
 				_me = new FacebookUser();
 				_me.setUsernameAndImages("vukovic.djordje");

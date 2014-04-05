@@ -35,7 +35,7 @@ package components {
 			var userInfoGroup:LayoutGroup = new LayoutGroup();
 			userInfoGroup.layout = new VerticalLayout();
 			userInfoGroup.x = 15;
-			userInfoGroup.y = 20;
+			userInfoGroup.y = 5;
 			userInfoGroup.width = 245;
 			userInfoGroup.height = 140;
 			this.addChild(userInfoGroup);
