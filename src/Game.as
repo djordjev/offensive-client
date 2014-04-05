@@ -32,8 +32,8 @@ package
 			// allowed domains
 			Security.allowDomain("*");
 			Security.allowInsecureDomain("*");
-			Security.loadPolicyFile("http://profile.ak.fbcdn.net/crossdomain.xml");
-			Security.loadPolicyFile("http://graph.facebook.com/crossdomain.xml");
+			Security.loadPolicyFile("https://profile.ak.fbcdn.net/crossdomain.xml");
+			Security.loadPolicyFile("https://graph.facebook.com/crossdomain.xml");
 			Security.loadPolicyFile("https://fbcdn-profile-a.akamaihd.net/crossdomain.xml");
 			// store reference in globals
 			Globals.instance.game = this;

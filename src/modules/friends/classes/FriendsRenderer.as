@@ -42,7 +42,7 @@ package modules.friends.classes
 			
 			this.addChild(_background);
 			
-			_image.source = "http://images.artistdirect.com/Images/artd/amg/music/cover/6106612_imperial_blaze_50.jpg";
+			//_image.source = "http://images.artistdirect.com/Images/artd/amg/music/cover/6106612_imperial_blaze_50.jpg";
 			_image.y = 20;
 			_image.x = 40;
 			this.addChild(_image);

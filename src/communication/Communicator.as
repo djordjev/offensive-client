@@ -69,8 +69,8 @@ package communication {
 			var messageHeader:ByteArray = buildHeader(handlerCode, messageBytes.length, _ticket);
 
 			var finalMessage:ByteArray = new ByteArray();
-			finalMessage.writeBytes(messageHeader, 0, HEADER_SIZE);
-			finalMessage.writeBytes(messageBytes, HEADER_SIZE, messageBytes.length);
+			finalMessage.writeBytes(messageHeader);
+			finalMessage.writeBytes(messageBytes);
 
 			// store callback
 			if (callback != null) {
@@ -91,7 +91,7 @@ package communication {
 			header.writeInt(ticketId);
 			header.writeInt(size);
 			header.writeByte(0);
-			header.writeByte(1);
+			header.writeByte(0);
 			return header;
 		}
 
