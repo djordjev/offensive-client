@@ -22,6 +22,12 @@ package modules.main
 			super();
 		}
 		
+		public function requestJoinableGames(callback:Function):void {
+			if (callback != null) {
+				callback();
+			}
+		}
+		
 	}
 
 }

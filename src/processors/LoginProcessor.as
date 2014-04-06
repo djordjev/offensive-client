@@ -38,7 +38,8 @@ package processors {
 		
 		public function processLogin():void {
 			new HandlerMapping();
-			connectToServer();
+			//connectToServer();
+			initializeModels();
 		}
 		
 		public function connectToServer():void {

@@ -1,5 +1,6 @@
 package modules.main 
 {
+	import components.GameActionsDialog;
 	import feathers.controls.Callout;
 	import feathers.controls.Label;
 	import feathers.core.FeathersControl;
@@ -43,6 +44,8 @@ package modules.main
 			view.currentUserInfoDisplay.playerName.text = FacebookCommunicator.instance.me.name;
 			view.currentUserInfoDisplay.stats.text = "Some stupid statistics";
 			view.currentUserInfoDisplay.userImage.source = FacebookCommunicator.instance.me.largeImageURL;
+			
+			view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
 		}
 		
 	}
