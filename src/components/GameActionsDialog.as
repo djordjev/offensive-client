@@ -6,7 +6,6 @@ package components {
 	import feathers.controls.NumericStepper;
 	import feathers.controls.Radio;
 	import feathers.controls.TextInput;
-	import feathers.core.FocusManager;
 	import feathers.core.ToggleGroup;
 	import feathers.data.ListCollection;
 	import feathers.layout.HorizontalLayout;
@@ -92,7 +91,7 @@ package components {
 			addComponentsForNewGame();
 			var createOpenGameButton:Button = new Button();
 			createOpenGameButton.label = "Create New Open Game";
-			createOpenGameButton.height = 100;
+			createOpenGameButton.height = 50;
 			createOpenGameButton.width = 200;
 			createOpenGameButton.addEventListener(Event.TRIGGERED, function createdOpenGame():void {
 				dispatchEvent(new Event(CREATED_OPEN_GAME, true));
@@ -105,9 +104,16 @@ package components {
 			addHeader("Create private game");
 			
 			addComponentsForNewGame();
+			
+			var inviteButton:Button = new Button();
+			inviteButton.label = "Invite friends";
+			inviteButton.height = 50;
+			inviteButton.width = 200;
+			_gamesManipulationGroup.addChild(inviteButton);
+			
 			var createPrivateGameButton:Button = new Button();
 			createPrivateGameButton.label = "Create New Private Game";
-			createPrivateGameButton.height = 100;
+			createPrivateGameButton.height = 50;
 			createPrivateGameButton.width = 200;
 			createPrivateGameButton.addEventListener(Event.TRIGGERED, function createdOpenGame():void {
 				dispatchEvent(new Event(CREATED_PRIVATE_GAME, true));
@@ -175,8 +181,10 @@ package components {
 			gameNameGroup.addChild(gameNameLabel);
 			
 			var gameNameInput:TextInput = new TextInput();
-			gameNameInput.width 250;
+			gameNameInput.width = 250;
+			gameNameInput.clearFocus();
 			gameNameInput.setFocus();
+			gameNameInput.showFocus();
 			gameNameGroup.addChild(gameNameInput);
 			
 			_gamesManipulationGroup.addChild(gameNameGroup);
@@ -240,14 +248,17 @@ package components {
 		}
 		
 		private function createOpenGame(event:Event):void {
+			event.currentTarget.removeEventListener(Event.TRIGGERED, createOpenGame);
 			state = STATE_OPEN_GAME;
 		}
 		
 		private function createPrivateGame(event:Event):void {
+			event.currentTarget.removeEventListener(Event.TRIGGERED, createPrivateGame);
 			state = STATE_PRIVATE_GAME;
 		}
 		
 		private function joinGame(event:Event):void {
+			event.currentTarget.removeEventListener(Event.TRIGGERED, joinGame);
 			state = STATE_JOIN_GAME;
 		}
 	
