@@ -1,2 +1,4 @@
-bin/*.*
-obj/*.*
+*.swf
+obj/offensive-clientConfig.old
+obj/offensive-clientConfig.xml
+bin/offensiveclient.swf
