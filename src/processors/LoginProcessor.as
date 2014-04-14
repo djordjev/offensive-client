@@ -3,6 +3,7 @@ package processors {
 	import communication.Communicator;
 	import communication.HandlerCodes;
 	import communication.HandlerMapping;
+	import communication.Me;
 	import communication.ProtocolMessage;
 	import communication.protos.GetUserDataRequest;
 	import communication.protos.GetUserDataResponse;
@@ -12,7 +13,6 @@ package processors {
 	import modules.main.MainControlsModel;
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
-	import utils.Globals;
 	import utils.Settings;
 	
 	/**
@@ -55,8 +55,7 @@ package processors {
 		public function requestUserInfo(event:Event):void {
 			trace("CONNECTED TO " + Settings.HOSTNAME + " ON PORT " + Settings.PORT);
 			var getUserData:GetUserDataRequest = new GetUserDataRequest();
-			//getUserData.userId = Int64.parseInt64(Globals.instance.parameters["userId"]); 
-			getUserData.userId = Int64.parseInt64("1"); 
+			getUserData.userId = Int64.parseInt64(Me.instance.userIdAsString); 
 			trace("Requesting " + getUserData.userId.toString());
 			Communicator.instance.send(HandlerCodes.GET_USER_DATA, getUserData, function handleResponse(message:ProtocolMessage):void {
 				var response:GetUserDataResponse = message.data as GetUserDataResponse;
@@ -66,7 +65,7 @@ package processors {
 		}
 		
 		public function requestGameData():void {
-			trace("Received " + _myUserInfo.userData.me.userId.toString() + "num games " + _myUserInfo.userData.statistics.numberOfGames + " num wins " + _myUserInfo.userData.statistics.numberOfWins );
+			Me.instance.userInfo = _myUserInfo.userData;
 			initializeModels();
 		}
 		

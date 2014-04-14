@@ -1,6 +1,7 @@
 package
 {
 	import com.demonsters.debugger.MonsterDebugger;
+	import communication.Me;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.system.DeviceCapabilities;
@@ -37,6 +38,8 @@ package
 			Security.loadPolicyFile("https://fbcdn-profile-a.akamaihd.net/crossdomain.xml");
 			// store reference in globals
 			Globals.instance.game = this;
+			// create user if
+			Me.instance.initialize(Globals.instance.parameters["userId"]);
 			// init facebook communicator
 			FacebookCommunicator.instance.initialize(Globals.instance.parameters["facebookId"], function mineFacebookInfoInitialized():void {
 				// populate view
