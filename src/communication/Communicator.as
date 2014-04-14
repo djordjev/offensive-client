@@ -1,5 +1,9 @@
 package communication {
 	import com.netease.protobuf.Message;
+	import feathers.controls.Callout;
+	import flash.events.TimerEvent;
+	import flash.utils.Timer;
+	import utils.Alert;
 
 	import flash.events.IOErrorEvent;
 	import flash.events.ProgressEvent;
@@ -18,6 +22,8 @@ package communication {
 		public static const SOCKET_IO_ERROR:String = "socket io error";
 
 		private static const HEADER_SIZE:int = 14; // size in bytes
+		
+		private static const WAIT_FOR_RESPONSE_TIME:int = 30000;
 
 		private static var _instance:Communicator;
 
@@ -32,6 +38,7 @@ package communication {
 		private var _socket:Socket;
 
 		private var _callbacks:Dictionary = new Dictionary();
+		private var _timers:Dictionary = new Dictionary();
 
 		private var _ticket:int = 1;
 
@@ -76,6 +83,12 @@ package communication {
 			if (callback != null) {
 				_callbacks[_ticket] = callback;
 			}
+			
+			var timer:Timer = new Timer(WAIT_FOR_RESPONSE_TIME, 1);
+			timer.addEventListener(TimerEvent.TIMER_COMPLETE, timerIsUp);
+			
+			_timers[_ticket] = timer;
+			timer.start();
 
 			_ticket++;
 
@@ -121,6 +134,15 @@ package communication {
 				delete _callbacks[protocolMessage.ticketId];
 				delegate(protocolMessage);
 			}
+			
+			var timer:Timer = _timers[protocolMessage.ticketId];
+			timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timerIsUp);
+			timer.stop();
+			delete _timers[protocolMessage.ticketId];
+		}
+		
+		private function timerIsUp(e:TimerEvent):void {
+			Alert.showConnectionBrokenAlert();
 		}
 	}
 }

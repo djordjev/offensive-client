@@ -38,8 +38,7 @@ package processors {
 		
 		public function processLogin():void {
 			new HandlerMapping();
-			//connectToServer();
-			initializeModels();
+			connectToServer();
 		}
 		
 		public function connectToServer():void {
@@ -57,7 +56,7 @@ package processors {
 			trace("CONNECTED TO " + Settings.HOSTNAME + " ON PORT " + Settings.PORT);
 			var getUserData:GetUserDataRequest = new GetUserDataRequest();
 			//getUserData.userId = Int64.parseInt64(Globals.instance.parameters["userId"]); 
-			getUserData.userId = Int64.parseInt64("2"); 
+			getUserData.userId = Int64.parseInt64("1"); 
 			trace("Requesting " + getUserData.userId.toString());
 			Communicator.instance.send(HandlerCodes.GET_USER_DATA, getUserData, function handleResponse(message:ProtocolMessage):void {
 				var response:GetUserDataResponse = message.data as GetUserDataResponse;

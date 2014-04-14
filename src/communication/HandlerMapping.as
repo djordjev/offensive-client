@@ -1,4 +1,5 @@
 package communication {
+	import communication.protos.CreateGameResponse;
 	import communication.protos.GetUserDataResponse;
 
 	import flash.utils.Dictionary;
@@ -8,6 +9,7 @@ package communication {
 
 		public function HandlerMapping() {
 			mapping[HandlerCodes.GET_USER_DATA] = GetUserDataResponse;
+			mapping[HandlerCodes.CREATE_GAME] = CreateGameResponse;
 		}
 	}
 }

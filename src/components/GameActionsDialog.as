@@ -1,4 +1,5 @@
 package components {
+	import components.events.CreateGameEvent;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
@@ -25,15 +26,14 @@ package components {
 		public static const STATE_PRIVATE_GAME:String = "private game";
 		public static const STATE_JOIN_GAME:String = "join game";
 		
-	/*	public static const CREATE_OPEN_GAME:String = "create open game";
-		public static const CREATE_PRIVATE_GAME:String = "create private game";
-		public static const JOIN_GAME:String = "join game";*/
-		
-		public static const CREATED_OPEN_GAME:String = "created open game";
 		public static const CREATED_PRIVATE_GAME:String = "created private game";
 		public static const JOINED_GAME:String = "joined game";
 		
 		public var existingGamesList:List = new List();
+		
+		private var _gameName:TextInput;
+		private var _numberOfPlayers:NumericStepper;
+		private var _gameType:ToggleGroup;
 		
 		private var _gamesManipulationGroup:LayoutGroup = new LayoutGroup();
 		
@@ -94,7 +94,9 @@ package components {
 			createOpenGameButton.height = 50;
 			createOpenGameButton.width = 200;
 			createOpenGameButton.addEventListener(Event.TRIGGERED, function createdOpenGame():void {
-				dispatchEvent(new Event(CREATED_OPEN_GAME, true));
+				var newOpenGameEvent:CreateGameEvent = new CreateGameEvent(CreateGameEvent.CREATED_OPEN_GAME, true);
+				populateCreateGameEvent(newOpenGameEvent);
+				dispatchEvent(newOpenGameEvent);
 			});
 			_gamesManipulationGroup.addChild(createOpenGameButton);
 		}
@@ -169,6 +171,10 @@ package components {
 			_gamesManipulationGroup.x = 30;
 			_gamesManipulationGroup.y = 30;
 			this.addChild(_gamesManipulationGroup);
+			
+			_gameName = null;
+			_gameType = null;
+			_numberOfPlayers = null;
 		}
 		
 		private function addComponentsForNewGame():void {
@@ -180,12 +186,12 @@ package components {
 			gameNameLabel.text = "Game Name";
 			gameNameGroup.addChild(gameNameLabel);
 			
-			var gameNameInput:TextInput = new TextInput();
-			gameNameInput.width = 250;
-			gameNameInput.clearFocus();
-			gameNameInput.setFocus();
-			gameNameInput.showFocus();
-			gameNameGroup.addChild(gameNameInput);
+			_gameName = new TextInput();
+			_gameName.width = 250;
+			_gameName.clearFocus();
+			_gameName.setFocus();
+			_gameName.showFocus();
+			gameNameGroup.addChild(_gameName);
 			
 			_gamesManipulationGroup.addChild(gameNameGroup);
 			
@@ -197,12 +203,12 @@ package components {
 			numberOfPlayersLabel.text = "Number of players";
 			numberOfPlayersGroup.addChild(numberOfPlayersLabel);
 			
-			var numberOfPlayersInput:NumericStepper = new NumericStepper();
-			numberOfPlayersInput.minimum = 3;
-			numberOfPlayersInput.maximum = 6;
-			numberOfPlayersInput.value = 5;
-			numberOfPlayersInput.step = 1;
-			numberOfPlayersGroup.addChild(numberOfPlayersInput);
+			_numberOfPlayers = new NumericStepper();
+			_numberOfPlayers.minimum = 3;
+			_numberOfPlayers.maximum = 6;
+			_numberOfPlayers.value = 5;
+			_numberOfPlayers.step = 1;
+			numberOfPlayersGroup.addChild(_numberOfPlayers);
 			
 			_gamesManipulationGroup.addChild(numberOfPlayersGroup);
 			
@@ -210,17 +216,17 @@ package components {
 			gameTypeGroup.layout = new HorizontalLayout();
 			(gameTypeGroup.layout as HorizontalLayout).gap = 20;
 			
-			var gameTypeToggleGroup:ToggleGroup = new ToggleGroup();
-			gameTypeToggleGroup.isSelectionRequired = true;
+			_gameType = new ToggleGroup();
+			_gameType.isSelectionRequired = true;
 			
 			var worldDomination:Radio = new Radio();
 			worldDomination.label = "World domination";
-			worldDomination.toggleGroup = gameTypeToggleGroup;
+			worldDomination.toggleGroup = _gameType;
 			gameTypeGroup.addChild(worldDomination);
 			
 			var mission:Radio = new Radio();
 			mission.label = "Mission";
-			mission.toggleGroup = gameTypeToggleGroup;
+			mission.toggleGroup = _gameType;
 			gameTypeGroup.addChild(mission);
 			
 			_gamesManipulationGroup.addChild(gameTypeGroup);
@@ -260,6 +266,16 @@ package components {
 		private function joinGame(event:Event):void {
 			event.currentTarget.removeEventListener(Event.TRIGGERED, joinGame);
 			state = STATE_JOIN_GAME;
+		}
+		
+		private function populateCreateGameEvent(e:CreateGameEvent):void {
+			e.gameName = _gameName.text;
+			e.numberOfPlayers = _numberOfPlayers.value;
+			if ((_gameType.selectedItem as Radio).label == "Mission") {
+				e.objective = 1;
+			} else {
+				e.objective = 0;
+			}
 		}
 	
 	}

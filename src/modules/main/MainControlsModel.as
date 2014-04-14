@@ -1,5 +1,11 @@
 package modules.main 
 {
+	import communication.Communicator;
+	import communication.HandlerCodes;
+	import communication.ProtocolMessage;
+	import communication.protos.CreateGameRequest;
+	import communication.protos.CreateGameResponse;
+	import flash.sampler.NewObjectSample;
 	import modules.base.BaseModel;
 	
 	/**
@@ -17,6 +23,9 @@ package modules.main
 			return _instance;
 		}
 		
+		/** Array of GameContext */
+		public var activeGames:Array = [];
+		
 		public function MainControlsModel() 
 		{
 			super();
@@ -26,6 +35,21 @@ package modules.main
 			if (callback != null) {
 				callback();
 			}
+		}
+		
+		public function createOpenGame(gameName:String, numberOfPlayers:int, gameType:int, callback:Function):void {
+			var request:CreateGameRequest = new CreateGameRequest();
+			request.gameName = gameName;
+			request.numberOfPlayers = numberOfPlayers;
+			request.objectiveCode = gameType;
+			Communicator.instance.send(HandlerCodes.CREATE_GAME, request, function createOpenGameResponse(message:ProtocolMessage):void {
+				var gameCreatedResponse:CreateGameResponse = message.data as CreateGameResponse;
+				
+				activeGames.push(gameCreatedResponse.gameContext);
+				if (callback != null) {
+					callback();
+				}
+			});
 		}
 		
 	}

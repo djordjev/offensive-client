@@ -1,5 +1,6 @@
 package modules.main 
 {
+	import components.events.CreateGameEvent;
 	import components.GameActionsDialog;
 	import feathers.controls.Callout;
 	import feathers.controls.Label;
@@ -7,6 +8,7 @@ package modules.main
 	import flash.external.ExternalInterface;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
+	import starling.events.Event;
 	import utils.FacebookCommunicator;
 	import utils.Globals;
 	
@@ -46,6 +48,16 @@ package modules.main
 			view.currentUserInfoDisplay.userImage.source = FacebookCommunicator.instance.me.largeImageURL;
 			
 			view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
+		}
+		
+		override protected function addHandlers():void {
+			view.addEventListener(CreateGameEvent.CREATED_OPEN_GAME, newOpenGameCreation);
+		}
+		
+		private function newOpenGameCreation(e:CreateGameEvent):void {
+			model.createOpenGame(e.gameName, e.numberOfPlayers, e.objective, function createdNewOpenGame():void {
+				trace("CREATED NEW GAME");
+			});
 		}
 		
 	}
