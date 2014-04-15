@@ -1,4 +1,5 @@
 package components {
+	import components.classes.ExistingGamesRenderer;
 	import components.events.CreateGameEvent;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
@@ -6,6 +7,7 @@ package components {
 	import feathers.controls.List;
 	import feathers.controls.NumericStepper;
 	import feathers.controls.Radio;
+	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.controls.TextInput;
 	import feathers.core.ToggleGroup;
 	import feathers.data.ListCollection;
@@ -49,14 +51,17 @@ package components {
 			var background:Quad = new Quad(840, 350, 0x78787A);
 			this.addChild(background);
 			
-			existingGamesList.x = 780;
-			existingGamesList.y = 40;
-			existingGamesList.width = 240;
-			existingGamesList.height = 350;
+			existingGamesList.x = 400;
+			existingGamesList.y = 35;
+			existingGamesList.width = 300;
+			existingGamesList.height = 300;
 			
 			var listLayout:VerticalLayout = new VerticalLayout();
 			listLayout.gap = 10;
-			existingGamesList.layout = listLayout;			
+			existingGamesList.layout = listLayout;
+			
+			existingGamesList.itemRendererFactory = existingGamesRendererFactory;
+			this.addChild(existingGamesList);
 		}
 		
 		private function populateForMenu():void {
@@ -94,10 +99,10 @@ package components {
 			createOpenGameButton.height = 50;
 			createOpenGameButton.width = 200;
 			createOpenGameButton.addEventListener(Event.TRIGGERED, function createdOpenGame():void {
-				var newOpenGameEvent:CreateGameEvent = new CreateGameEvent(CreateGameEvent.CREATED_OPEN_GAME, true);
-				populateCreateGameEvent(newOpenGameEvent);
-				dispatchEvent(newOpenGameEvent);
-			});
+					var newOpenGameEvent:CreateGameEvent = new CreateGameEvent(CreateGameEvent.CREATED_OPEN_GAME, true);
+					populateCreateGameEvent(newOpenGameEvent);
+					dispatchEvent(newOpenGameEvent);
+				});
 			_gamesManipulationGroup.addChild(createOpenGameButton);
 		}
 		
@@ -118,8 +123,8 @@ package components {
 			createPrivateGameButton.height = 50;
 			createPrivateGameButton.width = 200;
 			createPrivateGameButton.addEventListener(Event.TRIGGERED, function createdOpenGame():void {
-				dispatchEvent(new Event(CREATED_PRIVATE_GAME, true));
-			});
+					dispatchEvent(new Event(CREATED_PRIVATE_GAME, true));
+				});
 			_gamesManipulationGroup.addChild(createPrivateGameButton);
 		}
 		
@@ -135,16 +140,16 @@ package components {
 			
 			var joinButton:Button = new Button();
 			joinButton.label = "Join";
-			joinButton.addEventListener(Event.TRIGGERED, function joiedButtonClicked(Event):void {
-				dispatchEvent(new Event(JOINED_GAME, true));
-			});
+			joinButton.addEventListener(Event.TRIGGERED, function joiedButtonClicked(e:Event):void {
+					dispatchEvent(new Event(JOINED_GAME, true));
+				});
 			_gamesManipulationGroup.addChild(joinButton);
 			
 			// populate list
 			MainControlsModel.instance.requestJoinableGames(function joinableGamesLoadingFInished():void {
-				gamesList.dataProvider = new ListCollection([{gameInfo:"First game info / 1"}, {gameInfo: "Second game info / 2"}, {gameInfo: "Third game info / 3"}]);
-			});
-			
+					gamesList.dataProvider = new ListCollection([{gameInfo: "First game info / 1"}, {gameInfo: "Second game info / 2"}, {gameInfo: "Third game info / 3"}]);
+				});
+		
 		}
 		
 		private function addHeader(actionName:String):void {
@@ -152,12 +157,12 @@ package components {
 			actionsNameGroup.layout = new HorizontalLayout();
 			
 			var nameForActions:Label = new Label();
-			nameForActions.text  = actionName;
+			nameForActions.text = actionName;
 			var back:Button = new Button();
 			back.label = "Back";
 			back.addEventListener(Event.TRIGGERED, function goBack(e:Event):void {
-				state = STATE_MENU;
-			});
+					state = STATE_MENU;
+				});
 			actionsNameGroup.addChild(nameForActions);
 			actionsNameGroup.addChild(back);
 			_gamesManipulationGroup.addChild(actionsNameGroup);
@@ -230,24 +235,24 @@ package components {
 			gameTypeGroup.addChild(mission);
 			
 			_gamesManipulationGroup.addChild(gameTypeGroup);
-			
+		
 		}
 		
 		public function set state(value:String):void {
-			switch(value) {
-				case STATE_MENU:
+			switch (value) {
+				case STATE_MENU: 
 					populateForMenu();
 					break;
-				case STATE_OPEN_GAME:
+				case STATE_OPEN_GAME: 
 					populateForOpenGame();
 					break;
-				case STATE_PRIVATE_GAME:
+				case STATE_PRIVATE_GAME: 
 					populateForPrivateGame();
 					break;
-				case STATE_JOIN_GAME:
+				case STATE_JOIN_GAME: 
 					populateForJoinGame();
 					break;
-				default:
+				default: 
 					trace("Selected invalid value for state in GameActionsDialog " + value);
 					break;
 			}
@@ -276,6 +281,11 @@ package components {
 			} else {
 				e.objective = 0;
 			}
+		}
+		
+		private function existingGamesRendererFactory():IListItemRenderer {
+			var renderer:ExistingGamesRenderer = new ExistingGamesRenderer();
+			return renderer;
 		}
 	
 	}

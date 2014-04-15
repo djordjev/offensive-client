@@ -56,22 +56,17 @@ package processors {
 			trace("CONNECTED TO " + Settings.HOSTNAME + " ON PORT " + Settings.PORT);
 			var getUserData:GetUserDataRequest = new GetUserDataRequest();
 			getUserData.userId = Int64.parseInt64(Me.instance.userIdAsString); 
-			trace("Requesting " + getUserData.userId.toString());
 			Communicator.instance.send(HandlerCodes.GET_USER_DATA, getUserData, function handleResponse(message:ProtocolMessage):void {
 				var response:GetUserDataResponse = message.data as GetUserDataResponse;
 				_myUserInfo = response;
-				requestGameData();
+				initializeModels();
 			});
 		}
 		
-		public function requestGameData():void {
-			Me.instance.userInfo = _myUserInfo.userData;
-			initializeModels();
-		}
-		
 		public function initializeModels():void {
+			Me.instance.userInfo = _myUserInfo.userData;
 			FriendsModel.instance.intialize();
-			MainControlsModel.instance;
+			MainControlsModel.instance.initialize(_myUserInfo.userData);
 			initializeControllers();
 		}
 		

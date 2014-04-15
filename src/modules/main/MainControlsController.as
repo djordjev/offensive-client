@@ -5,6 +5,7 @@ package modules.main
 	import feathers.controls.Callout;
 	import feathers.controls.Label;
 	import feathers.core.FeathersControl;
+	import feathers.data.ListCollection;
 	import flash.external.ExternalInterface;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
@@ -48,6 +49,8 @@ package modules.main
 			view.currentUserInfoDisplay.userImage.source = FacebookCommunicator.instance.me.largeImageURL;
 			
 			view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
+			trace("Setting data provider");
+			view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
 		}
 		
 		override protected function addHandlers():void {

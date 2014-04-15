@@ -5,6 +5,7 @@ package modules.main
 	import communication.ProtocolMessage;
 	import communication.protos.CreateGameRequest;
 	import communication.protos.CreateGameResponse;
+	import communication.protos.UserData;
 	import flash.sampler.NewObjectSample;
 	import modules.base.BaseModel;
 	
@@ -29,6 +30,10 @@ package modules.main
 		public function MainControlsModel() 
 		{
 			super();
+		}
+		
+		public function initialize(myUserInfo:UserData):void {
+			activeGames = myUserInfo.joinedGames;
 		}
 		
 		public function requestJoinableGames(callback:Function):void {
