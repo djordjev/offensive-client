@@ -16,22 +16,14 @@ package {
 			this.addChild(_stats);
 			
 			Globals.instance.parameters = this.root.loaderInfo.parameters;
+			Starling.multitouchEnabled = false;
 
 			_myStarling = new Starling(Game, stage, new Rectangle(0, 0, 1024, 768));
+			_myStarling.simulateMultitouch = false;
 			_myStarling.stage.stageWidth = 1024;
 			_myStarling.stage.stageHeight = 768;
 			_myStarling.antiAliasing = 1;
 			_myStarling.start();
-			
-			/*Communicator.instance.addEventListener(Communicator.SOCKET_CONNECTED, function socketConnected(e:Event):void {
-				var getUserData:GetUserDataRequest = new GetUserDataRequest();
-				getUserData.userId = Int64.parseInt64(facebookId);
-				Communicator.instance.send(HandlerCodes.GET_USER_DATA, getUserData, function handleResponse(message:ProtocolMessage):void {
-					var response:GetUserDataResponse = message.data as GetUserDataResponse;
-					label.appendText(" received message ");
-				});
-			});
-			Communicator.instance.connect(Settings.HOSTNAME, Settings.PORT);*/
 		}
 	}
 }
