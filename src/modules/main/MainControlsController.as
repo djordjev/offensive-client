@@ -55,11 +55,18 @@ package modules.main
 		
 		override protected function addHandlers():void {
 			view.addEventListener(CreateGameEvent.CREATED_OPEN_GAME, newOpenGameCreation);
+			view.addEventListener(GameActionsDialog.REQUEST_LIST_OF_GAMES, getListOfOpenGames);
 		}
 		
 		private function newOpenGameCreation(e:CreateGameEvent):void {
 			model.createOpenGame(e.gameName, e.numberOfPlayers, e.objective, function createdNewOpenGame():void {
-				trace("CREATED NEW GAME");
+				view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
+			});
+		}
+		
+		private function getListOfOpenGames(e:Event):void {
+			model.getListOfOpenGames(function receivedListOfGames():void {
+				view.gameActionsDialog.gamesAvailableForJoining.dataProvider = new ListCollection(model.openGamesAvailableForJoin);
 			});
 		}
 		

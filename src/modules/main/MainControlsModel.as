@@ -5,6 +5,8 @@ package modules.main
 	import communication.ProtocolMessage;
 	import communication.protos.CreateGameRequest;
 	import communication.protos.CreateGameResponse;
+	import communication.protos.GetOpenGamesRequest;
+	import communication.protos.GetOpenGamesResponse;
 	import communication.protos.UserData;
 	import flash.sampler.NewObjectSample;
 	import modules.base.BaseModel;
@@ -26,6 +28,9 @@ package modules.main
 		
 		/** Array of GameContext */
 		public var activeGames:Array = [];
+		
+		/** Array of open games that are available for joining. Array of GameDescription */
+		public var openGamesAvailableForJoin:Array = [];
 		
 		public function MainControlsModel() 
 		{
@@ -51,6 +56,17 @@ package modules.main
 				var gameCreatedResponse:CreateGameResponse = message.data as CreateGameResponse;
 				
 				activeGames.push(gameCreatedResponse.gameContext);
+				if (callback != null) {
+					callback();
+				}
+			});
+		}
+		
+		public function getListOfOpenGames(callback:Function):void {
+			var request:GetOpenGamesRequest = new GetOpenGamesRequest();
+			Communicator.instance.send(HandlerCodes.OPEN_GAMES_LIST, request, function receivedListOfOpenGames(message:ProtocolMessage):void {
+				var response:GetOpenGamesResponse = message.data as GetOpenGamesResponse;
+				openGamesAvailableForJoin = response.gameDescription;
 				if (callback != null) {
 					callback();
 				}

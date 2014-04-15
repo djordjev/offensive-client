@@ -1,5 +1,6 @@
 package components {
 	import components.classes.ExistingGamesRenderer;
+	import components.classes.GamesForJoinRenderer;
 	import components.events.CreateGameEvent;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
@@ -31,7 +32,11 @@ package components {
 		public static const CREATED_PRIVATE_GAME:String = "created private game";
 		public static const JOINED_GAME:String = "joined game";
 		
+		public static const REQUEST_LIST_OF_GAMES:String = "request list of open games";
+		
 		public var existingGamesList:List = new List();
+		
+		private var _gamesAvailableForJoining:List = new List();
 		
 		private var _gameName:TextInput;
 		private var _numberOfPlayers:NumericStepper;
@@ -41,6 +46,10 @@ package components {
 		
 		public function GameActionsDialog() {
 			super();
+		}
+		
+		public function get gamesAvailableForJoining():List {
+			return _gamesAvailableForJoining;
 		}
 		
 		override protected function initialize():void {
@@ -132,11 +141,12 @@ package components {
 			initializeLeftGroup();
 			addHeader("Join game");
 			
-			var gamesList:List = new List();
-			gamesList.height = 220;
-			gamesList.width = 200;
-			gamesList.itemRendererProperties.labelField = "gameInfo";
-			_gamesManipulationGroup.addChild(gamesList);
+			_gamesAvailableForJoining = new List();
+			_gamesAvailableForJoining.itemRendererFactory = gamesToJoinRendererFactory;
+			_gamesAvailableForJoining.height = 220;
+			_gamesAvailableForJoining.width = 200;
+			_gamesAvailableForJoining.itemRendererProperties.labelField = "gameInfo";
+			_gamesManipulationGroup.addChild(_gamesAvailableForJoining);
 			
 			var joinButton:Button = new Button();
 			joinButton.label = "Join";
@@ -145,10 +155,7 @@ package components {
 				});
 			_gamesManipulationGroup.addChild(joinButton);
 			
-			// populate list
-			MainControlsModel.instance.requestJoinableGames(function joinableGamesLoadingFInished():void {
-					gamesList.dataProvider = new ListCollection([{gameInfo: "First game info / 1"}, {gameInfo: "Second game info / 2"}, {gameInfo: "Third game info / 3"}]);
-				});
+			this.dispatchEvent(new Event(REQUEST_LIST_OF_GAMES, true));
 		
 		}
 		
@@ -286,6 +293,10 @@ package components {
 		private function existingGamesRendererFactory():IListItemRenderer {
 			var renderer:ExistingGamesRenderer = new ExistingGamesRenderer();
 			return renderer;
+		}
+		
+		private function gamesToJoinRendererFactory():IListItemRenderer {
+			return new GamesForJoinRenderer();
 		}
 	
 	}
