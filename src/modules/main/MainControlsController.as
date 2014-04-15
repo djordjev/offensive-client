@@ -61,6 +61,7 @@ package modules.main
 		private function newOpenGameCreation(e:CreateGameEvent):void {
 			model.createOpenGame(e.gameName, e.numberOfPlayers, e.objective, function createdNewOpenGame():void {
 				view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
+				view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
 			});
 		}
 		
