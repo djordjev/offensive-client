@@ -1,8 +1,11 @@
 package components.common 
 {
+	import components.events.MouseClickEvent;
+	import feathers.core.FeathersControl;
 	import flash.geom.Point;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
+	import starling.events.EventDispatcher;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -11,7 +14,7 @@ package components.common
 	 * ...
 	 * @author Djordje Vukovic
 	 */
-	public class StatesAdapter 
+	public class StatesAdapter extends EventDispatcher
 	{
 		private static const HELPER_POINT:Point = new Point();
 		private var _targetComponent:ComponentWithStates;
@@ -75,7 +78,7 @@ package components.common
 				if (isInBounds) {
 					this.currentState = States.HOVERED;
 					if (_inDownState) {
-						trace("REGISTER CLICK AND DISPATCH EVENT");
+						dispatchEvent(new MouseClickEvent(MouseClickEvent.CLICK, targetDOC as FeathersControl, true));
 					}
 				} else {
 					this.currentState = States.UP;
