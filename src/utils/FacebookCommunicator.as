@@ -1,6 +1,7 @@
 package utils 
 {
 	import flash.external.ExternalInterface;
+	import flash.utils.Dictionary;
 	import wrappers.FacebookUser;
 	/**
 	 * ...
@@ -17,11 +18,13 @@ package utils
 			return _instance;
 		}
 		
-		private var facebookId:String;
+		public var facebookId:String;
 		
 		private var _me:FacebookUser;
 		
 		private var _initializedCallback:Function;
+		
+		private var _friendsReceivedCallback:Function;
 		
 		public function FacebookCommunicator() {
 		}
@@ -30,29 +33,55 @@ package utils
 			return _me;
 		}
 		
+		public function get isMeFacebookUser():Boolean {
+			return facebookId != null;
+		}
+		
 		public function initialize(fbId:String, callback:Function):void {
-			facebookId = fbId;
-			
-			if(facebookId != null && facebookId != "") {
+			if(fbId != null && fbId != "") {
 				ExternalInterface.addCallback("playerInfoReceived", playerInfoReceived);
 				_initializedCallback = callback;
+				facebookId = fbId;
 				ExternalInterface.call("getMyInfo");
 			} else {
+				facebookId = null;
 				_me = new FacebookUser();
-				_me.setUsernameAndImages("vukovic.djordje");
+				_me.setFacebookId("1282639449");
 				_me.name = "Djordje Vukovic";
+				_me.username = "vukovic.djordje";
 				callback();
 			}
 		}
 		
 		private function playerInfoReceived(userInfo:Object):void {
 			_me = new FacebookUser();
-			_me.setUsernameAndImages(userInfo.username);
+			_me.setFacebookId(facebookId);
 			_me.name = userInfo.name;
-			
+			_me.username = userInfo.username;
 			
 			if (_initializedCallback != null) {
 				_initializedCallback();
+			}
+		}
+		
+		/** Callback is function with one argument - array of facebookIds as String */
+		public function requestMyFriendsList(callback:Function):void {
+			if (callback != null && _friendsReceivedCallback == null) {
+				ExternalInterface.addCallback("friendsListReceived", friendsListReceived);
+				_friendsReceivedCallback = callback;
+				ExternalInterface.call("getFriendsList");
+			}
+		}
+		
+		private function friendsListReceived(friends:Object):void {
+			if (_friendsReceivedCallback != null) {
+				for each(var friend:Object in friends.data) {
+					var fbUser:FacebookUser = new FacebookUser();
+					fbUser.name = friend.name as String;
+					fbUser.setFacebookId(friend.id as String);
+				}
+				_friendsReceivedCallback(friends.data as Array);
+				_friendsReceivedCallback = null;
 			}
 		}
 		

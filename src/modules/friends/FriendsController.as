@@ -5,6 +5,7 @@ package modules.friends
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
 	import starling.events.Event;
+	import utils.FacebookCommunicator;
 	import utils.Globals;
 	
 	/**
@@ -41,9 +42,18 @@ package modules.friends
 			view.rightScrollButton.addEventListener(Event.TRIGGERED, rightScrollClicked);
 		}
 		
-		override protected function initializeView():void 
-		{
-			view.friendsList.dataProvider = new ListCollection(model.friends);
+		override protected function initializeView():void {
+			// request friends from facebook
+			if (FacebookCommunicator.instance.isMeFacebookUser) {
+				FacebookCommunicator.instance.requestMyFriendsList(function friendsListReceive(friends:Array):void {
+					// received friends from facebook
+					var friendsIds:Array = [];
+					for each(var oneFriend:Object in friends) {
+						friendsIds.push(oneFriend.id as String);
+					}
+					model.filterFriends(friendsIds, gatheringFriendsFinished);
+				});
+			}
 		}
 		
 		private function leftScrollClicked(e:Event):void {
@@ -56,6 +66,9 @@ package modules.friends
 			view.friendsList.scrollToPosition(targetPostion, view.friendsList.verticalScrollPosition, 0.5);
 		}
 		
+		private function gatheringFriendsFinished():void {
+			view.friendsList.dataProvider = new ListCollection(model.friends);
+		}
+		
 	}
-
 }

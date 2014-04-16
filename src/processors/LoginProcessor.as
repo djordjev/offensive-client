@@ -65,7 +65,7 @@ package processors {
 		
 		public function initializeModels():void {
 			Me.instance.userInfo = _myUserInfo.userData;
-			FriendsModel.instance.intialize();
+			FriendsModel.instance;
 			MainControlsModel.instance.initialize(_myUserInfo.userData);
 			initializeControllers();
 		}

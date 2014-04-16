@@ -6,8 +6,8 @@ package wrappers {
 	 * @author Djordje Vukovic
 	 */
 	public class UserWrapper {
+		public var facebookUser:FacebookUser;
 		public var user:User;
-		public var name:String;
 		
 		public function UserWrapper() {
 		

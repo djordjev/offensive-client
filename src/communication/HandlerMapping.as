@@ -1,5 +1,6 @@
 package communication {
 	import communication.protos.CreateGameResponse;
+	import communication.protos.FilterFriendsResponse;
 	import communication.protos.GetOpenGamesResponse;
 	import communication.protos.GetUserDataResponse;
 
@@ -12,6 +13,7 @@ package communication {
 			mapping[HandlerCodes.GET_USER_DATA] = GetUserDataResponse;
 			mapping[HandlerCodes.CREATE_GAME] = CreateGameResponse;
 			mapping[HandlerCodes.OPEN_GAMES_LIST] = GetOpenGamesResponse;
+			mapping[HandlerCodes.FILTER_FRIENDS] = FilterFriendsResponse;
 		}
 	}
 }

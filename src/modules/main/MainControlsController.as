@@ -49,7 +49,6 @@ package modules.main
 			view.currentUserInfoDisplay.userImage.source = FacebookCommunicator.instance.me.largeImageURL;
 			
 			view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
-			trace("Setting data provider");
 			view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
 		}
 		
