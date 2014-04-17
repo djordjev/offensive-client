@@ -9,6 +9,8 @@ package processors {
 	import communication.protos.GetUserDataResponse;
 	import modules.friends.FriendsController;
 	import modules.friends.FriendsModel;
+	import modules.game.GameController;
+	import modules.game.GameModel;
 	import modules.main.MainControlsController;
 	import modules.main.MainControlsModel;
 	import starling.events.Event;
@@ -67,12 +69,14 @@ package processors {
 			Me.instance.userInfo = _myUserInfo.userData;
 			FriendsModel.instance;
 			MainControlsModel.instance.initialize(_myUserInfo.userData);
+			GameModel.instance;
 			initializeControllers();
 		}
 		
 		public function initializeControllers():void {
 			FriendsController.instance;
 			MainControlsController.instance;
+			GameController.instance;
 			this.dispatchEvent(new Event(LOGIN_COMPLETED));
 		}
 	

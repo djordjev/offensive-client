@@ -1,17 +1,16 @@
 package modules.main 
 {
 	import components.events.CreateGameEvent;
+	import components.events.OpenGameEvent;
 	import components.GameActionsDialog;
-	import feathers.controls.Callout;
-	import feathers.controls.Label;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
-	import flash.external.ExternalInterface;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
 	import starling.events.Event;
 	import utils.FacebookCommunicator;
 	import utils.Globals;
+	import utils.Screens;
 	
 	/**
 	 * ...
@@ -55,6 +54,7 @@ package modules.main
 		override protected function addHandlers():void {
 			view.addEventListener(CreateGameEvent.CREATED_OPEN_GAME, newOpenGameCreation);
 			view.addEventListener(GameActionsDialog.REQUEST_LIST_OF_GAMES, getListOfOpenGames);
+			view.gameActionsDialog.existingGamesList.addEventListener(OpenGameEvent.OPEN_GAME, openGame);
 		}
 		
 		private function newOpenGameCreation(e:CreateGameEvent):void {
@@ -68,6 +68,10 @@ package modules.main
 			model.getListOfOpenGames(function receivedListOfGames():void {
 				view.gameActionsDialog.gamesAvailableForJoining.dataProvider = new ListCollection(model.openGamesAvailableForJoin);
 			});
+		}
+		
+		private function openGame(e:OpenGameEvent):void {
+			mainScreenNavigator.showScreen(Screens.GAME);
 		}
 		
 	}

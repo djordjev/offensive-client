@@ -2,17 +2,22 @@ package
 {
 	import com.demonsters.debugger.MonsterDebugger;
 	import communication.Me;
+	import components.common.OffensiveScreenNavigator;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
+	import feathers.controls.ScreenNavigator;
+	import feathers.controls.ScreenNavigatorItem;
 	import feathers.system.DeviceCapabilities;
 	import feathers.themes.AeonDesktopTheme;
 	import flash.system.Security;
 	import modules.control.ControllScreenView;
+	import modules.game.GameView;
 	import processors.LoginProcessor;
 	import starling.display.Sprite;
 	import starling.events.Event;
 	import utils.FacebookCommunicator;
 	import utils.Globals;
+	import utils.Screens;
 	
 	public class Game extends Sprite
 	{
@@ -23,6 +28,9 @@ package
 		}
 		
 		public var controllScreenView:ControllScreenView;
+		public var gameScreenView:GameView;
+		
+		public var screenNavigator:ScreenNavigator;
 		
 		private function addedToStage(e:Event):void {
 			trace("LOADED");
@@ -55,8 +63,18 @@ package
 		}
 		
 		private function populateView():void {
-			controllScreenView = new ControllScreenView;
-			this.addChild(controllScreenView);
+			controllScreenView = new ControllScreenView();
+			gameScreenView = new GameView();
+			
+			screenNavigator = new OffensiveScreenNavigator();
+			screenNavigator.width = 1024;
+			screenNavigator.height = 768;
+			
+			screenNavigator.addScreen(Screens.MENUS, new ScreenNavigatorItem(controllScreenView));
+			screenNavigator.addScreen(Screens.GAME, new ScreenNavigatorItem(gameScreenView));
+			
+			this.addChild(screenNavigator);
+			screenNavigator.showScreen(Screens.MENUS);
 		}
 	}
 }

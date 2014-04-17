@@ -1,7 +1,9 @@
 package modules.base 
 {
+	import feathers.controls.ScreenNavigator;
 	import feathers.core.FeathersControl;
 	import starling.events.Event;
+	import utils.Globals;
 	/**
 	 * ...
 	 * @author Djordje Vukovic
@@ -32,6 +34,10 @@ package modules.base
 		}
 		
 		protected function initializeView():void {
+		}
+		
+		protected function get mainScreenNavigator():ScreenNavigator {
+			return Globals.instance.game.screenNavigator;
 		}
 		
 	}

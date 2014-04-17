@@ -2,10 +2,13 @@ package components.classes {
 	import communication.protos.GameContext;
 	import components.common.ComponentWithStates;
 	import components.common.StatesAdapter;
+	import components.events.MouseClickEvent;
+	import components.events.OpenGameEvent;
 	import feathers.controls.Label;
 	import feathers.controls.renderers.LayoutGroupListItemRenderer;
 	import flash.geom.Point;
 	import starling.display.Quad;
+	import starling.events.Event;
 	import starling.events.Touch;
 	import starling.events.TouchEvent;
 	import starling.events.TouchPhase;
@@ -69,6 +72,11 @@ package components.classes {
 			
 			this.useHandCursor = true;
 			
+			_statesAdapter.addEventListener(MouseClickEvent.CLICK, clickHandler);
+		}
+		
+		private function clickHandler(e:MouseClickEvent):void {
+			this.dispatchEvent(new OpenGameEvent(OpenGameEvent.OPEN_GAME, dataAsGameContext, true));
 		}
 		
 		override protected function commitData():void {

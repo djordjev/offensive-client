@@ -47,8 +47,8 @@ package utils
 				facebookId = null;
 				_me = new FacebookUser();
 				_me.setFacebookId("1282639449");
-				_me.name = "Djordje Vukovic";
-				_me.username = "vukovic.djordje";
+				_me.name = "Dummy User";
+				_me.username = "dummy.user";
 				callback();
 			}
 		}

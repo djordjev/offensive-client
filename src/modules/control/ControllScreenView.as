@@ -9,8 +9,8 @@ package modules.control {
 	 */
 	public class ControllScreenView extends LayoutGroup {
 				
-		public var friendsView:FriendsView;
-		public var mainControlsView:MainControlsView;
+		public var friendsView:FriendsView = new FriendsView();
+		public var mainControlsView:MainControlsView = new MainControlsView();
 		
 		public function ControllScreenView() {
 			super();
@@ -20,11 +20,9 @@ package modules.control {
 		{
 			super.initialize();
 			// add MainControlls
-			mainControlsView = new MainControlsView();
 			this.addChild(mainControlsView);
 			
 			// add friends view
-			friendsView = new FriendsView();
 			friendsView.y = 618;
 			
 			this.addChild(friendsView);
