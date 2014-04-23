@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:246652a7ec1fbc0de64d698301e3f390:33fddc94b99e640b52d817f5220de121:eba6b9d10a0b670d3f17f84196d634ed$ -->
+<!-- $TexturePacker:SmartUpdate:1d8cce8843b95c59ca77c670f31296d3:64715958a78f360d312a69dfb21b51d5:eba6b9d10a0b670d3f17f84196d634ed$ -->
 <TextureAtlas imagePath="uiAtlas.png">
-    <SubTexture name="profilePic" x="2" y="2" width="165" height="166"/>
+    <SubTexture name="profilePic" x="2" y="2" width="165" height="166" frameX="-2" frameY="-2" frameWidth="169" frameHeight="170"/>
+    <SubTexture name="right arrow_down" x="169" y="2" width="65" height="99"/>
+    <SubTexture name="right arrow_normal" x="49" y="170" width="45" height="80" frameX="-4" frameY="0" frameWidth="49" frameHeight="80"/>
+    <SubTexture name="right arrow_over" x="2" y="170" width="45" height="80" frameX="-4" frameY="0" frameWidth="49" frameHeight="80"/>
 </TextureAtlas>

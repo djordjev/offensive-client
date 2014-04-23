@@ -23,7 +23,7 @@ package modules.control {
 			this.addChild(mainControlsView);
 			
 			// add friends view
-			friendsView.y = 618;
+			friendsView.y = 605;
 			
 			this.addChild(friendsView);
 		}

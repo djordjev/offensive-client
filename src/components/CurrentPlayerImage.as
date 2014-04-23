@@ -24,7 +24,7 @@ package components {
 			userImage.y = 5;
 			this.addChild(userImage);
 			
-			pictureFrame = new Image(Assets.getPofileImageFrame());
+			pictureFrame = new Image(Assets.getProfileImageFrame());
 			this.addChild(pictureFrame);
 		
 		}

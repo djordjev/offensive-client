@@ -64,8 +64,20 @@ package utils
 			return _uiAtlas;
 		}
 		
-		public static function getPofileImageFrame():Texture {
+		public static function getProfileImageFrame():Texture {
 			return uiAtlas.getTexture("profilePic");
+		}
+		
+		public static function getScrollFriendsNormalImage():Texture {
+			return uiAtlas.getTexture("right arrow_normal");
+		}
+		
+		public static function getScrollFriendsOverImage():Texture {
+			return uiAtlas.getTexture("right arrow_over");
+		}
+		
+		public static function getScrollFriendsDownImage():Texture {
+			return uiAtlas.getTexture("right arrow_down");
 		}
 	}
 

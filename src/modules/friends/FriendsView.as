@@ -1,4 +1,5 @@
 package modules.friends {
+	import components.FriendsScrollButton;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
@@ -21,8 +22,8 @@ package modules.friends {
 		private static const BACKGROUND_ALPHA:Number = 0.3;
 		
 		public var friendsList:List = new List();
-		public var rightScrollButton:Button = new Button();
-		public var leftScrollButton:Button = new Button();
+		public var rightScrollButton:FriendsScrollButton = new FriendsScrollButton();
+		public var leftScrollButton:FriendsScrollButton = new FriendsScrollButton();
 		
 		public function FriendsView() {
 			super();
@@ -31,34 +32,30 @@ package modules.friends {
 		override protected function initialize():void {
 			super.initialize();
 			// background color
-			var background:Quad = new Quad(1024, 150, Colors.WHITE);
+			var background:Quad = new Quad(940, 100, Colors.WHITE);
+			background.x = 41;
 			background.alpha = BACKGROUND_ALPHA;
 			this.addChild(background);
 			// list
-			friendsList.width = 924;
-			friendsList.height = 130;
-			friendsList.x = 50;
-			friendsList.y = 10;
+			friendsList.width = 630;
+			friendsList.height = 100;
+			friendsList.x = 185;
 			var listLayout:HorizontalLayout = new HorizontalLayout();
-			listLayout.gap = 10;
+			listLayout.gap = 16;
 			friendsList.layout = listLayout;
 			friendsList.horizontalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			friendsList.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			friendsList.itemRendererFactory = friendsListItemRendererFactoryFunction;
 			
 			// left scroll button
-			leftScrollButton.width = 30;
-			leftScrollButton.height = 30;
-			leftScrollButton.label = "<";
-			leftScrollButton.x = 10;
+			leftScrollButton.x = 0;
 			leftScrollButton.y = 60;
+			leftScrollButton.direction = FriendsScrollButton.DIRECTION_LEFT;
 			this.addChild(leftScrollButton);
 			
 			// right scroll button
-			rightScrollButton.width = 30;
-			rightScrollButton.height = 30;
-			rightScrollButton.label = ">";
-			rightScrollButton.x = 984;
+			rightScrollButton.direction = FriendsScrollButton.DIRECTION_RIGHT;
+			rightScrollButton.x = 934;
 			rightScrollButton.y = 60;
 			this.addChild(rightScrollButton);
 			
