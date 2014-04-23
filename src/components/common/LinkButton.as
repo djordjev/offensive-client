@@ -50,6 +50,7 @@ package components.common {
 		
 		public function set fontSize(value:int):void {
 			_labelForDisplay.fontSize = value;
+			this.invalidate();
 		}
 		
 		override protected function initialize():void {

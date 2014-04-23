@@ -75,6 +75,14 @@ package utils
 		public static function getScrollFriendsOverImage():Texture {
 			return uiAtlas.getTexture("right arrow_over");
 		}
+		
+		public static function getBackNormal():Texture {
+			return uiAtlas.getTexture("back_normal");
+		}
+		
+		public static function getBackOver():Texture {
+			return uiAtlas.getTexture("back_over");
+		}
 	}
 
 }

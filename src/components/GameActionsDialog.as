@@ -2,6 +2,7 @@ package components {
 	import components.classes.ExistingGamesRenderer;
 	import components.classes.GamesForJoinRenderer;
 	import components.common.LinkButton;
+	import components.common.OLabel;
 	import components.events.CreateGameEvent;
 	import components.events.GameManipulationEvent;
 	import components.events.MouseClickEvent;
@@ -112,11 +113,12 @@ package components {
 			addHeader("Add open game");
 			
 			addComponentsForNewGame();
-			var createOpenGameButton:Button = new Button();
-			createOpenGameButton.label = "Create New Open Game";
+			var createOpenGameButton:LinkButton = new LinkButton();
+			createOpenGameButton.label = "CREATE NEW OPEN GAME";
+			createOpenGameButton.fontSize = 20;
 			createOpenGameButton.height = 50;
 			createOpenGameButton.width = 200;
-			createOpenGameButton.addEventListener(Event.TRIGGERED, function createdOpenGame():void {
+			createOpenGameButton.addEventListener(MouseClickEvent.CLICK, function createdOpenGame():void {
 					var newOpenGameEvent:CreateGameEvent = new CreateGameEvent(CreateGameEvent.CREATED_OPEN_GAME, true);
 					populateCreateGameEvent(newOpenGameEvent);
 					dispatchEvent(newOpenGameEvent);
@@ -130,17 +132,17 @@ package components {
 			
 			addComponentsForNewGame();
 			
-			var inviteButton:Button = new Button();
-			inviteButton.label = "Invite friends";
+			var inviteButton:LinkButton = new LinkButton();
+			inviteButton.label = "INVITE FRIENDS";
 			inviteButton.height = 50;
 			inviteButton.width = 200;
 			_gamesManipulationGroup.addChild(inviteButton);
 			
-			var createPrivateGameButton:Button = new Button();
-			createPrivateGameButton.label = "Create New Private Game";
+			var createPrivateGameButton:LinkButton = new LinkButton();
+			createPrivateGameButton.label = "CREATE NEW PRIVATE GAME";
 			createPrivateGameButton.height = 50;
 			createPrivateGameButton.width = 200;
-			createPrivateGameButton.addEventListener(Event.TRIGGERED, function createdOpenGame():void {
+			createPrivateGameButton.addEventListener(MouseClickEvent.CLICK, function createdOpenGame():void {
 					dispatchEvent(new Event(CREATED_PRIVATE_GAME, true));
 				});
 			_gamesManipulationGroup.addChild(createPrivateGameButton);
@@ -171,16 +173,20 @@ package components {
 		private function addHeader(actionName:String):void {
 			var actionsNameGroup:LayoutGroup = new LayoutGroup();
 			actionsNameGroup.layout = new HorizontalLayout();
+			(actionsNameGroup.layout as HorizontalLayout).gap = 20;
 			
-			var nameForActions:Label = new Label();
-			nameForActions.text = actionName;
-			var back:Button = new Button();
-			back.label = "Back";
-			back.addEventListener(Event.TRIGGERED, function goBack(e:Event):void {
+			var nameForActions:OLabel = new OLabel();
+			nameForActions.text = actionName.toUpperCase();
+			nameForActions.font = OLabel.FONT_GEARS_OF_PACE;
+			nameForActions.fontSize = 15;
+			nameForActions.fontColor = Colors.BLACK;
+			
+			var back:BackButton = new BackButton();
+			back.addEventListener(MouseClickEvent.CLICK, function goBack(e:Event):void {
 					state = STATE_MENU;
 				});
-			actionsNameGroup.addChild(nameForActions);
 			actionsNameGroup.addChild(back);
+			actionsNameGroup.addChild(nameForActions);
 			_gamesManipulationGroup.addChild(actionsNameGroup);
 		}
 		
@@ -203,7 +209,10 @@ package components {
 			gameNameGroup.layout = new HorizontalLayout();
 			(gameNameGroup.layout as HorizontalLayout).gap = 20;
 			
-			var gameNameLabel:Label = new Label();
+			var gameNameLabel:OLabel = new OLabel();
+			gameNameLabel.font = OLabel.FONT_GEARS_OF_PACE;
+			gameNameLabel.fontColor = Colors.BLACK;
+			gameNameLabel.fontSize = 23;
 			gameNameLabel.text = "Game Name";
 			gameNameGroup.addChild(gameNameLabel);
 			
@@ -220,7 +229,10 @@ package components {
 			numberOfPlayersGroup.layout = new HorizontalLayout();
 			(numberOfPlayersGroup.layout as HorizontalLayout).gap = 20;
 			
-			var numberOfPlayersLabel:Label = new Label();
+			var numberOfPlayersLabel:OLabel = new OLabel();
+			numberOfPlayersLabel.font = OLabel.FONT_GEARS_OF_PACE;
+			numberOfPlayersLabel.fontColor = Colors.BLACK;
+			numberOfPlayersLabel.fontSize = 23;
 			numberOfPlayersLabel.text = "Number of players";
 			numberOfPlayersGroup.addChild(numberOfPlayersLabel);
 			
