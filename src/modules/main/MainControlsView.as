@@ -22,7 +22,7 @@ package modules.main {
 		public var currentUserInfoDisplay:CurrentUser = new CurrentUser();
 		public var gameActionsDialog:GameActionsDialog = new GameActionsDialog();
 		public var backgroundImage:Image;
-		public var backgroundTransparency:Quad = new Quad(762, 655, Colors.BLACK);
+		public var backgroundFade:Image;
 		
 		
 		public function MainControlsView() {
@@ -34,16 +34,14 @@ package modules.main {
 			this.width = 1024;
 			this.height = 618;
 			
-			backgroundTransparency.x = 130;
-			backgroundTransparency.y = 80;
-			backgroundTransparency.alpha = 0.5;
-			this.addChild(backgroundTransparency);
+			backgroundFade = new Image(Texture.fromBitmap(new Assets.BackgroundFade()));
+			this.addChild(backgroundFade);
 			
 			currentUserInfoDisplay.x = 162;
 			currentUserInfoDisplay.y = 15;
 			this.addChild(currentUserInfoDisplay);
 			
-			gameActionsDialog.x = 92;
+			gameActionsDialog.x = 152;
 			gameActionsDialog.y = 230;
 			this.addChild(gameActionsDialog);
 		

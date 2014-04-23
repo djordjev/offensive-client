@@ -14,7 +14,7 @@ package components.common {
 		
 		private static const NORMAL_FONT_COLOR:uint = 0x191919;
 		private static const OVER_DOWN_FONT_COLOR:uint = 0xFFFFFF;
-		private static const FONT_SIZE:int = 40;
+		private static const FONT_SIZE:int = 30;
 		
 		private var _labelForDisplay:OLabel = new OLabel();
 		private var _blurFilter:BlurFilter; 

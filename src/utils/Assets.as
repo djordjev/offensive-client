@@ -43,6 +43,9 @@ package utils
 			}
 		}
 		
+		[Embed(source="../../assets/gameAssets/backgroundFade.png")]
+		public static const BackgroundFade:Class;
+		
 		[Embed(source="../../assets/gameAssets/uiAtlas.xml", mimeType="application/octet-stream")]
 		private static const uiAtlasXML:Class;
 		
