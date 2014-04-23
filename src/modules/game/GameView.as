@@ -1,5 +1,7 @@
 package modules.game 
 {
+	import components.common.OLabel;
+	import components.common.OLabel;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
@@ -26,7 +28,8 @@ package modules.game
 			backgroundSprite = new Quad(1024, 768, 0xC0C0C0);
 			this.addChild(backgroundSprite);
 			
-			var label:Label = new Label();
+			var label:OLabel = new OLabel();
+			label.fontColor = 0x3344DC;
 			label.text = "Ovde dodje mapa";
 			label.x = 400;
 			label.y = 400;
