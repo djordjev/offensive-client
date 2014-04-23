@@ -78,7 +78,7 @@ package components.common
 				if (isInBounds) {
 					this.currentState = States.HOVERED;
 					if (_inDownState) {
-						dispatchEvent(new MouseClickEvent(MouseClickEvent.CLICK, targetDOC as FeathersControl, true));
+						targetDOC.dispatchEvent(new MouseClickEvent(MouseClickEvent.CLICK, targetDOC as FeathersControl, true));
 					}
 				} else {
 					this.currentState = States.UP;

@@ -72,7 +72,7 @@ package components.classes {
 			
 			this.useHandCursor = true;
 			
-			_statesAdapter.addEventListener(MouseClickEvent.CLICK, clickHandler);
+			addEventListener(MouseClickEvent.CLICK, clickHandler);
 		}
 		
 		private function clickHandler(e:MouseClickEvent):void {

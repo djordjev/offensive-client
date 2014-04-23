@@ -27,18 +27,22 @@ package components.common {
 			} else {
 				this.textRendererProperties.embedFonts = true;
 			}
+			this.invalidate();
 		}
 		
 		public function set fontSize(value:int):void {
 			textFormat.size = value;
+			this.invalidate();
 		}
 		
 		public function set fontColor(value:int):void {
 			textFormat.color = value;
+			this.invalidate();
 		}
 		
 		public function set textAlign(value:String):void {
 			textFormat.align = value;
+			this.invalidate();
 		}
 	}
 

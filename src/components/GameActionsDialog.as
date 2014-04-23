@@ -1,8 +1,10 @@
 package components {
 	import components.classes.ExistingGamesRenderer;
 	import components.classes.GamesForJoinRenderer;
+	import components.common.LinkButton;
 	import components.events.CreateGameEvent;
 	import components.events.GameManipulationEvent;
+	import components.events.MouseClickEvent;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
@@ -77,25 +79,25 @@ package components {
 		private function populateForMenu():void {
 			initializeLeftGroup();
 			
-			var createOpenGameButton:Button = new Button();
+			var createOpenGameButton:LinkButton = new LinkButton();
 			createOpenGameButton.width = 300;
 			createOpenGameButton.height = 80;
 			createOpenGameButton.label = "Create open game";
-			createOpenGameButton.addEventListener(Event.TRIGGERED, createOpenGame);
+			createOpenGameButton.addEventListener(MouseClickEvent.CLICK, createOpenGame);
 			_gamesManipulationGroup.addChild(createOpenGameButton);
 			
-			var createPrivateGameButton:Button = new Button();
+			var createPrivateGameButton:LinkButton = new LinkButton();
 			createPrivateGameButton.width = 300;
 			createPrivateGameButton.height = 80;
 			createPrivateGameButton.label = "Create private game";
-			createPrivateGameButton.addEventListener(Event.TRIGGERED, createPrivateGame);
+			createPrivateGameButton.addEventListener(MouseClickEvent.CLICK, createPrivateGame);
 			_gamesManipulationGroup.addChild(createPrivateGameButton);
 			
-			var joinGameButton:Button = new Button();
+			var joinGameButton:LinkButton = new LinkButton();
 			joinGameButton.width = 300;
 			joinGameButton.height = 80;
 			joinGameButton.label = "Join game";
-			joinGameButton.addEventListener(Event.TRIGGERED, joinGame);
+			joinGameButton.addEventListener(MouseClickEvent.CLICK, joinGame);
 			_gamesManipulationGroup.addChild(joinGameButton);
 		}
 		
@@ -269,17 +271,17 @@ package components {
 		}
 		
 		private function createOpenGame(event:Event):void {
-			event.currentTarget.removeEventListener(Event.TRIGGERED, createOpenGame);
+			event.currentTarget.removeEventListener(MouseClickEvent.CLICK, createOpenGame);
 			state = STATE_OPEN_GAME;
 		}
 		
 		private function createPrivateGame(event:Event):void {
-			event.currentTarget.removeEventListener(Event.TRIGGERED, createPrivateGame);
+			event.currentTarget.removeEventListener(MouseClickEvent.CLICK, createPrivateGame);
 			state = STATE_PRIVATE_GAME;
 		}
 		
 		private function joinGame(event:Event):void {
-			event.currentTarget.removeEventListener(Event.TRIGGERED, joinGame);
+			event.currentTarget.removeEventListener(MouseClickEvent.CLICK, joinGame);
 			state = STATE_JOIN_GAME;
 		}
 		
