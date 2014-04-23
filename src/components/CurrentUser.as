@@ -22,7 +22,7 @@ package components {
 		
 		public var userImage:CurrentPlayerImage = new CurrentPlayerImage();
 		public var stats:OLabel = new OLabel();
-		public var inviteToPrivateGame:Button = new Button();
+		public var inviteToPrivateGame:InvitesButton = new InvitesButton();
 		
 		public function CurrentUser() {
 			super();
@@ -81,7 +81,7 @@ package components {
 			statsGroup.addChild(stats);
 			
 			// add invite button
-			inviteToPrivateGame.x = 15;
+			inviteToPrivateGame.x = 120;
 			inviteToPrivateGame.width = 670;
 			inviteToPrivateGame.y = 170;
 			inviteToPrivateGame.height = 25;

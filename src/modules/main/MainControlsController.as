@@ -47,7 +47,7 @@ package modules.main
 		
 		override protected function initializeView():void 
 		{
-			view.currentUserInfoDisplay.inviteToPrivateGame.label = "Invites to private games";
+			view.currentUserInfoDisplay.inviteToPrivateGame.numberOfInvitations = 3;
 			view.currentUserInfoDisplay.playerName.text = FacebookCommunicator.instance.me.name.toUpperCase();
 			view.currentUserInfoDisplay.playerJoined.text = "JOINED";
 			view.currentUserInfoDisplay.playerLocation.text = "BEOGRAD";
