@@ -44,6 +44,24 @@ package components.common {
 			textFormat.align = value;
 			this.invalidate();
 		}
+		
+		override public function set text(value:String):void {
+			if (!isAsciiOnly(value)) {
+				font = FONT_ARIAL;
+			}
+			super.text = value;
+		}
+		
+		private function isAsciiOnly(str:String):Boolean {
+			for (var i:int = 0; i < str.length; i++) {
+				var ch:Number = str.charCodeAt(i);
+				if (ch < 32 || ch > 126) {
+					return false;
+				}
+			}
+			
+			return true;
+		}
 	}
 
 }

@@ -1,5 +1,6 @@
 package modules.friends 
 {
+	import components.events.MouseClickEvent;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
 	import modules.base.BaseController;
@@ -14,6 +15,8 @@ package modules.friends
 	 */
 	public class FriendsController extends BaseController 
 	{
+		private static const FRIENDS_DISPLAYED:int = 6;
+		
 		private static var _instance:FriendsController;
 		
 		public static function get instance():FriendsController {
@@ -38,8 +41,8 @@ package modules.friends
 		
 		override protected function addHandlers():void 
 		{
-			view.leftScrollButton.addEventListener(Event.TRIGGERED, leftScrollClicked);
-			view.rightScrollButton.addEventListener(Event.TRIGGERED, rightScrollClicked);
+			view.leftScrollButton.addEventListener(MouseClickEvent.CLICK, leftScrollClicked);
+			view.rightScrollButton.addEventListener(MouseClickEvent.CLICK, rightScrollClicked);
 		}
 		
 		override protected function initializeView():void {

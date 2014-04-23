@@ -41,22 +41,24 @@ package modules.friends {
 			friendsList.height = 100;
 			friendsList.x = 185;
 			var listLayout:HorizontalLayout = new HorizontalLayout();
-			listLayout.gap = 16;
+			listLayout.gap = 6;
 			friendsList.layout = listLayout;
 			friendsList.horizontalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			friendsList.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			friendsList.itemRendererFactory = friendsListItemRendererFactoryFunction;
+			friendsList.addEventListener(Event.ADDED_TO_STAGE, function friendsListAddedToStage(e:Event):void {
+				friendsList.backgroundSkin.alpha = 0;
+			});
 			
 			// left scroll button
-			leftScrollButton.x = 0;
-			leftScrollButton.y = 60;
+			leftScrollButton.x = 140;
+			leftScrollButton.y = 10;
 			leftScrollButton.direction = FriendsScrollButton.DIRECTION_LEFT;
 			this.addChild(leftScrollButton);
 			
 			// right scroll button
-			rightScrollButton.direction = FriendsScrollButton.DIRECTION_RIGHT;
-			rightScrollButton.x = 934;
-			rightScrollButton.y = 60;
+			rightScrollButton.x = 875;
+			rightScrollButton.y = 10;
 			this.addChild(rightScrollButton);
 			
 			this.addChild(friendsList);
