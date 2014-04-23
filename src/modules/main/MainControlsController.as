@@ -1,13 +1,18 @@
 package modules.main 
 {
 	import components.events.CreateGameEvent;
+	import components.events.GameManipulationEvent;
 	import components.events.OpenGameEvent;
 	import components.GameActionsDialog;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
+	import flash.display.Bitmap;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
+	import starling.display.Image;
 	import starling.events.Event;
+	import starling.textures.Texture;
+	import utils.Assets;
 	import utils.FacebookCommunicator;
 	import utils.Globals;
 	import utils.Screens;
@@ -55,6 +60,7 @@ package modules.main
 			view.addEventListener(CreateGameEvent.CREATED_OPEN_GAME, newOpenGameCreation);
 			view.addEventListener(GameActionsDialog.REQUEST_LIST_OF_GAMES, getListOfOpenGames);
 			view.gameActionsDialog.existingGamesList.addEventListener(OpenGameEvent.OPEN_GAME, openGame);
+			view.addEventListener(GameManipulationEvent.SELECTED_GAME_ACTION, selectedGameAction);
 		}
 		
 		private function newOpenGameCreation(e:CreateGameEvent):void {
@@ -72,6 +78,19 @@ package modules.main
 		
 		private function openGame(e:OpenGameEvent):void {
 			mainScreenNavigator.showScreen(Screens.GAME);
+		}
+		
+		private function selectedGameAction(e:GameManipulationEvent):void {
+			if (e.gameAction != null) {
+				var bitmap:Class = Assets.getBackgroundImage(e.gameAction);
+				if (view.backgroundImage != null) {
+					// remove old background image
+					view.removeChild(view.backgroundImage);
+				}
+				view.backgroundImage = new Image(Texture.fromBitmap(new bitmap()));
+				// add new image as background as first child
+				view.addChildAt(view.backgroundImage, 0);
+			}
 		}
 		
 	}

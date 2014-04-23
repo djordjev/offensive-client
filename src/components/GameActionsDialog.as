@@ -2,6 +2,7 @@ package components {
 	import components.classes.ExistingGamesRenderer;
 	import components.classes.GamesForJoinRenderer;
 	import components.events.CreateGameEvent;
+	import components.events.GameManipulationEvent;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
@@ -263,6 +264,8 @@ package components {
 					trace("Selected invalid value for state in GameActionsDialog " + value);
 					break;
 			}
+			
+			this.dispatchEvent(new GameManipulationEvent(GameManipulationEvent.SELECTED_GAME_ACTION, value, true));
 		}
 		
 		private function createOpenGame(event:Event):void {
