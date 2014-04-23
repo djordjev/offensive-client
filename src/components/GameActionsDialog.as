@@ -61,7 +61,7 @@ package components {
 			this.height = 416;
 			// background
 			var background:Quad = new Quad(840, 350, 0x78787A);
-			this.addChild(background);
+			//this.addChild(background);
 			
 			existingGamesList.x = 400;
 			existingGamesList.y = 35;

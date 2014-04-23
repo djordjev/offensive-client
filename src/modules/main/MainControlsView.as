@@ -11,6 +11,7 @@ package modules.main {
 	import starling.events.Event;
 	import starling.textures.Texture;
 	import utils.Assets;
+	import utils.Colors;
 	
 	/**
 	 * ...
@@ -21,6 +22,8 @@ package modules.main {
 		public var currentUserInfoDisplay:CurrentUser = new CurrentUser();
 		public var gameActionsDialog:GameActionsDialog = new GameActionsDialog();
 		public var backgroundImage:Image;
+		public var backgroundTransparency:Quad = new Quad(762, 655, Colors.BLACK);
+		
 		
 		public function MainControlsView() {
 			super();
@@ -31,8 +34,13 @@ package modules.main {
 			this.width = 1024;
 			this.height = 618;
 			
+			backgroundTransparency.x = 130;
+			backgroundTransparency.y = 80;
+			backgroundTransparency.alpha = 0.5;
+			this.addChild(backgroundTransparency);
+			
 			currentUserInfoDisplay.x = 162;
-			currentUserInfoDisplay.y = 20;
+			currentUserInfoDisplay.y = 15;
 			this.addChild(currentUserInfoDisplay);
 			
 			gameActionsDialog.x = 92;

@@ -2,6 +2,8 @@ package utils
 {
 	import components.GameActionsDialog;
 	import flash.display.Bitmap;
+	import starling.textures.Texture;
+	import starling.textures.TextureAtlas;
 	/**
 	 * ...
 	 * @author Djordje Vukovic
@@ -41,7 +43,27 @@ package utils
 			}
 		}
 		
+		[Embed(source="../../assets/gameAssets/uiAtlas.xml", mimeType="application/octet-stream")]
+		private static const uiAtlasXML:Class;
 		
+		[Embed(source="../../assets/gameAssets/uiAtlas.png")]
+		private static const uiTextures:Class;
+		
+		private static var _uiAtlas:TextureAtlas;
+		
+		public static function get uiAtlas():TextureAtlas {
+			if (_uiAtlas == null) {
+				var texture:Texture = Texture.fromBitmap(new uiTextures());
+				var xml:XML = XML(new uiAtlasXML());
+				_uiAtlas = new TextureAtlas(texture, xml);
+			}
+			
+			return _uiAtlas;
+		}
+		
+		public static function getPofileImageFrame():Texture {
+			return uiAtlas.getTexture("profilePic");
+		}
 	}
 
 }

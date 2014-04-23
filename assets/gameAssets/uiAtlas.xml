@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:246652a7ec1fbc0de64d698301e3f390:33fddc94b99e640b52d817f5220de121:eba6b9d10a0b670d3f17f84196d634ed$ -->
+<TextureAtlas imagePath="uiAtlas.png">
+    <SubTexture name="profilePic" x="2" y="2" width="165" height="166"/>
+</TextureAtlas>
