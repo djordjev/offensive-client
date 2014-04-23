@@ -1,35 +1,41 @@
 package components.classes {
 	import communication.protos.GameContext;
 	import components.common.ComponentWithStates;
+	import components.common.OLabel;
 	import components.common.StatesAdapter;
 	import components.events.MouseClickEvent;
 	import components.events.OpenGameEvent;
-	import feathers.controls.Label;
 	import feathers.controls.renderers.LayoutGroupListItemRenderer;
-	import flash.geom.Point;
+	import flash.text.TextFormatAlign;
 	import starling.display.Quad;
-	import starling.events.Event;
-	import starling.events.Touch;
-	import starling.events.TouchEvent;
-	import starling.events.TouchPhase;
+	import starling.filters.BlurFilter;
+	import utils.Colors;
 	import utils.States;
 	
 	/**
 	 * ...
 	 * @author Djordje Vukovic
 	 */
-	public class ExistingGamesRenderer extends LayoutGroupListItemRenderer implements ComponentWithStates{
+	public class ExistingGamesRenderer extends LayoutGroupListItemRenderer implements ComponentWithStates {
+		
+		private static const BACKGROUND_QUAD_ALPHA:Number = 0.5;
+		private static const WIDTH:int = 215;
+		private static const HEIGHT:int = 87;
 		
 		private var _dirty:Boolean = true;
 		
-		private var _gameInfo:Label = new Label();
-		private var _background:Quad = new Quad(150, 80, 0xFFFF00);
+		private var _gameName:OLabel = new OLabel();
+		private var _numberOfPlayers:OLabel = new OLabel();
+		
+		private var _background:Quad = new Quad(WIDTH, HEIGHT, Colors.BLACK);
+		private var _glow:BlurFilter;
 		
 		private var _statesAdapter:StatesAdapter;
 		
 		public function ExistingGamesRenderer() {
 			super();
 			_statesAdapter = new StatesAdapter(this);
+			_glow = BlurFilter.createGlow(Colors.WHITE);
 		}
 		
 		override public function set data(value:Object):void {
@@ -46,29 +52,54 @@ package components.classes {
 		}
 		
 		public function changeToUp():void {
-			_background.color = 0xFFFF00;
+			_background.color = Colors.BLACK;
+			_background.filter = null;
+			this._gameName.fontColor = Colors.WHITE;
+			this._numberOfPlayers.fontColor = Colors.WHITE;
 			this.invalidate();
 		}
 		
 		public function changeToDown():void {
-			_background.color = 0x00FF00;
+			_background.color = Colors.WHITE;
+			_background.filter = null;
+			this._gameName.fontColor = Colors.BLACK;
+			this._numberOfPlayers.fontColor = Colors.BLACK;
 			this.invalidate();
 		}
 		
 		public function changeToHovered():void {
-			_background.color = 0xFF8000;
+			_background.color = Colors.WHITE;
+			_background.filter = _glow;
+			this._gameName.fontColor = Colors.BLACK;
+			this._numberOfPlayers.fontColor = Colors.BLACK;
 			this.invalidate();
 		}
 		
 		override protected function initialize():void {
 			super.initialize();
-			this.width = 150;
-			this.height = 80;
+			this.width = HEIGHT;
+			this.height = WIDTH;
 			
 			_statesAdapter.currentState = States.UP;
+			_background.alpha = BACKGROUND_QUAD_ALPHA;
 			
 			this.addChild(_background);
-			this.addChild(_gameInfo);
+			
+			_gameName.width = WIDTH;
+			_gameName.textAlign = TextFormatAlign.CENTER;
+			_gameName.y = 5;
+			_gameName.fontSize = 20;
+			_gameName.font = OLabel.FONT_GEARS_OF_PACE;
+			_gameName.fontColor = Colors.WHITE;
+			this.addChild(_gameName);
+			
+			_numberOfPlayers.width = WIDTH;
+			_numberOfPlayers.textAlign = TextFormatAlign.CENTER;
+			_numberOfPlayers.y = 45;
+			_numberOfPlayers.fontSize = 12;
+			_numberOfPlayers.font = OLabel.FONT_GEARS_OF_PACE;
+			_numberOfPlayers.fontColor = Colors.WHITE;
+			this.addChild(_numberOfPlayers);
 			
 			this.useHandCursor = true;
 			
@@ -81,7 +112,8 @@ package components.classes {
 		
 		override protected function commitData():void {
 			if (_dirty && dataAsGameContext != null) {
-				_gameInfo.text = dataAsGameContext.lightGameContext.gameDescription.gameName + " " + dataAsGameContext.lightGameContext.gameDescription.numberOfPlayers;
+				_gameName.text = dataAsGameContext.lightGameContext.gameDescription.gameName;
+				_numberOfPlayers.text = "PLAYERS IN GAME: " +  dataAsGameContext.lightGameContext.gameDescription.numberOfPlayers;
 				_dirty = false;
 			}
 			super.commitData();

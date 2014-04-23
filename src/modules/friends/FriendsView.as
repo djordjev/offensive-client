@@ -9,12 +9,16 @@ package modules.friends {
 	import feathers.layout.HorizontalLayout;
 	import modules.friends.classes.FriendsRenderer;
 	import starling.display.Quad;
+	import starling.events.Event;
+	import utils.Colors;
 	
 	/**
 	 * ...
 	 * @author Djordje Vukovic
 	 */
 	public class FriendsView extends LayoutGroup {
+		
+		private static const BACKGROUND_ALPHA:Number = 0.3;
 		
 		public var friendsList:List = new List();
 		public var rightScrollButton:Button = new Button();
@@ -27,7 +31,8 @@ package modules.friends {
 		override protected function initialize():void {
 			super.initialize();
 			// background color
-			var background:Quad = new Quad(1024, 150, 0x000000);
+			var background:Quad = new Quad(1024, 150, Colors.WHITE);
+			background.alpha = BACKGROUND_ALPHA;
 			this.addChild(background);
 			// list
 			friendsList.width = 924;

@@ -15,11 +15,16 @@ package components {
 	import feathers.controls.TextInput;
 	import feathers.core.ToggleGroup;
 	import feathers.data.ListCollection;
+	import feathers.display.Scale3Image;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.VerticalLayout;
+	import feathers.textures.Scale3Textures;
 	import modules.main.MainControlsModel;
+	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.events.Event;
+	import utils.Assets;
+	import utils.Colors;
 	
 	/**
 	 * ...
@@ -59,14 +64,15 @@ package components {
 			super.initialize();
 			this.width = 840;
 			this.height = 416;
-			// background
-			var background:Quad = new Quad(840, 350, 0x78787A);
-			//this.addChild(background);
 			
-			existingGamesList.x = 400;
-			existingGamesList.y = 35;
-			existingGamesList.width = 300;
-			existingGamesList.height = 300;
+			existingGamesList.x = 480;
+			existingGamesList.y = 8;
+			existingGamesList.width = 215;
+			existingGamesList.height = 320;
+			
+			existingGamesList.addEventListener(Event.ADDED_TO_STAGE, function listIsAddedToStage(e:Event):void {
+				existingGamesList.backgroundSkin.alpha = 0;
+			});
 			
 			var listLayout:VerticalLayout = new VerticalLayout();
 			listLayout.gap = 10;
