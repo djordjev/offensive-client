@@ -1,7 +1,9 @@
 package modules.main 
 {
+	import communication.protos.GameDescription;
 	import components.events.CreateGameEvent;
 	import components.events.GameManipulationEvent;
+	import components.events.JoinGameEvent;
 	import components.events.OpenGameEvent;
 	import components.GameActionsDialog;
 	import feathers.core.FeathersControl;
@@ -60,6 +62,7 @@ package modules.main
 		
 		override protected function addHandlers():void {
 			view.addEventListener(CreateGameEvent.CREATED_OPEN_GAME, newOpenGameCreation);
+			view.addEventListener(JoinGameEvent.JOINED_TO_GAME, joinToGame);
 			view.addEventListener(GameActionsDialog.REQUEST_LIST_OF_GAMES, getListOfOpenGames);
 			view.gameActionsDialog.existingGamesList.addEventListener(OpenGameEvent.OPEN_GAME, openGame);
 			view.addEventListener(GameManipulationEvent.SELECTED_GAME_ACTION, selectedGameAction);
@@ -92,6 +95,17 @@ package modules.main
 				view.backgroundImage = new Image(Texture.fromBitmap(new bitmap()));
 				// add new image as background as first child
 				view.addChildAt(view.backgroundImage, 0);
+			}
+		}
+		
+		private function joinToGame(e:JoinGameEvent):void {
+			var gameToJoin:GameDescription = e.gameToJoin;
+			if (gameToJoin != null) {
+				model.joinToGame(gameToJoin, function joinedToGame():void {
+					// joined to game
+					view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
+					view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
+				});
 			}
 		}
 		

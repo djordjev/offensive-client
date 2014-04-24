@@ -117,6 +117,7 @@ package components.classes {
 				_numberOfPlayers.text = "PLAYERS IN GAME: " +  dataAsGameContext.lightGameContext.gameDescription.numberOfPlayers;
 				_dirty = false;
 			}
+			
 			super.commitData();
 		}
 	

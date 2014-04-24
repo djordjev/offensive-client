@@ -3,6 +3,7 @@ package communication {
 	import communication.protos.FilterFriendsResponse;
 	import communication.protos.GetOpenGamesResponse;
 	import communication.protos.GetUserDataResponse;
+	import communication.protos.JoinGameResponse;
 
 	import flash.utils.Dictionary;
 
@@ -14,6 +15,7 @@ package communication {
 			mapping[HandlerCodes.CREATE_GAME] = CreateGameResponse;
 			mapping[HandlerCodes.OPEN_GAMES_LIST] = GetOpenGamesResponse;
 			mapping[HandlerCodes.FILTER_FRIENDS] = FilterFriendsResponse;
+			mapping[HandlerCodes.JOIN_GAME] = JoinGameResponse;
 		}
 	}
 }

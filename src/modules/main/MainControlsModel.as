@@ -5,8 +5,11 @@ package modules.main
 	import communication.ProtocolMessage;
 	import communication.protos.CreateGameRequest;
 	import communication.protos.CreateGameResponse;
+	import communication.protos.GameDescription;
 	import communication.protos.GetOpenGamesRequest;
 	import communication.protos.GetOpenGamesResponse;
+	import communication.protos.JoinGameRequest;
+	import communication.protos.JoinGameResponse;
 	import communication.protos.UserData;
 	import flash.sampler.NewObjectSample;
 	import modules.base.BaseModel;
@@ -67,6 +70,18 @@ package modules.main
 			Communicator.instance.send(HandlerCodes.OPEN_GAMES_LIST, request, function receivedListOfOpenGames(message:ProtocolMessage):void {
 				var response:GetOpenGamesResponse = message.data as GetOpenGamesResponse;
 				openGamesAvailableForJoin = response.gameDescription;
+				if (callback != null) {
+					callback();
+				}
+			});
+		}
+		
+		public function joinToGame(gameDescription:GameDescription, callback:Function):void {
+			var request:JoinGameRequest = new JoinGameRequest();
+			request.gameId = gameDescription.gameId;
+			Communicator.instance.send(HandlerCodes.JOIN_GAME, request, function receivedJoinGameResponse(message:ProtocolMessage):void {
+				var response:JoinGameResponse = message.data as JoinGameResponse;
+				activeGames.push(response);
 				if (callback != null) {
 					callback();
 				}

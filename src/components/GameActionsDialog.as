@@ -1,13 +1,16 @@
 package components {
+	import communication.protos.GameContext;
+	import communication.protos.GameDescription;
 	import components.classes.ExistingGamesRenderer;
-	import components.classes.GamesForJoinRenderer;
+	import components.classes.JoinableGamesRenderer;
+	import components.classes.SelectableList;
 	import components.common.LinkButton;
 	import components.common.OLabel;
 	import components.events.CreateGameEvent;
 	import components.events.GameManipulationEvent;
+	import components.events.JoinGameEvent;
 	import components.events.MouseClickEvent;
 	import feathers.controls.Button;
-	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
 	import feathers.controls.List;
 	import feathers.controls.NumericStepper;
@@ -15,16 +18,9 @@ package components {
 	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.controls.TextInput;
 	import feathers.core.ToggleGroup;
-	import feathers.data.ListCollection;
-	import feathers.display.Scale3Image;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.VerticalLayout;
-	import feathers.textures.Scale3Textures;
-	import modules.main.MainControlsModel;
-	import starling.display.Image;
-	import starling.display.Quad;
 	import starling.events.Event;
-	import utils.Assets;
 	import utils.Colors;
 	
 	/**
@@ -45,7 +41,7 @@ package components {
 		
 		public var existingGamesList:List = new List();
 		
-		private var _gamesAvailableForJoining:List = new List();
+		private var _gamesAvailableForJoining:SelectableList = new SelectableList();
 		
 		private var _gameName:TextInput;
 		private var _numberOfPlayers:NumericStepper;
@@ -57,7 +53,7 @@ package components {
 			super();
 		}
 		
-		public function get gamesAvailableForJoining():List {
+		public function get gamesAvailableForJoining():SelectableList {
 			return _gamesAvailableForJoining;
 		}
 		
@@ -154,17 +150,19 @@ package components {
 			initializeLeftGroup();
 			addHeader("Join game");
 			
-			_gamesAvailableForJoining = new List();
-			_gamesAvailableForJoining.itemRendererFactory = gamesToJoinRendererFactory;
-			_gamesAvailableForJoining.height = 220;
-			_gamesAvailableForJoining.width = 200;
-			_gamesAvailableForJoining.itemRendererProperties.labelField = "gameInfo";
+			_gamesAvailableForJoining = new SelectableList();
+			_gamesAvailableForJoining.itemRendererFactory = joinableGamesRenderersFactory;
+			_gamesAvailableForJoining.height = 200;
+			_gamesAvailableForJoining.width = 400;
 			_gamesManipulationGroup.addChild(_gamesAvailableForJoining);
 			
-			var joinButton:Button = new Button();
-			joinButton.label = "Join";
-			joinButton.addEventListener(Event.TRIGGERED, function joiedButtonClicked(e:Event):void {
-					dispatchEvent(new Event(JOINED_GAME, true));
+			var joinButton:LinkButton = new LinkButton();
+			joinButton.x = 350;
+			joinButton.fontSize = 20;
+			joinButton.label = "JOIN";
+			joinButton.addEventListener(MouseClickEvent.CLICK, function joiedButtonClicked(e:Event):void {
+					var selectedGameContext:GameDescription = _gamesAvailableForJoining.selectedItem as GameDescription;
+					dispatchEvent(new JoinGameEvent(JoinGameEvent.JOINED_TO_GAME, selectedGameContext, true));
 				});
 			_gamesManipulationGroup.addChild(joinButton);
 			
@@ -320,10 +318,10 @@ package components {
 			return renderer;
 		}
 		
-		private function gamesToJoinRendererFactory():IListItemRenderer {
-			return new GamesForJoinRenderer();
+		private function joinableGamesRenderersFactory():IListItemRenderer {
+			return new JoinableGamesRenderer;
 		}
-	
+		
 	}
 
 }

@@ -5,5 +5,6 @@ package communication {
 		public static const FILTER_FRIENDS:int = 4;
 		public static const CREATE_GAME:int = 5;
 		public static const OPEN_GAMES_LIST:int = 6;
+		public static const JOIN_GAME:int = 7;
 	}
 }
