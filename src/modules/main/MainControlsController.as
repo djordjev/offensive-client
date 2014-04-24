@@ -50,11 +50,15 @@ package modules.main
 		override protected function initializeView():void 
 		{
 			view.currentUserInfoDisplay.inviteToPrivateGame.numberOfInvitations = 3;
-			view.currentUserInfoDisplay.playerName.text = FacebookCommunicator.instance.me.name.toUpperCase();
 			view.currentUserInfoDisplay.playerJoined.text = "JOINED";
 			view.currentUserInfoDisplay.playerLocation.text = "BEOGRAD";
 			view.currentUserInfoDisplay.stats.text = "Some stupid statistics".toUpperCase();
-			view.currentUserInfoDisplay.userImage.userImageSource = FacebookCommunicator.instance.me.largeImageURL;
+			if(FacebookCommunicator.instance.me != null) {
+				view.currentUserInfoDisplay.userImage.userImageSource = FacebookCommunicator.instance.me.largeImageURL;
+				if(FacebookCommunicator.instance.me.name != null) {
+					view.currentUserInfoDisplay.playerName.text = FacebookCommunicator.instance.me.name.toUpperCase();
+				}
+			}
 			
 			view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
 			view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
