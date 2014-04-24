@@ -20,6 +20,8 @@ package components.common {
 		private var _blurFilter:BlurFilter; 
 		private var _statesAdapter:StatesAdapter;
 		
+		private var _fontSize:int = FONT_SIZE;
+		
 		public function LinkButton() {
 			super();
 			_statesAdapter = new StatesAdapter(this);
@@ -49,6 +51,7 @@ package components.common {
 		}
 		
 		public function set fontSize(value:int):void {
+			_fontSize = value;
 			_labelForDisplay.fontSize = value;
 			this.invalidate();
 		}
@@ -58,7 +61,7 @@ package components.common {
 			
 			_labelForDisplay.font = OLabel.FONT_GEARS_OF_PACE;
 			_labelForDisplay.fontColor = NORMAL_FONT_COLOR;
-			_labelForDisplay.fontSize = FONT_SIZE;
+			_labelForDisplay.fontSize = _fontSize;
 			this.addChild(_labelForDisplay);
 		}
 		

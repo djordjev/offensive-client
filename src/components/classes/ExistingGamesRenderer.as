@@ -6,6 +6,7 @@ package components.classes {
 	import components.events.MouseClickEvent;
 	import components.events.OpenGameEvent;
 	import feathers.controls.renderers.LayoutGroupListItemRenderer;
+	import feathers.layout.VerticalLayout;
 	import flash.text.TextFormatAlign;
 	import starling.display.Quad;
 	import starling.filters.BlurFilter;
@@ -77,8 +78,8 @@ package components.classes {
 		
 		override protected function initialize():void {
 			super.initialize();
-			this.width = HEIGHT;
-			this.height = WIDTH;
+			this.width = WIDTH;
+			this.height = HEIGHT;
 			
 			_statesAdapter.currentState = States.UP;
 			_background.alpha = BACKGROUND_QUAD_ALPHA;

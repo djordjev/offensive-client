@@ -3,11 +3,8 @@ package
 	import com.demonsters.debugger.MonsterDebugger;
 	import communication.Me;
 	import components.common.OffensiveScreenNavigator;
-	import feathers.controls.Button;
-	import feathers.controls.Label;
 	import feathers.controls.ScreenNavigator;
 	import feathers.controls.ScreenNavigatorItem;
-	import feathers.system.DeviceCapabilities;
 	import feathers.themes.AeonDesktopTheme;
 	import flash.system.Security;
 	import modules.control.ControllScreenView;
@@ -38,6 +35,7 @@ package
 			new AeonDesktopTheme();
 			// initialize monster debugger
 			MonsterDebugger.initialize(this);
+			MonsterDebugger.trace(this, "Monster debugger initialized");
 			// allowed domains
 			Security.allowDomain("*");
 			Security.allowInsecureDomain("*");

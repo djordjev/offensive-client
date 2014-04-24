@@ -68,7 +68,7 @@ package components {
 			
 			existingGamesList.x = 480;
 			existingGamesList.y = 8;
-			existingGamesList.width = 215;
+			existingGamesList.width = 235;
 			existingGamesList.height = 320;
 			
 			existingGamesList.addEventListener(Event.ADDED_TO_STAGE, function listIsAddedToStage(e:Event):void {
@@ -136,12 +136,14 @@ package components {
 			inviteButton.label = "INVITE FRIENDS";
 			inviteButton.height = 50;
 			inviteButton.width = 200;
+			inviteButton.fontSize = 20;
 			_gamesManipulationGroup.addChild(inviteButton);
 			
 			var createPrivateGameButton:LinkButton = new LinkButton();
 			createPrivateGameButton.label = "CREATE NEW PRIVATE GAME";
 			createPrivateGameButton.height = 50;
 			createPrivateGameButton.width = 200;
+			createPrivateGameButton.fontSize = 20;
 			createPrivateGameButton.addEventListener(MouseClickEvent.CLICK, function createdOpenGame():void {
 					dispatchEvent(new Event(CREATED_PRIVATE_GAME, true));
 				});
