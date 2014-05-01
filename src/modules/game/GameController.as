@@ -1,18 +1,19 @@
 package modules.game {
+	import communication.protos.GameContext;
+	import communication.protos.Territory;
 	import feathers.core.FeathersControl;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
 	import starling.events.Event;
 	import utils.Globals;
 	import utils.Screens;
+	import wrappers.TerritoryWrapper;
 	
 	/**
 	 * ...
 	 * @author Djordje Vukovic
 	 */
 	public class GameController extends BaseController {
-		
-		public static const LEAVE_GAME:String = "leave game";
 		
 		private static var _instance:GameController;
 		
@@ -37,11 +38,21 @@ package modules.game {
 		}
 		
 		override protected function addHandlers():void {
-			view.addEventListener(LEAVE_GAME, goBack);
+			view.backButton.addEventListener(Event.TRIGGERED, goBack);
 		}
 		
 		private function goBack(e:Event):void {
 			mainScreenNavigator.showScreen(Screens.MENUS);
+		}
+		
+		public function initForGame(gameContext:GameContext):void {
+			model.initForGame(gameContext);
+			
+			var t:Territory = new Territory();
+			t.id = 1;
+			var tw:TerritoryWrapper = new TerritoryWrapper(t);
+			
+			view.getTerritoryVisual(1).territory = tw;
 		}
 	
 	}

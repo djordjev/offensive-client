@@ -2,6 +2,7 @@ package components.common {
 	import feathers.controls.Label;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
+	import utils.Colors;
 	
 	/**
 	 * ...
@@ -18,6 +19,9 @@ package components.common {
 			super();
 			this.textRendererProperties.textFormat = textFormat;
 			this.textRendererProperties.embedFonts = false;
+			this.font = FONT_GEARS_OF_PACE;
+			this.fontColor = Colors.BLACK;
+			this.fontSize = 14;
 		}
 		
 		public function set font(value:String):void {

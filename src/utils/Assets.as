@@ -105,6 +105,10 @@ package utils
 		[Embed(source="../../assets/gameAssets/sea.png")]
 		public static const SeaBackground:Class;
 		
+		public static function getTerritory(id:int):Texture {
+			return mapAtlas.getTexture("territory_" + id.toString());
+		}
+		
 		
 	}
 

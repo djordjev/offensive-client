@@ -11,6 +11,7 @@ package modules.main
 	import flash.display.Bitmap;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
+	import modules.game.GameController;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.textures.Texture;
@@ -87,6 +88,7 @@ package modules.main
 		
 		private function openGame(e:OpenGameEvent):void {
 			mainScreenNavigator.showScreen(Screens.GAME);
+			GameController.instance.initForGame(e.gameContext);
 		}
 		
 		private function selectedGameAction(e:GameManipulationEvent):void {

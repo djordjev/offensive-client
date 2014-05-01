@@ -1,11 +1,16 @@
-package modules.game 
-{
+package modules.game {
+	import com.netease.protobuf.Int64;
+	import communication.protos.GameContext;
+	import communication.protos.Player;
 	import components.common.OLabel;
 	import components.common.OLabel;
+	import components.TerritoryVisual;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
 	import flash.geom.Point;
+	import flash.sampler.NewObjectSample;
+	import modules.game.classes.Territories;
 	import starling.display.Image;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -13,13 +18,13 @@ package modules.game
 	import starling.textures.Texture;
 	import utils.Assets;
 	import utils.Colors;
+	import wrappers.UserWrapper;
 	
 	/**
 	 * ...
 	 * @author Djordje Vukovic
 	 */
-	public class GameView extends LayoutGroup 
-	{
+	public class GameView extends LayoutGroup {
 		private static const WIDTH:int = 1024;
 		private static const HEIGHT:int = 768;
 		
@@ -29,8 +34,11 @@ package modules.game
 		
 		private var _mapSprite:Sprite = new Sprite();
 		
-		public function GameView() 
-		{
+		public var backButton:Button = new Button();
+		
+		// game fields
+		
+		public function GameView() {
 			super();
 		}
 		
@@ -51,9 +59,19 @@ package modules.game
 			image.height = HEIGHT;
 			this.addChild(image);
 			
+			// add terrotories components
+			populateTerritories();
+			
 			// add control panel
 			populateControlPanel();
+		}
+		
+		private function populateTerritories():void {
+			for (var i:int = 0; i < Territories.NUMBER_OF_TERRITORIES; i++) {
+				_mapSprite.addChild(new TerritoryVisual());
+			}
 			
+			this.addChild(_mapSprite);
 		}
 		
 		private function populateControlPanel():void {
@@ -64,22 +82,23 @@ package modules.game
 			controlPanelBackground.alpha = CONTROL_PANEL_BACKGROUND_ALPHA;
 			controlPanel.addChild(controlPanelBackground);
 			
-			var backButton:Button = new Button();
 			backButton.label = "Back";
 			backButton.width = 50;
 			backButton.height = 30;
 			backButton.x = 950;
 			backButton.y = 100;
-			backButton.addEventListener(Event.TRIGGERED, goBack);
 			controlPanel.addChild(backButton);
 			
 			this.addChild(controlPanel);
 		}
 		
-		private function goBack(e:Event):void {
-			dispatchEvent(new Event(GameController.LEAVE_GAME, true));
+		public function getTerritoryVisual(id:int):TerritoryVisual {
+			if (_mapSprite.numChildren == Territories.NUMBER_OF_TERRITORIES) {
+				return _mapSprite.getChildAt(id - 1) as TerritoryVisual;
+			} else {
+				return null;
+			}
 		}
-		
 	}
 
 }
