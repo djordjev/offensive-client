@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:4d9af600a9bd1107aaf0c3e251b14060:5a50133815d2f0a98fde2ca0463d3261:a81df8e3ec822ce336cdfaae17dbbe1f$ -->
+<TextureAtlas imagePath="mapAtlas.png">
+    <SubTexture name="sea" x="2" y="2" width="64" height="48"/>
+</TextureAtlas>

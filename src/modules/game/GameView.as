@@ -5,8 +5,14 @@ package modules.game
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
+	import flash.geom.Point;
+	import starling.display.Image;
 	import starling.display.Quad;
+	import starling.display.Sprite;
 	import starling.events.Event;
+	import starling.textures.Texture;
+	import utils.Assets;
+	import utils.Colors;
 	
 	/**
 	 * ...
@@ -14,9 +20,14 @@ package modules.game
 	 */
 	public class GameView extends LayoutGroup 
 	{
-		public static const GO_BACK:String = "go back";
+		private static const WIDTH:int = 1024;
+		private static const HEIGHT:int = 768;
 		
-		private var backgroundSprite:Quad;
+		private static const CONTROL_PANEL_HEIGHT:int = 150;
+		private static const CONTROL_PANEL_WIDTH:int = 1024;
+		private static const CONTROL_PANEL_BACKGROUND_ALPHA:Number = 0.2;
+		
+		private var _mapSprite:Sprite = new Sprite();
 		
 		public function GameView() 
 		{
@@ -25,28 +36,48 @@ package modules.game
 		
 		override protected function initialize():void {
 			super.initialize();
-			backgroundSprite = new Quad(1024, 768, 0xC0C0C0);
-			this.addChild(backgroundSprite);
 			
-			var label:OLabel = new OLabel();
-			label.fontColor = 0x3344DC;
-			label.text = "Ovde dodje mapa";
-			label.x = 400;
-			label.y = 400;
-			this.addChild(label);
+			// add sea background
 			
-			var button:Button = new Button();
-			button.label = "Go Back";
-			button.x = 500;
-			button.y = 500;
-			button.addEventListener(Event.TRIGGERED, goBack);
+			var seaBitmap:Class = Assets.SeaBackground;
+			var seaTexture:Texture = Texture.fromBitmap(new seaBitmap());
+			seaTexture.repeat = true;
+			var image:Image = new Image(seaTexture);
+			image.setTexCoords(1, new Point(16, 0));
+			image.setTexCoords(2, new Point(0, 24));
+			image.setTexCoords(3, new Point(16, 24));
 			
-			this.addChild(button);
+			image.width = WIDTH;
+			image.height = HEIGHT;
+			this.addChild(image);
+			
+			// add control panel
+			populateControlPanel();
 			
 		}
 		
+		private function populateControlPanel():void {
+			var controlPanel:LayoutGroup = new LayoutGroup();
+			controlPanel.y = HEIGHT - CONTROL_PANEL_HEIGHT;
+			
+			var controlPanelBackground:Quad = new Quad(CONTROL_PANEL_WIDTH, CONTROL_PANEL_HEIGHT, Colors.WHITE);
+			controlPanelBackground.alpha = CONTROL_PANEL_BACKGROUND_ALPHA;
+			controlPanel.addChild(controlPanelBackground);
+			
+			var backButton:Button = new Button();
+			backButton.label = "Back";
+			backButton.width = 50;
+			backButton.height = 30;
+			backButton.x = 950;
+			backButton.y = 100;
+			backButton.addEventListener(Event.TRIGGERED, goBack);
+			controlPanel.addChild(backButton);
+			
+			this.addChild(controlPanel);
+		}
+		
 		private function goBack(e:Event):void {
-			dispatchEvent(new Event(GO_BACK, true));
+			dispatchEvent(new Event(GameController.LEAVE_GAME, true));
 		}
 		
 	}

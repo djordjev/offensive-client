@@ -1,5 +1,4 @@
-package modules.game 
-{
+package modules.game {
 	import feathers.core.FeathersControl;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
@@ -11,8 +10,10 @@ package modules.game
 	 * ...
 	 * @author Djordje Vukovic
 	 */
-	public class GameController extends BaseController 
-	{
+	public class GameController extends BaseController {
+		
+		public static const LEAVE_GAME:String = "leave game";
+		
 		private static var _instance:GameController;
 		
 		public static function get instance():GameController {
@@ -36,13 +37,13 @@ package modules.game
 		}
 		
 		override protected function addHandlers():void {
-			view.addEventListener(GameView.GO_BACK, goBack);
+			view.addEventListener(LEAVE_GAME, goBack);
 		}
 		
 		private function goBack(e:Event):void {
 			mainScreenNavigator.showScreen(Screens.MENUS);
 		}
-		
+	
 	}
 
 }

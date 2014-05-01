@@ -83,6 +83,29 @@ package utils
 		public static function getBackOver():Texture {
 			return uiAtlas.getTexture("back_over");
 		}
+		
+		[Embed(source="../../assets/gameAssets/mapAtlas.xml", mimeType="application/octet-stream")]
+		private static const mapAtlasXML:Class;
+		
+		[Embed(source="../../assets/gameAssets/mapAtlas.png")]
+		private static const mapTextures:Class;
+		
+		private static var _mapAtlas:TextureAtlas;
+		
+		public static function get mapAtlas():TextureAtlas {
+			if (_mapAtlas == null) {
+				var texture:Texture = Texture.fromBitmap(new mapTextures());
+				var xml:XML = XML(new mapAtlasXML());
+				_mapAtlas = new TextureAtlas(texture, xml);
+			}
+			
+			return _mapAtlas;
+		}
+		
+		[Embed(source="../../assets/gameAssets/sea.png")]
+		public static const SeaBackground:Class;
+		
+		
 	}
 
 }
