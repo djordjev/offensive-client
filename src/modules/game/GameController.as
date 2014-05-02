@@ -4,6 +4,7 @@ package modules.game {
 	import feathers.core.FeathersControl;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
+	import modules.game.classes.Territories;
 	import starling.events.Event;
 	import utils.Globals;
 	import utils.Screens;
@@ -47,6 +48,12 @@ package modules.game {
 		
 		public function initForGame(gameContext:GameContext):void {
 			model.initForGame(gameContext);
+			
+			for (var i:int = 1; i <= Territories.NUMBER_OF_TERRITORIES; i++) {
+				var t:Territory = new Territory();
+				t.id = i;
+				view.getTerritoryVisual(i).territory = new TerritoryWrapper(t);
+			}
 			
 			var t:Territory = new Territory();
 			t.id = 1;

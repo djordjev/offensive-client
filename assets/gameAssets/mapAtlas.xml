@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:8511e519e5ab3132919dfafa235e6043:30ba84f5c8960a31f99e69e674b98428:a81df8e3ec822ce336cdfaae17dbbe1f$ -->
+<!-- $TexturePacker:SmartUpdate:94f7fc55bf64f174cc3647328061a335:e7130cb7604aef21d20039bff9d46f44:a81df8e3ec822ce336cdfaae17dbbe1f$ -->
 <TextureAtlas imagePath="mapAtlas.png">
-    <SubTexture name="terrirory_2" x="63" y="2" width="98" height="31"/>
     <SubTexture name="territory_1" x="2" y="226" width="122" height="51"/>
-    <SubTexture name="territory_10" x="159" y="1736" width="88" height="172"/>
-    <SubTexture name="territory_11" x="2" y="1736" width="155" height="154"/>
-    <SubTexture name="territory_12" x="128" y="1201" width="91" height="117"/>
+    <SubTexture name="territory_10" x="159" y="1737" width="88" height="172"/>
+    <SubTexture name="territory_11" x="2" y="1737" width="155" height="154"/>
+    <SubTexture name="territory_12" x="128" y="1202" width="91" height="117"/>
     <SubTexture name="territory_13" x="2" y="466" width="107" height="62"/>
     <SubTexture name="territory_14" x="28" y="2" width="33" height="27"/>
     <SubTexture name="territory_15" x="2" y="2" width="24" height="16"/>
     <SubTexture name="territory_16" x="163" y="2" width="58" height="34"/>
     <SubTexture name="territory_17" x="2" y="80" width="62" height="42"/>
     <SubTexture name="territory_18" x="2" y="38" width="70" height="40"/>
-    <SubTexture name="territory_19" x="113" y="700" width="111" height="87"/>
+    <SubTexture name="territory_19" x="2" y="701" width="111" height="87"/>
+    <SubTexture name="territory_2" x="63" y="2" width="98" height="31"/>
     <SubTexture name="territory_20" x="2" y="174" width="55" height="48"/>
-    <SubTexture name="territory_21" x="156" y="789" width="96" height="93"/>
-    <SubTexture name="territory_22" x="2" y="1588" width="104" height="146"/>
+    <SubTexture name="territory_21" x="156" y="790" width="96" height="93"/>
+    <SubTexture name="territory_22" x="2" y="1589" width="104" height="146"/>
     <SubTexture name="territory_23" x="2" y="125" width="89" height="45"/>
     <SubTexture name="territory_24" x="206" y="282" width="32" height="58"/>
-    <SubTexture name="territory_25" x="2" y="1320" width="141" height="120"/>
-    <SubTexture name="territory_26" x="2" y="1442" width="112" height="124"/>
+    <SubTexture name="territory_25" x="2" y="1321" width="141" height="120"/>
+    <SubTexture name="territory_26" x="2" y="1443" width="112" height="124"/>
     <SubTexture name="territory_27" x="111" y="466" width="118" height="73"/>
-    <SubTexture name="territory_28" x="2" y="984" width="167" height="103"/>
-    <SubTexture name="territory_29" x="2" y="1201" width="124" height="113"/>
-    <SubTexture name="territory_3" x="2" y="789" width="152" height="89"/>
+    <SubTexture name="territory_28" x="2" y="985" width="167" height="103"/>
+    <SubTexture name="territory_29" x="2" y="1202" width="124" height="113"/>
+    <SubTexture name="territory_3" x="2" y="790" width="152" height="89"/>
     <SubTexture name="territory_30" x="66" y="80" width="123" height="43"/>
-    <SubTexture name="territory_31" x="59" y="174" width="34" height="50"/>
-    <SubTexture name="territory_32" x="2" y="700" width="109" height="78"/>
-    <SubTexture name="territory_33" x="78" y="884" width="123" height="98"/>
-    <SubTexture name="territory_34" x="2" y="404" width="149" height="60"/>
-    <SubTexture name="territory_35" x="2" y="884" width="74" height="96"/>
+    <SubTexture name="territory_31" x="132" y="174" width="34" height="50"/>
+    <SubTexture name="territory_32" x="130" y="541" width="109" height="78"/>
+    <SubTexture name="territory_33" x="78" y="885" width="123" height="98"/>
+    <SubTexture name="territory_34" x="2" y="342" width="149" height="60"/>
+    <SubTexture name="territory_35" x="2" y="885" width="74" height="96"/>
     <SubTexture name="territory_37" x="2" y="541" width="126" height="77"/>
     <SubTexture name="territory_38" x="93" y="125" width="129" height="47"/>
-    <SubTexture name="territory_39" x="116" y="1442" width="101" height="144"/>
-    <SubTexture name="territory_4" x="2" y="620" width="153" height="78"/>
-    <SubTexture name="territory_40" x="2" y="1089" width="132" height="108"/>
-    <SubTexture name="territory_41" x="2" y="342" width="143" height="60"/>
-    <SubTexture name="territory_42" x="126" y="226" width="104" height="54"/>
+    <SubTexture name="territory_39" x="116" y="1443" width="101" height="144"/>
+    <SubTexture name="territory_4" x="2" y="621" width="153" height="78"/>
+    <SubTexture name="territory_40" x="2" y="1090" width="132" height="108"/>
+    <SubTexture name="territory_41" x="2" y="404" width="143" height="60"/>
+    <SubTexture name="territory_42" x="136" y="1090" width="104" height="110"/>
     <SubTexture name="territory_5" x="87" y="282" width="117" height="56"/>
     <SubTexture name="territory_6" x="74" y="38" width="173" height="40"/>
-    <SubTexture name="territory_7" x="95" y="174" width="71" height="50"/>
+    <SubTexture name="territory_7" x="59" y="174" width="71" height="50"/>
     <SubTexture name="territory_8" x="2" y="282" width="83" height="56"/>
-    <SubTexture name="territory_9" x="136" y="1089" width="104" height="110"/>
+    <SubTexture name="territory_9" x="126" y="226" width="104" height="54"/>
 </TextureAtlas>

@@ -1,8 +1,14 @@
 package components {
 	import communication.protos.Territory;
+	import components.common.ComponentWithStates;
 	import components.common.OLabel;
+	import components.common.StatesAdapter;
+	import components.events.MouseClickEvent;
 	import feathers.controls.ImageLoader;
 	import feathers.controls.LayoutGroup;
+	import flash.geom.Point;
+	import modules.game.classes.Territories;
+	import starling.display.DisplayObject;
 	import starling.textures.Texture;
 	import utils.Assets;
 	import utils.Colors;
@@ -12,15 +18,19 @@ package components {
 	 * ...
 	 * @author Djordje Vukovic
 	 */
-	public class TerritoryVisual extends LayoutGroup {
+	public class TerritoryVisual extends LayoutGroup implements ComponentWithStates {
 		
 		private var _territory:TerritoryWrapper;
 		
 		private var _image:ImageLoader = new ImageLoader();
 		private var _nameLabel:OLabel = new OLabel();
 		
+		var _statesAdapter:StatesAdapter;
+		
 		public function TerritoryVisual() {
 			super();
+			_statesAdapter = new StatesAdapter(this);
+			addEventListener(MouseClickEvent.CLICK, mouseClicked);
 		}
 		
 		override protected function initialize():void {
@@ -40,16 +50,43 @@ package components {
 				var texture:Texture = Assets.getTerritory(value.territory.id);
 				_image.source = texture;
 				
-				_nameLabel.text = _territory.name;
+				//_nameLabel.text = _territory.name;
 				
-				this.x = 500;
-				this.y = 500;
-				
+				var position:Point = Territories.getTerritoryPosition(_territory.territory.id);
+				if(position) {
+					this.x = position.x;
+					this.y = position.y;
+				} else {
+					this.x = 700;
+					this.y = 700;
+				}
 			}
 		}
 		
 		public function get territory():TerritoryWrapper {
 			return _territory;
+		}
+		
+		public function changeToUp():void {
+		}
+		
+		public function changeToDown():void {
+		}
+		
+		public function changeToHovered():void {
+		}
+		
+		private function mouseClicked(e:MouseClickEvent):void {
+			trace("Clicked ON " + _territory.name);
+		}
+		
+		override public function hitTest(localPoint:Point, forTouch:Boolean = false):DisplayObject 
+		{
+			if (_territory.territory.id == Territories.NORTHWEST_TERRITORY) {
+				return null;
+			} else {
+				return super.hitTest(localPoint, forTouch);
+			}
 		}
 	
 	}

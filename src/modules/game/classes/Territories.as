@@ -1,4 +1,6 @@
 package modules.game.classes {
+	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	
 	/**
 	 * ...
@@ -141,6 +143,26 @@ package modules.game.classes {
 				default: 
 					return "";
 			}
+		}
+		
+		private static var _territoriesPositions:Dictionary;
+		
+		public static function getTerritoryPosition(id:int):Point {
+			if (_territoriesPositions == null) {
+				_territoriesPositions = new Dictionary();
+				// points for N. America
+				_territoriesPositions[ALASKA] = new Point(75, 87);
+				_territoriesPositions[EASTERN_US] = new Point(153, 143);
+				_territoriesPositions[WESTERN_US] = new Point(117, 146);
+				_territoriesPositions[ALBERTA] = new Point(147, 116);
+				_territoriesPositions[QUEBEC] = new Point(266, 109);
+				_territoriesPositions[ONTARIO] = new Point(213, 116);
+				_territoriesPositions[NORTHWEST_TERRITORY] = new Point(153, 82);
+				_territoriesPositions[GREENLAND] = new Point(332, 51);
+				_territoriesPositions[CENTRAL_AMERICA] = new Point(117, 187);
+			}
+			
+			return _territoriesPositions[id];
 		}
 	
 	}
