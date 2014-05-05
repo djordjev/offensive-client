@@ -6,12 +6,15 @@ package components {
 	import components.events.MouseClickEvent;
 	import feathers.controls.ImageLoader;
 	import feathers.controls.LayoutGroup;
+	import feathers.core.FeathersControl;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import modules.game.classes.PixelUtilBitmapData;
 	import modules.game.classes.Territories;
 	import starling.display.DisplayObject;
+	import starling.display.Sprite;
+	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	import utils.Assets;
 	import utils.Colors;
@@ -23,11 +26,11 @@ package components {
 	 */
 	public class TerritoryVisual extends LayoutGroup implements ComponentWithStates {
 		
-		private static const CLICK_TRANSPARENCY_TRASHOLD:Number = 0.1;
 		
 		private var _territory:TerritoryWrapper;
 		
 		private var _bitmapData:PixelUtilBitmapData;
+		private var _glow:BlurFilter;
 		
 		private var _image:ImageLoader = new ImageLoader();
 		private var _nameLabel:OLabel = new OLabel();
@@ -38,6 +41,13 @@ package components {
 			super();
 			_statesAdapter = new StatesAdapter(this);
 			addEventListener(MouseClickEvent.CLICK, mouseClicked);
+		}
+		
+		public function get glow():BlurFilter {
+			if (_glow == null) {
+				_glow = BlurFilter.createGlow(Colors.RED, 1, 4);
+			}
+			return _glow;
 		}
 		
 		override protected function initialize():void {
@@ -58,8 +68,7 @@ package components {
 				var bitmap:Bitmap = new territoryClass();
 				_bitmapData = new PixelUtilBitmapData(bitmap.bitmapData);
 				// add background image
-				var texture:Texture = Texture.fromBitmapData(_bitmapData.bitmapData);
-				_image.source = texture;
+				_image.source = Texture.fromBitmapData(_bitmapData.bitmapData);
 				
 				//_nameLabel.text = _territory.name;
 				
@@ -79,16 +88,22 @@ package components {
 		}
 		
 		public function changeToUp():void {
+			this.filter = null;
 		}
 		
 		public function changeToDown():void {
 		}
 		
 		public function changeToHovered():void {
+			this.filter = glow;
+			// move up front
+			this.parent.setChildIndex(this, this.parent.numChildren - 1);
 		}
 		
 		private function mouseClicked(e:MouseClickEvent):void {
 			trace("Clicked ON " + _territory.name);
+			_bitmapData.addColorOverlay(0x00FF00);
+			_image.source = Texture.fromBitmapData(_bitmapData.bitmapData);
 		}
 		
 		override public function hitTest(localPoint:Point, forTouch:Boolean = false):DisplayObject {
