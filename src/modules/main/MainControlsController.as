@@ -1,5 +1,4 @@
-package modules.main 
-{
+package modules.main {
 	import communication.protos.GameDescription;
 	import components.events.CreateGameEvent;
 	import components.events.GameManipulationEvent;
@@ -24,8 +23,7 @@ package modules.main
 	 * ...
 	 * @author Djordje Vukovic
 	 */
-	public class MainControlsController extends BaseController 
-	{
+	public class MainControlsController extends BaseController {
 		private static var _instance:MainControlsController;
 		
 		public static function get instance():MainControlsController {
@@ -35,8 +33,7 @@ package modules.main
 			return _instance;
 		}
 		
-		public function MainControlsController(view:FeathersControl, model:BaseModel) 
-		{
+		public function MainControlsController(view:FeathersControl, model:BaseModel) {
 			super(view, model);
 		}
 		
@@ -48,15 +45,14 @@ package modules.main
 			return _model as MainControlsModel;
 		}
 		
-		override protected function initializeView():void 
-		{
+		override protected function initializeView():void {
 			view.currentUserInfoDisplay.inviteToPrivateGame.numberOfInvitations = 3;
 			view.currentUserInfoDisplay.playerJoined.text = "JOINED";
 			view.currentUserInfoDisplay.playerLocation.text = "BEOGRAD";
 			view.currentUserInfoDisplay.stats.text = "Some stupid statistics".toUpperCase();
-			if(FacebookCommunicator.instance.me != null) {
+			if (FacebookCommunicator.instance.me != null) {
 				view.currentUserInfoDisplay.userImage.userImageSource = FacebookCommunicator.instance.me.largeImageURL;
-				if(FacebookCommunicator.instance.me.name != null) {
+				if (FacebookCommunicator.instance.me.name != null) {
 					view.currentUserInfoDisplay.playerName.text = FacebookCommunicator.instance.me.name.toUpperCase();
 				}
 			}
@@ -75,15 +71,15 @@ package modules.main
 		
 		private function newOpenGameCreation(e:CreateGameEvent):void {
 			model.createOpenGame(e.gameName, e.numberOfPlayers, e.objective, function createdNewOpenGame():void {
-				view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
-				view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
-			});
+					view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
+					view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
+				});
 		}
 		
 		private function getListOfOpenGames(e:Event):void {
 			model.getListOfOpenGames(function receivedListOfGames():void {
-				view.gameActionsDialog.gamesAvailableForJoining.dataProvider = new ListCollection(model.openGamesAvailableForJoin);
-			});
+					view.gameActionsDialog.gamesAvailableForJoining.dataProvider = new ListCollection(model.openGamesAvailableForJoin);
+				});
 		}
 		
 		private function openGame(e:OpenGameEvent):void {
@@ -109,12 +105,12 @@ package modules.main
 			if (gameToJoin != null) {
 				model.joinToGame(gameToJoin, function joinedToGame():void {
 					// joined to game
-					view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
-					view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
-				});
+						view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
+						view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
+					});
 			}
 		}
-		
+	
 	}
 
 }

@@ -81,7 +81,7 @@ package modules.main
 			request.gameId = gameDescription.gameId;
 			Communicator.instance.send(HandlerCodes.JOIN_GAME, request, function receivedJoinGameResponse(message:ProtocolMessage):void {
 				var response:JoinGameResponse = message.data as JoinGameResponse;
-				activeGames.push(response);
+				activeGames.push(response.gameContext);
 				if (callback != null) {
 					callback();
 				}
