@@ -61,7 +61,7 @@ package components {
 		}
 		
 		public function set territory(value:TerritoryWrapper):void {
-			if (value != null && value.territory.id != 36) {
+			if (value != null) {
 				_territory = value;
 				
 				var territoryClass:Class = Assets.getTerritory(value.territory.id);

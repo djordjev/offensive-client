@@ -194,8 +194,8 @@ package utils
 		[Embed(source="../../assets/gameAssets/territories/territory_35.png")]
 		private static const Territory_35:Class;
 		
-		//[Embed(source="../../assets/gameAssets/territories/territory_36.png")] Missing Siberia
-		//private static const Territory_36:Class;
+		[Embed(source="../../assets/gameAssets/territories/territory_36.png")] 
+		private static const Territory_36:Class;
 		
 		[Embed(source="../../assets/gameAssets/territories/territory_37.png")]
 		private static const Territory_37:Class;
