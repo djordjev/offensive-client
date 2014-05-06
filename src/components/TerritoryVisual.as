@@ -1,4 +1,5 @@
 package components {
+	import communication.protos.Player;
 	import communication.protos.Territory;
 	import components.common.ComponentWithStates;
 	import components.common.OLabel;
@@ -12,12 +13,14 @@ package components {
 	import flash.geom.Point;
 	import modules.game.classes.PixelUtilBitmapData;
 	import modules.game.classes.Territories;
+	import modules.game.GameModel;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	import utils.Assets;
 	import utils.Colors;
+	import utils.PlayerColors;
 	import wrappers.TerritoryWrapper;
 	
 	/**
@@ -45,7 +48,7 @@ package components {
 		
 		public function get glow():BlurFilter {
 			if (_glow == null) {
-				_glow = BlurFilter.createGlow(Colors.RED, 1, 4);
+				_glow = BlurFilter.createGlow(Colors.WHITE, 1, 4);
 			}
 			return _glow;
 		}
@@ -62,24 +65,29 @@ package components {
 		
 		public function set territory(value:TerritoryWrapper):void {
 			if (value != null) {
+				
 				_territory = value;
 				
 				var territoryClass:Class = Assets.getTerritory(value.territory.id);
 				var bitmap:Bitmap = new territoryClass();
 				_bitmapData = new PixelUtilBitmapData(bitmap.bitmapData);
-				// add background image
-				_image.source = Texture.fromBitmapData(_bitmapData.bitmapData);
-				
 				//_nameLabel.text = _territory.name;
 				
 				var position:Point = Territories.getTerritoryPosition(_territory.territory.id);
-				if(position) {
-					this.x = position.x;
-					this.y = position.y;
-				} else {
-					this.x = 700;
-					this.y = 700;
-				}
+				this.x = position.x;
+				this.y = position.y;
+				
+				refresh();
+			}
+		}
+		
+		public function refresh():void {
+			var ownerOfTerritory:Player = GameModel.instance.getPlayerByUserId(_territory.territory.userId);
+			if(ownerOfTerritory != null) {
+				var coloredBitmapData:BitmapData = _bitmapData.addColorOverlay(PlayerColors.getColor(ownerOfTerritory.color));
+				_image.source = Texture.fromBitmapData(coloredBitmapData);
+			} else {
+				_image.source = Texture.fromBitmapData(_bitmapData.bitmapData);
 			}
 		}
 		
@@ -102,8 +110,6 @@ package components {
 		
 		private function mouseClicked(e:MouseClickEvent):void {
 			trace("Clicked ON " + _territory.name);
-			_bitmapData.addColorOverlay(0x00FF00);
-			_image.source = Texture.fromBitmapData(_bitmapData.bitmapData);
 		}
 		
 		override public function hitTest(localPoint:Point, forTouch:Boolean = false):DisplayObject {

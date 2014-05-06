@@ -92,6 +92,7 @@ package modules.game {
 			this.addChild(controlPanel);
 		}
 		
+		/** Returns TerritoryVisual component for teritory Id */
 		public function getTerritoryVisual(id:int):TerritoryVisual {
 			if (_mapSprite.numChildren == Territories.NUMBER_OF_TERRITORIES) {
 				return _mapSprite.getChildAt(id - 1) as TerritoryVisual;

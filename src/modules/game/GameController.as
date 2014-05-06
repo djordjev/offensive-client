@@ -48,18 +48,10 @@ package modules.game {
 		
 		public function initForGame(gameContext:GameContext):void {
 			model.initForGame(gameContext);
-			
-			for (var i:int = 1; i <= Territories.NUMBER_OF_TERRITORIES; i++) {
-				var t:Territory = new Territory();
-				t.id = i;
-				view.getTerritoryVisual(i).territory = new TerritoryWrapper(t);
+			// remove after all teritories are always sent
+			for each (var territory:TerritoryWrapper in model.territories) {
+				view.getTerritoryVisual(territory.territory.id).territory = territory;
 			}
-			
-			var t:Territory = new Territory();
-			t.id = 1;
-			var tw:TerritoryWrapper = new TerritoryWrapper(t);
-			
-			view.getTerritoryVisual(1).territory = tw;
 		}
 	
 	}

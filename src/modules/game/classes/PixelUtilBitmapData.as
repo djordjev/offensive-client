@@ -9,7 +9,7 @@ package modules.game.classes {
 	public class PixelUtilBitmapData {
 		
 		private static const PIXEL_TRANSPARENT_TRASHOLD:Number = 20;
-		private static const MIXTURE_PERCENT:Number = 0.8;
+		private static const MIXTURE_PERCENT:Number = 0.85;
 		
 		private static const MASK:uint = 0xFF;
 		private static const ALPHA_CHANNEL_OFFSET:uint = 24;
@@ -33,11 +33,12 @@ package modules.game.classes {
 		
 		}
 		
-		public function addColorOverlay(color:uint):void {
+		public function addColorOverlay(color:uint):BitmapData {
+			var newBitmapData:BitmapData = bitmapData.clone();
 			// iterate through all pixels
-			for (var x:int = 0; x < bitmapData.width; x++) {
-				for (var y:int = 0; y < bitmapData.height; y++) {
-					var targetPixel:uint = bitmapData.getPixel32(x, y);
+			for (var x:int = 0; x < newBitmapData.width; x++) {
+				for (var y:int = 0; y < newBitmapData.height; y++) {
+					var targetPixel:uint = newBitmapData.getPixel32(x, y);
 					var alphaChannelImage:uint = targetPixel >> ALPHA_CHANNEL_OFFSET & MASK;
 					
 					if (alphaChannelImage > 0) {
@@ -54,11 +55,13 @@ package modules.game.classes {
 						var newGreenChannel:uint = (MIXTURE_PERCENT * greenChannelImage + (1 - MIXTURE_PERCENT) * greenChannelOverlay) << GREEN_CHANNEL_OFFSET;
 						var newBlueChannel:uint = (MIXTURE_PERCENT * blueChannelImage + (1 - MIXTURE_PERCENT) * blueChannelOverlay) << BLUE_CHANNEL_OFFSET;
 						
-						bitmapData.setPixel32(x, y, newAlphaChannel | newRedChannel | newGreenChannel | newBlueChannel);
+						newBitmapData.setPixel32(x, y, newAlphaChannel | newRedChannel | newGreenChannel | newBlueChannel);
 					}
 					
 				}
 			}
+			
+			return newBitmapData;
 		}
 	
 	}

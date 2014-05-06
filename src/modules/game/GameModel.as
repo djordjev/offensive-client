@@ -4,8 +4,10 @@ package modules.game {
 	import communication.protos.GameContext;
 	import communication.protos.Player;
 	import communication.protos.Territory;
+	import flash.text.TextRenderer;
 	import flash.utils.Dictionary;
 	import modules.base.BaseModel;
+	import modules.game.classes.Territories;
 	import wrappers.TerritoryWrapper;
 	
 	/**
@@ -21,6 +23,7 @@ package modules.game {
 		private var _objective:int;
 		private var _round:int;
 		private var _phase:int;
+		private var _allPlayers:Array;
 		/** mapping territory id to TerritoryWrapper */
 		private var _territories:Dictionary;
 		
@@ -45,21 +48,44 @@ package modules.game {
 			_gameName = gameContext.lightGameContext.gameDescription.gameName;
 			_gameId = gameContext.lightGameContext.gameDescription.gameId;
 			_opponents = [];
+			_allPlayers = [];
 			for each (var player:Player in gameContext.lightGameContext.playersInGame) {
 				if (player.user.userId.toString() == Me.instance.userIdAsString) {
 					_me = player;
 				} else {
 					_opponents.push(player);
 				}
+				_allPlayers.push(player);
 			}
 			_objective = gameContext.lightGameContext.gameDescription.objective;
 			_round = gameContext.lightGameContext.round;
 			_phase = gameContext.lightGameContext.phase;
 			
 			_territories = new Dictionary();
-			for each(var territory:Territory in gameContext.territories) {
-				_territories[territory.id] = new TerritoryWrapper(territory);
+			if (gameContext.territories.length > 0) {
+				for each (var territory:Territory in gameContext.territories) {
+					_territories[territory.id] = new TerritoryWrapper(territory);
+				}
+			} else {
+				for (var i:int = 1; i <= Territories.NUMBER_OF_TERRITORIES; i++) {
+					var t:Territory = new Territory();
+					t.id = i;
+					_territories[i] = new TerritoryWrapper(t);
+				}
 			}
+		
+		}
+		
+		public function getPlayerByUserId(userId:Int64):Player {
+			if (userId != null) {
+				for each (var player:Player in _allPlayers) {
+					if (player.user.userId.toString() == userId.toString()) {
+						return player;
+					}
+				}
+			}
+			
+			return null;
 		}
 	
 	}
