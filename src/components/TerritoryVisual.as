@@ -16,6 +16,7 @@ package components {
 	import modules.game.GameModel;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
+	import starling.events.Event;
 	import starling.filters.BlurFilter;
 	import starling.textures.Texture;
 	import utils.Assets;
@@ -38,6 +39,8 @@ package components {
 		private var _image:ImageLoader = new ImageLoader();
 		private var _nameLabel:OLabel = new OLabel();
 		
+		private var _units:Units = new Units();
+		
 		var _statesAdapter:StatesAdapter;
 		
 		public function TerritoryVisual() {
@@ -57,10 +60,11 @@ package components {
 			super.initialize();
 			
 			this.addChild(_image);
-			
 			_nameLabel.x = 15;
 			_nameLabel.y = 20;
 			this.addChild(_nameLabel);
+			
+			this.addChild(_units);
 		}
 		
 		public function set territory(value:TerritoryWrapper):void {
@@ -83,11 +87,18 @@ package components {
 		
 		public function refresh():void {
 			var ownerOfTerritory:Player = GameModel.instance.getPlayerByUserId(_territory.territory.userId);
-			if(ownerOfTerritory != null) {
-				var coloredBitmapData:BitmapData = _bitmapData.addColorOverlay(PlayerColors.getColor(ownerOfTerritory.color));
+			if (ownerOfTerritory != null) {
+				var playerColor:uint = PlayerColors.getColor(ownerOfTerritory.color);
+				var coloredBitmapData:BitmapData = _bitmapData.addColorOverlay(playerColor);
 				_image.source = Texture.fromBitmapData(coloredBitmapData);
+				_units.visible = true;
+				_units.setColorAndUnits(playerColor, _territory.territory.troopsOnIt);
+				
+				_units.x = Territories.getUnitsPosition(_territory.territory.id).x;
+				_units.y = Territories.getUnitsPosition(_territory.territory.id).y;
 			} else {
 				_image.source = Texture.fromBitmapData(_bitmapData.bitmapData);
+				_units.visible = false;
 			}
 		}
 		

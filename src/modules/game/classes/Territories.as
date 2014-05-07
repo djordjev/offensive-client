@@ -207,6 +207,69 @@ package modules.game.classes {
 			
 			return _territoriesPositions[id];
 		}
+		
+		private static var _unitsPositions:Dictionary;
+		
+		public static function getUnitsPosition(id:int):Point {
+			if (_unitsPositions == null) {
+				_unitsPositions = new Dictionary();
+				// points for N. America
+				_unitsPositions[ALASKA] = new Point(52, 0);
+				_unitsPositions[EASTERN_US] = new Point(60, 13);
+				_unitsPositions[WESTERN_US] = new Point(38, 4);
+				_unitsPositions[ALBERTA] = new Point(19, 0);
+				_unitsPositions[QUEBEC] = new Point(60, 7);
+				_unitsPositions[ONTARIO] = new Point(20, 3);
+				_unitsPositions[NORTHWEST_TERRITORY] = new Point(86, 0);
+				_unitsPositions[GREENLAND] = new Point(62, 3);
+				_unitsPositions[CENTRAL_AMERICA] = new Point(20, 36);
+				
+				// points in S.America
+				_unitsPositions[VENEZUELA] = new Point(51, 2);
+				_unitsPositions[PERU] = new Point(30, 55);
+				_unitsPositions[BRAZIL] = new Point(80, 60);
+				_unitsPositions[ARGENTINA] = new Point(10, 90);
+				
+				// points in Africa
+				_unitsPositions[NORTH_AFRICA] = new Point(60, 60);
+				_unitsPositions[EGYPT] = new Point(33, 0);
+				_unitsPositions[EAST_AFRICA] = new Point(30, 30);
+				_unitsPositions[CONGO] = new Point(30, 30);
+				_unitsPositions[SOUTH_AFRICA] = new Point(30, 60);
+				_unitsPositions[MADAGASCAR] = new Point(0, 0);
+				
+				// points in Europe
+				_unitsPositions[WESTERN_EUROPE] = new Point(11, 20);
+				_unitsPositions[SOUTHERN_EUROPE] = new Point(28, 14);
+				_unitsPositions[UKRAINE] = new Point(28, 40);
+				_unitsPositions[NORTHERN_EUROPE] = new Point(6, 0);
+				_unitsPositions[SCANDINAVIA] = new Point(18, 0);
+				_unitsPositions[ICELAND] = new Point(16, -10);
+				_unitsPositions[GREAT_BRITAIN] = new Point(-26, 7);
+				
+				// points in Asia
+				_unitsPositions[AFGHANISTAN] = new Point(24, 26);
+				_unitsPositions[CHINA] = new Point(109, 55);
+				_unitsPositions[INDIA] = new Point(27, 14);
+				_unitsPositions[IRKUTSK] = new Point(39, 13);
+				_unitsPositions[JAPAN] = new Point(0, 0);
+				_unitsPositions[KAMCHATKA] = new Point(45, 0);
+				_unitsPositions[MIDDLE_EAST] = new Point(40, 36);
+				_unitsPositions[MONGOLIA] = new Point(54, 15);
+				_unitsPositions[SIAM] = new Point(21, 28);
+				_unitsPositions[SIBERIA] = new Point(7, 19);
+				_unitsPositions[URAL] = new Point(38, 25);
+				_unitsPositions[YAKUTSK] = new Point(56, 0);
+				
+				// points in Australia
+				_unitsPositions[NEW_GUINEA] = new Point(80, 32);
+				_unitsPositions[EASTERN_AUSTRALIA] = new Point(60, 60);
+				_unitsPositions[WESTERN_AUSTRALIA] = new Point(25, 35);
+				_unitsPositions[INDONESIA] = new Point(60, 55);
+			}
+			
+			return _unitsPositions[id];
+		}
 	
 	}
 
