@@ -4,7 +4,13 @@ package modules.game {
 	import feathers.core.FeathersControl;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
+	import modules.game.classes.ActionPerformedTroopDeployment;
+	import modules.game.classes.ActionPerformedWaitingForOpponents;
+	import modules.game.classes.GamePhase;
+	import modules.game.classes.IGameActionPerformed;
 	import modules.game.classes.Territories;
+	import modules.game.events.ChangedNumberOfUnits;
+	import modules.game.events.ClickOnTerritory;
 	import starling.events.Event;
 	import utils.Globals;
 	import utils.Screens;
@@ -26,6 +32,8 @@ package modules.game {
 			return _instance;
 		}
 		
+		private var _actionPerformed:IGameActionPerformed;
+		
 		public function get model():GameModel {
 			return _model as GameModel;
 		}
@@ -40,6 +48,8 @@ package modules.game {
 		
 		override protected function addHandlers():void {
 			view.backButton.addEventListener(Event.TRIGGERED, goBack);
+			view.addEventListener(ClickOnTerritory.CLICKED_ON_TERRITORY, clickOnTerritoryHandler);
+			model.addEventListener(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, changedNumberOfUnitsOnTerritory);
 		}
 		
 		private function goBack(e:Event):void {
@@ -52,6 +62,28 @@ package modules.game {
 			for each (var territory:TerritoryWrapper in model.territories) {
 				view.getTerritoryVisual(territory.territory.id).territory = territory;
 			}
+			
+			createActionPerformedForPhase();
+		}
+		
+		private function clickOnTerritoryHandler(e:ClickOnTerritory):void {
+			_actionPerformed.clickOnTerritory(e.territory);
+		}
+		
+		private function createActionPerformedForPhase():void {
+			switch(model.phase) {
+				case GamePhase.WAITING_FOR_OPPONENTS_PHASE:
+					_actionPerformed = new ActionPerformedWaitingForOpponents();
+				case GamePhase.TROOP_DEPLOYMENT_PHASE:
+					_actionPerformed = new ActionPerformedTroopDeployment(model);
+					break;
+				default:
+					_actionPerformed = null;
+			}
+		}
+		
+		private function changedNumberOfUnitsOnTerritory(e:ChangedNumberOfUnits):void {
+			view.getTerritoryVisual(e.territory).refresh();
 		}
 	
 	}

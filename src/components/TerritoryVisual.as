@@ -13,6 +13,7 @@ package components {
 	import flash.geom.Point;
 	import modules.game.classes.PixelUtilBitmapData;
 	import modules.game.classes.Territories;
+	import modules.game.events.ClickOnTerritory;
 	import modules.game.GameModel;
 	import starling.display.DisplayObject;
 	import starling.display.Sprite;
@@ -120,7 +121,7 @@ package components {
 		}
 		
 		private function mouseClicked(e:MouseClickEvent):void {
-			trace("Clicked ON " + _territory.name);
+			dispatchEvent(new ClickOnTerritory(ClickOnTerritory.CLICKED_ON_TERRITORY, _territory, true));
 		}
 		
 		override public function hitTest(localPoint:Point, forTouch:Boolean = false):DisplayObject {

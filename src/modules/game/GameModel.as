@@ -1,13 +1,18 @@
 package modules.game {
 	import com.netease.protobuf.Int64;
+	import communication.Communicator;
+	import communication.HandlerCodes;
 	import communication.Me;
+	import communication.protos.AddUnitRequest;
 	import communication.protos.GameContext;
 	import communication.protos.Player;
 	import communication.protos.Territory;
 	import flash.text.TextRenderer;
 	import flash.utils.Dictionary;
 	import modules.base.BaseModel;
+	import modules.game.classes.GamePhase;
 	import modules.game.classes.Territories;
+	import modules.game.events.ChangedNumberOfUnits;
 	import wrappers.TerritoryWrapper;
 	
 	/**
@@ -44,6 +49,10 @@ package modules.game {
 			return _territories;
 		}
 		
+		public function get phase():int {
+			return _phase;
+		}
+		
 		public function initForGame(gameContext:GameContext):void {
 			_gameName = gameContext.lightGameContext.gameDescription.gameName;
 			_gameId = gameContext.lightGameContext.gameDescription.gameId;
@@ -73,6 +82,9 @@ package modules.game {
 					_territories[i] = new TerritoryWrapper(t);
 				}
 			}
+			
+			/// add fake number of reinforcements
+			_me.numberOfReinforcments = 1113;
 		
 		}
 		
@@ -87,7 +99,27 @@ package modules.game {
 			
 			return null;
 		}
-	
+		
+		public function get numberOfReinforcements():int {
+			if (_phase == GamePhase.TROOP_DEPLOYMENT_PHASE) {
+				return _me.numberOfReinforcments;
+			}
+			return 0;
+		}
+		
+		/** Asynch send to server. Not waiting response. */
+		public function addReinforcement(territoryId:int):void {
+			if (numberOfReinforcements > 0) {
+				var request:AddUnitRequest = new AddUnitRequest();
+				request.gameId = _gameId;
+				request.territoryId = territoryId;
+				Communicator.instance.send(HandlerCodes.ADD_UNIT, request, null);
+				_me.numberOfReinforcments--;
+				var territory:TerritoryWrapper = _territories[territoryId];
+				territory.territory.troopsOnIt++;
+				dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, territoryId));
+			}
+		}
 	}
 
 }

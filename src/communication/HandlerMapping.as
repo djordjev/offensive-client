@@ -1,4 +1,5 @@
 package communication {
+	import communication.protos.AddUnitResponse;
 	import communication.protos.CreateGameResponse;
 	import communication.protos.FilterFriendsResponse;
 	import communication.protos.GetOpenGamesResponse;
@@ -16,6 +17,7 @@ package communication {
 			mapping[HandlerCodes.OPEN_GAMES_LIST] = GetOpenGamesResponse;
 			mapping[HandlerCodes.FILTER_FRIENDS] = FilterFriendsResponse;
 			mapping[HandlerCodes.JOIN_GAME] = JoinGameResponse;
+			mapping[HandlerCodes.ADD_UNIT] = AddUnitResponse;
 		}
 	}
 }

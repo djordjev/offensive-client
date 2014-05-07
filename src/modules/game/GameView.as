@@ -10,6 +10,7 @@ package modules.game {
 	import feathers.controls.LayoutGroup;
 	import flash.geom.Point;
 	import flash.sampler.NewObjectSample;
+	import flash.utils.Dictionary;
 	import modules.game.classes.Territories;
 	import starling.display.Image;
 	import starling.display.Quad;
@@ -33,6 +34,7 @@ package modules.game {
 		private static const CONTROL_PANEL_BACKGROUND_ALPHA:Number = 0.2;
 		
 		private var _mapSprite:Sprite = new Sprite();
+		private var _territories:Dictionary = new Dictionary();
 		
 		public var backButton:Button = new Button();
 		
@@ -68,7 +70,9 @@ package modules.game {
 		
 		private function populateTerritories():void {
 			for (var i:int = 0; i < Territories.NUMBER_OF_TERRITORIES; i++) {
-				_mapSprite.addChild(new TerritoryVisual());
+				var visualTerritory:TerritoryVisual = new TerritoryVisual();
+				_territories[i + 1] = visualTerritory;
+				_mapSprite.addChild(visualTerritory);
 			}
 			
 			this.addChild(_mapSprite);
@@ -94,11 +98,7 @@ package modules.game {
 		
 		/** Returns TerritoryVisual component for teritory Id */
 		public function getTerritoryVisual(id:int):TerritoryVisual {
-			if (_mapSprite.numChildren == Territories.NUMBER_OF_TERRITORIES) {
-				return _mapSprite.getChildAt(id - 1) as TerritoryVisual;
-			} else {
-				return null;
-			}
+			return _territories[id];
 		}
 	}
 
