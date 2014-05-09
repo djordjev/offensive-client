@@ -62,6 +62,29 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
+		public static const SEED:FieldDescriptor$TYPE_INT64 = new FieldDescriptor$TYPE_INT64("communication.protos.Command.seed", "seed", (5 << 3) | com.netease.protobuf.WireType.VARINT);
+
+		private var seed$field:Int64;
+
+		public function clearSeed():void {
+			seed$field = null;
+		}
+
+		public function get hasSeed():Boolean {
+			return seed$field != null;
+		}
+
+		public function set seed(value:Int64):void {
+			seed$field = value;
+		}
+
+		public function get seed():Int64 {
+			return seed$field;
+		}
+
+		/**
+		 *  @private
+		 */
 		override com.netease.protobuf.used_by_generated_code final function writeToBuffer(output:com.netease.protobuf.WritingBuffer):void {
 			if (hasCommandId) {
 				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 1);
@@ -73,6 +96,10 @@ package communication.protos {
 			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.destinationTerritory);
 			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 4);
 			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.numberOfUnits);
+			if (hasSeed) {
+				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 5);
+				com.netease.protobuf.WriteUtils.write$TYPE_INT64(output, seed$field);
+			}
 			for (var fieldKey:* in this) {
 				super.writeUnknown(output, fieldKey);
 			}
@@ -86,6 +113,7 @@ package communication.protos {
 			var sourceTerritory$count:uint = 0;
 			var destinationTerritory$count:uint = 0;
 			var numberOfUnits$count:uint = 0;
+			var seed$count:uint = 0;
 			while (input.bytesAvailable > bytesAfterSlice) {
 				var tag:uint = com.netease.protobuf.ReadUtils.read$TYPE_UINT32(input);
 				switch (tag >> 3) {
@@ -116,6 +144,13 @@ package communication.protos {
 					}
 					++numberOfUnits$count;
 					this.numberOfUnits = com.netease.protobuf.ReadUtils.read$TYPE_INT32(input);
+					break;
+				case 5:
+					if (seed$count != 0) {
+						throw new flash.errors.IOError('Bad data format: Command.seed cannot be set twice.');
+					}
+					++seed$count;
+					this.seed = com.netease.protobuf.ReadUtils.read$TYPE_INT64(input);
 					break;
 				default:
 					super.readUnknown(input, tag);

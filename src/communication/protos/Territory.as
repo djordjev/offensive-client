@@ -28,9 +28,9 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
-		public static const USERID:FieldDescriptor$TYPE_INT64 = new FieldDescriptor$TYPE_INT64("communication.protos.Territory.userId", "userId", (3 << 3) | com.netease.protobuf.WireType.VARINT);
+		public static const PLAYERID:FieldDescriptor$TYPE_INT32 = new FieldDescriptor$TYPE_INT32("communication.protos.Territory.playerId", "playerId", (3 << 3) | com.netease.protobuf.WireType.VARINT);
 
-		public var userId:Int64;
+		public var playerId:int;
 
 		/**
 		 *  @private
@@ -41,7 +41,7 @@ package communication.protos {
 			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 2);
 			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.troopsOnIt);
 			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 3);
-			com.netease.protobuf.WriteUtils.write$TYPE_INT64(output, this.userId);
+			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.playerId);
 			for (var fieldKey:* in this) {
 				super.writeUnknown(output, fieldKey);
 			}
@@ -53,7 +53,7 @@ package communication.protos {
 		override com.netease.protobuf.used_by_generated_code final function readFromSlice(input:flash.utils.IDataInput, bytesAfterSlice:uint):void {
 			var id$count:uint = 0;
 			var troopsOnIt$count:uint = 0;
-			var userId$count:uint = 0;
+			var playerId$count:uint = 0;
 			while (input.bytesAvailable > bytesAfterSlice) {
 				var tag:uint = com.netease.protobuf.ReadUtils.read$TYPE_UINT32(input);
 				switch (tag >> 3) {
@@ -72,11 +72,11 @@ package communication.protos {
 					this.troopsOnIt = com.netease.protobuf.ReadUtils.read$TYPE_INT32(input);
 					break;
 				case 3:
-					if (userId$count != 0) {
-						throw new flash.errors.IOError('Bad data format: Territory.userId cannot be set twice.');
+					if (playerId$count != 0) {
+						throw new flash.errors.IOError('Bad data format: Territory.playerId cannot be set twice.');
 					}
-					++userId$count;
-					this.userId = com.netease.protobuf.ReadUtils.read$TYPE_INT64(input);
+					++playerId$count;
+					this.playerId = com.netease.protobuf.ReadUtils.read$TYPE_INT32(input);
 					break;
 				default:
 					super.readUnknown(input, tag);
