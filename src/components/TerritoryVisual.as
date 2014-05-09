@@ -1,5 +1,4 @@
 package components {
-	import communication.protos.Player;
 	import communication.protos.Territory;
 	import components.common.ComponentWithStates;
 	import components.common.OLabel;
@@ -23,6 +22,7 @@ package components {
 	import utils.Assets;
 	import utils.Colors;
 	import utils.PlayerColors;
+	import wrappers.PlayerWrapper;
 	import wrappers.TerritoryWrapper;
 	
 	/**
@@ -87,9 +87,9 @@ package components {
 		}
 		
 		public function refresh():void {
-			var ownerOfTerritory:Player = GameModel.instance.getPlayerByUserId(_territory.territory.userId);
+			var ownerOfTerritory:PlayerWrapper = GameModel.instance.getPlayerByUserId(_territory.territory.userId);
 			if (ownerOfTerritory != null) {
-				var playerColor:uint = PlayerColors.getColor(ownerOfTerritory.color);
+				var playerColor:uint = PlayerColors.getColor(ownerOfTerritory.player.color);
 				var coloredBitmapData:BitmapData = _bitmapData.addColorOverlay(playerColor);
 				_image.source = Texture.fromBitmapData(coloredBitmapData);
 				_units.visible = true;

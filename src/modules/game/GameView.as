@@ -1,13 +1,17 @@
 package modules.game {
 	import com.netease.protobuf.Int64;
 	import communication.protos.GameContext;
-	import communication.protos.Player;
+	import components.classes.PlayerRenderer;
 	import components.common.OLabel;
 	import components.common.OLabel;
 	import components.TerritoryVisual;
 	import feathers.controls.Button;
 	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
+	import feathers.controls.List;
+	import feathers.controls.renderers.IListItemRenderer;
+	import feathers.controls.Scroller;
+	import feathers.layout.HorizontalLayout;
 	import flash.geom.Point;
 	import flash.sampler.NewObjectSample;
 	import flash.utils.Dictionary;
@@ -37,6 +41,7 @@ package modules.game {
 		private var _territories:Dictionary = new Dictionary();
 		
 		public var backButton:Button = new Button();
+		public var playersList:List = new List();
 		
 		// game fields
 		
@@ -93,12 +98,27 @@ package modules.game {
 			backButton.y = 100;
 			controlPanel.addChild(backButton);
 			
+			playersList.x = 10;
+			playersList.y = 10;
+			playersList.height = 130;
+			playersList.width = 720;
+			var listLayout:HorizontalLayout = new HorizontalLayout();
+			listLayout.gap = 20;
+			playersList.layout = listLayout;
+			playersList.horizontalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
+			playersList.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
+			playersList.itemRendererFactory = playersListItemRendererFactoryFunction;
+			
 			this.addChild(controlPanel);
 		}
 		
 		/** Returns TerritoryVisual component for teritory Id */
 		public function getTerritoryVisual(id:int):TerritoryVisual {
 			return _territories[id];
+		}
+		
+		private function playersListItemRendererFactoryFunction():IListItemRenderer {
+			return new PlayerRenderer();
 		}
 	}
 

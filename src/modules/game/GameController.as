@@ -2,6 +2,7 @@ package modules.game {
 	import communication.protos.GameContext;
 	import communication.protos.Territory;
 	import feathers.core.FeathersControl;
+	import feathers.data.ListCollection;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
 	import modules.game.classes.ActionPerformedTroopDeployment;
@@ -64,6 +65,8 @@ package modules.game {
 			}
 			
 			createActionPerformedForPhase();
+			// populate players list
+			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
 		}
 		
 		private function clickOnTerritoryHandler(e:ClickOnTerritory):void {

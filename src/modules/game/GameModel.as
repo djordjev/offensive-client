@@ -13,7 +13,10 @@ package modules.game {
 	import modules.game.classes.GamePhase;
 	import modules.game.classes.Territories;
 	import modules.game.events.ChangedNumberOfUnits;
+	import wrappers.FacebookUser;
+	import wrappers.PlayerWrapper;
 	import wrappers.TerritoryWrapper;
+	import wrappers.UserWrapper;
 	
 	/**
 	 * ...
@@ -23,12 +26,12 @@ package modules.game {
 		
 		private var _gameName:String;
 		private var _gameId:Int64;
-		private var _me:Player;
-		private var _opponents:Array; // array of Player
+		private var _me:PlayerWrapper;
+		private var _opponents:Array; // array of PlayerWrappers
 		private var _objective:int;
 		private var _round:int;
 		private var _phase:int;
-		private var _allPlayers:Array;
+		private var _allPlayers:Dictionary; // Dictionary userId -> PlayerWrapper
 		/** mapping territory id to TerritoryWrapper */
 		private var _territories:Dictionary;
 		
@@ -57,14 +60,15 @@ package modules.game {
 			_gameName = gameContext.lightGameContext.gameDescription.gameName;
 			_gameId = gameContext.lightGameContext.gameDescription.gameId;
 			_opponents = [];
-			_allPlayers = [];
+			_allPlayers = new Dictionary();
 			for each (var player:Player in gameContext.lightGameContext.playersInGame) {
-				if (player.user.userId.toString() == Me.instance.userIdAsString) {
-					_me = player;
+				var playerWrapper:PlayerWrapper = createPlayerWrapper(player);
+				if (playerWrapper.userWrapper.user.userId.toString() == Me.instance.userIdAsString) {
+					_me = playerWrapper;
 				} else {
-					_opponents.push(player);
+					_opponents.push(playerWrapper);
 				}
-				_allPlayers.push(player);
+				_allPlayers[playerWrapper.userWrapper.user.userId.toString()] = playerWrapper;
 			}
 			_objective = gameContext.lightGameContext.gameDescription.objective;
 			_round = gameContext.lightGameContext.round;
@@ -74,6 +78,8 @@ package modules.game {
 			if (gameContext.territories.length > 0) {
 				for each (var territory:Territory in gameContext.territories) {
 					_territories[territory.id] = new TerritoryWrapper(territory);
+					var owner:PlayerWrapper = _allPlayers[territory.userId.toString()];
+					owner.numberOfTerritories++;
 				}
 			} else {
 				for (var i:int = 1; i <= Territories.NUMBER_OF_TERRITORIES; i++) {
@@ -82,16 +88,27 @@ package modules.game {
 					_territories[i] = new TerritoryWrapper(t);
 				}
 			}
-			
 			/// add fake number of reinforcements
-			_me.numberOfReinforcments = 1113;
+			_me.player.numberOfReinforcments = 1113;
 		
 		}
 		
-		public function getPlayerByUserId(userId:Int64):Player {
+		private function createPlayerWrapper(player:Player):PlayerWrapper {
+			var playerWrapper:PlayerWrapper = new PlayerWrapper(player);
+			playerWrapper.userWrapper = new UserWrapper();
+			if (player.user.hasFacebookId) {
+				playerWrapper.userWrapper.facebookUser = new FacebookUser();
+				playerWrapper.userWrapper.facebookUser.setFacebookId(player.user.facebookId.toString());
+			}
+			playerWrapper.userWrapper.user = player.user;
+			playerWrapper.player.user = null;
+			return playerWrapper;
+		}
+		
+		public function getPlayerByUserId(userId:Int64):PlayerWrapper {
 			if (userId != null) {
-				for each (var player:Player in _allPlayers) {
-					if (player.user.userId.toString() == userId.toString()) {
+				for each (var player:PlayerWrapper in _allPlayers) {
+					if (player.player.user.userId.toString() == userId.toString()) {
 						return player;
 					}
 				}
@@ -102,7 +119,7 @@ package modules.game {
 		
 		public function get numberOfReinforcements():int {
 			if (_phase == GamePhase.TROOP_DEPLOYMENT_PHASE) {
-				return _me.numberOfReinforcments;
+				return _me.player.numberOfReinforcments;
 			}
 			return 0;
 		}
@@ -114,11 +131,16 @@ package modules.game {
 				request.gameId = _gameId;
 				request.territoryId = territoryId;
 				Communicator.instance.send(HandlerCodes.ADD_UNIT, request, null);
-				_me.numberOfReinforcments--;
+				_me.player.numberOfReinforcments--;
 				var territory:TerritoryWrapper = _territories[territoryId];
 				territory.territory.troopsOnIt++;
 				dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, territoryId));
 			}
+		}
+		
+		public function getAllPlayers():Array {
+			var onlyMe:Array = [_me];
+			return onlyMe.concat(_opponents);
 		}
 	}
 
