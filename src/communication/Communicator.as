@@ -120,6 +120,9 @@ package communication {
 
 			// read message 
 			var serializedMessage:ByteArray = new ByteArray();
+			if (protocolMessage.handlerId == 3) {
+				trace("available " + _socket.bytesAvailable + " bytesd pending " + _socket.bytesPending + " want read " + protocolMessage.dataLength);
+			}
 			_socket.readBytes(serializedMessage, 0, protocolMessage.dataLength);
 
 			var messageClass:Class = HandlerMapping.mapping[protocolMessage.handlerId];

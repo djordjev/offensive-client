@@ -15,6 +15,7 @@ package processors {
 	import modules.main.MainControlsModel;
 	import starling.events.Event;
 	import starling.events.EventDispatcher;
+	import utils.Alert;
 	import utils.Settings;
 	
 	/**
@@ -46,12 +47,17 @@ package processors {
 		public function connectToServer():void {
 			trace("INITIATING CONNECTION");
 			Communicator.instance.addEventListener(Communicator.SOCKET_CONNECTED, requestUserInfo);
-			Communicator.instance.addEventListener(Communicator.SOCKET_DISCONNECTED, failedToConnect);
+			Communicator.instance.addEventListener(Communicator.SOCKET_DISCONNECTED, socketDisconnected);
+			Communicator.instance.addEventListener(Communicator.SOCKET_IO_ERROR, unableToConnect);
 			Communicator.instance.connect(Settings.HOSTNAME, Settings.PORT);
 		}
 		
-		public function failedToConnect(e:Event):void {
-			trace("DISCONNECTED");
+		public function socketDisconnected(e:Event):void {
+			Alert.showConnectionBrokenAlert();
+		}
+		
+		private function unableToConnect(e:Event):void {
+			Alert.showConnectionBrokenAlert();
 		}
 		
 		public function requestUserInfo(event:Event):void {
