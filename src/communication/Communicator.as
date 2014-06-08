@@ -37,7 +37,12 @@ package communication {
 		
 		private var _socket:Socket;
 		
+		/** Mapping ticketId to callback */
 		private var _callbacks:Dictionary = new Dictionary();
+		
+		/** Mapping handlerId to callback function */
+		private var _subscriptionCallbacks:Dictionary = new Dictionary();
+		
 		private var _timers:Dictionary = new Dictionary();
 		
 		private var _ticket:int = 1;
@@ -161,7 +166,12 @@ package communication {
 			receivedMessage.data = message;
 			
 			// call callback function for this ticket
-			var delegate:Function = _callbacks[receivedMessage.ticketId];
+			var delegate:Function = null;
+			if (_subscriptionCallbacks[receivedMessage.handlerId] != null) {
+				delegate = _subscriptionCallbacks[receivedMessage.handlerId];
+			} else {
+				delegate = _callbacks[receivedMessage.ticketId];
+			}
 			if (delegate != null) {
 				delete _callbacks[receivedMessage.ticketId];
 				delegate(receivedMessage);
@@ -176,6 +186,12 @@ package communication {
 		
 		private function timerIsUp(e:TimerEvent):void {
 			Alert.showConnectionBrokenAlert();
+		}
+		
+		public function subscribe(handlerId:int, callback:Function):void {
+			if (callback != null) {
+				_subscriptionCallbacks[handlerId] = callback;
+			}
 		}
 	}
 }
