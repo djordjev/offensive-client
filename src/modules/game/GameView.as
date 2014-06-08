@@ -108,6 +108,10 @@ package modules.game {
 			playersList.horizontalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			playersList.verticalScrollPolicy = Scroller.SCROLL_POLICY_OFF;
 			playersList.itemRendererFactory = playersListItemRendererFactoryFunction;
+			playersList.addEventListener(Event.ADDED_TO_STAGE, function friendsListAddedToStage(e:Event):void {
+				playersList.backgroundSkin.alpha = 0;
+			});
+			controlPanel.addChild(playersList);
 			
 			this.addChild(controlPanel);
 		}

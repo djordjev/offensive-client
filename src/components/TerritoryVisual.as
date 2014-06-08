@@ -87,7 +87,7 @@ package components {
 		}
 		
 		public function refresh():void {
-			var ownerOfTerritory:PlayerWrapper = GameModel.instance.getPlayerByUserId(_territory.territory.userId);
+			var ownerOfTerritory:PlayerWrapper = GameModel.instance.getPlayerByPlayerId(_territory.territory.playerId);
 			if (ownerOfTerritory != null) {
 				var playerColor:uint = PlayerColors.getColor(ownerOfTerritory.player.color);
 				var coloredBitmapData:BitmapData = _bitmapData.addColorOverlay(playerColor);

@@ -1,6 +1,8 @@
 package modules.game.classes {
+	import communication.Me;
 	import modules.game.GameModel;
 	import wrappers.TerritoryWrapper;
+	import wrappers.UserWrapper;
 	
 	/**
 	 * ...
@@ -18,7 +20,11 @@ package modules.game.classes {
 		
 		/** In troop deplyment phase  */
 		public function clickOnTerritory(territory:TerritoryWrapper):void {
-			_model.addReinforcement(territory.territory.id);
+			if (territory.owner.userIdAsString == _model.me.userIdAsString) {
+				_model.addReinforcement(territory.territory.id);
+			} else {
+				trace("Can't deploy unit on enemy territory");
+			}
 		}
 	
 	}

@@ -7,6 +7,24 @@
 	
 	<script src="js/swfobject.js"></script>
 	<script>
+	
+		//fake image loading
+		function getFBUserInfo(facebookId) {
+			setTimeout(function () {
+				var response = {
+					"id": facebookId,
+					"first_name": "Test",
+					"gender": "male",
+					"last_name": "Igrac",
+					"locale": "en_US",
+					"name": "Test Igrac",
+					"username": "veljko089"
+				}
+				
+				document.getElementById("offensiveclient").facebookUserInfoReceived(response);
+			}, 1500);
+		}
+	
 		var flashvars = {
 		};
 		var params = {

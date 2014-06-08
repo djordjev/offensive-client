@@ -26,6 +26,8 @@ package utils
 		
 		private var _friendsReceivedCallback:Function;
 		
+		private var _fbUserCallbacks:Dictionary = new Dictionary();
+		
 		public function FacebookCommunicator() {
 		}
 		
@@ -82,6 +84,31 @@ package utils
 				}
 				_friendsReceivedCallback(friends.data as Array);
 				_friendsReceivedCallback = null;
+			}
+		}
+		
+		public function requestFBUserInfo(facebookId:String, callback:Function):void {
+			if (facebookId != null && facebookId != "" && _fbUserCallbacks[facebookId] == null) {
+				ExternalInterface.addCallback("facebookUserInfoReceived", facebookUserInfoReceived);
+				_fbUserCallbacks[facebookId] = callback;
+				ExternalInterface.call("getFBUserInfo", facebookId);
+			}
+		}
+		
+		private function facebookUserInfoReceived(userInfo:Object):void {
+			if (userInfo.id != null && _fbUserCallbacks[userInfo.id] != null) {
+				var facebookUser:FacebookUser = new FacebookUser();
+				facebookUser.setFacebookId(userInfo.id);
+				facebookUser.locale = userInfo.locale;
+				facebookUser.name = userInfo.name;
+				facebookUser.username = userInfo.username;
+				
+				var callback:Function = _fbUserCallbacks[userInfo.id];
+				_fbUserCallbacks[userInfo.id] = null; // remove callback
+				
+				if (callback != null) {
+					callback(facebookUser);
+				}
 			}
 		}
 		

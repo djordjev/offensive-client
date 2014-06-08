@@ -50,7 +50,7 @@ package components.common {
 		}
 		
 		override public function set text(value:String):void {
-			if (!isAsciiOnly(value)) {
+			if (value != null && !isAsciiOnly(value)) {
 				font = FONT_ARIAL;
 			}
 			super.text = value;

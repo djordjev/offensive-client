@@ -84,6 +84,14 @@ package utils
 			return uiAtlas.getTexture("back_over");
 		}
 		
+		public static function getNonFBUserAvatar():Texture {
+			return uiAtlas.getTexture("nonfbuser");
+		}
+		
+		public static function getMissingUserAvatar():Texture {
+			return uiAtlas.getTexture("waintinguser");
+		}
+		
 		[Embed(source="../../assets/gameAssets/sea.png")]
 		public static const SeaBackground:Class;
 		

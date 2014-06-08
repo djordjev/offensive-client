@@ -31,7 +31,7 @@ package modules.game {
 		private var _objective:int;
 		private var _round:int;
 		private var _phase:int;
-		private var _allPlayers:Dictionary; // Dictionary userId -> PlayerWrapper
+		private var _allPlayers:Dictionary; // Dictionary playerId -> PlayerWrapper
 		/** mapping territory id to TerritoryWrapper */
 		private var _territories:Dictionary;
 		
@@ -56,69 +56,46 @@ package modules.game {
 			return _phase;
 		}
 		
+		public function get me():PlayerWrapper {
+			return _me;
+		}
+		
 		public function initForGame(gameContext:GameContext):void {
 			_gameName = gameContext.lightGameContext.gameDescription.gameName;
 			_gameId = gameContext.lightGameContext.gameDescription.gameId;
 			_opponents = [];
 			_allPlayers = new Dictionary();
 			for each (var player:Player in gameContext.lightGameContext.playersInGame) {
-				var playerWrapper:PlayerWrapper = createPlayerWrapper(player);
-				if (playerWrapper.userWrapper.user.userId.toString() == Me.instance.userIdAsString) {
+				var playerWrapper:PlayerWrapper = PlayerWrapper.buildPlayerWrapper(player);
+				if (!playerWrapper.isDummy && playerWrapper.userWrapper.user.userId.toString() == Me.instance.userIdAsString) {
 					_me = playerWrapper;
 				} else {
 					_opponents.push(playerWrapper);
 				}
-				_allPlayers[playerWrapper.userWrapper.user.userId.toString()] = playerWrapper;
+				
+				_allPlayers[playerWrapper.player.playerId.toString()] = playerWrapper;
 			}
 			_objective = gameContext.lightGameContext.gameDescription.objective;
 			_round = gameContext.lightGameContext.round;
 			_phase = gameContext.lightGameContext.phase;
 			
 			_territories = new Dictionary();
-			if (gameContext.territories.length > 0) {
-				for each (var territory:Territory in gameContext.territories) {
-					_territories[territory.id] = new TerritoryWrapper(territory);
-					var owner:PlayerWrapper = _allPlayers[territory.userId.toString()];
+			for each (var territory:Territory in gameContext.territories) {
+				_territories[territory.id] = new TerritoryWrapper(territory);
+				var owner:PlayerWrapper = getPlayerByPlayerId(territory.playerId);
+				_territories[territory.id].conquer(owner, territory.troopsOnIt);
+				if (!owner.isDummy) {
 					owner.numberOfTerritories++;
 				}
-			} else {
-				for (var i:int = 1; i <= Territories.NUMBER_OF_TERRITORIES; i++) {
-					var t:Territory = new Territory();
-					t.id = i;
-					_territories[i] = new TerritoryWrapper(t);
-				}
 			}
-			/// add fake number of reinforcements
-			_me.player.numberOfReinforcments = 1113;
-		
 		}
 		
-		private function createPlayerWrapper(player:Player):PlayerWrapper {
-			var playerWrapper:PlayerWrapper = new PlayerWrapper(player);
-			playerWrapper.userWrapper = new UserWrapper();
-			if (player.user.hasFacebookId) {
-				playerWrapper.userWrapper.facebookUser = new FacebookUser();
-				playerWrapper.userWrapper.facebookUser.setFacebookId(player.user.facebookId.toString());
-			}
-			playerWrapper.userWrapper.user = player.user;
-			playerWrapper.player.user = null;
-			return playerWrapper;
-		}
-		
-		public function getPlayerByUserId(userId:Int64):PlayerWrapper {
-			if (userId != null) {
-				for each (var player:PlayerWrapper in _allPlayers) {
-					if (player.player.user.userId.toString() == userId.toString()) {
-						return player;
-					}
-				}
-			}
-			
-			return null;
+		public function getPlayerByPlayerId(playerId:int):PlayerWrapper {
+			return _allPlayers[playerId.toString()];
 		}
 		
 		public function get numberOfReinforcements():int {
-			if (_phase == GamePhase.TROOP_DEPLOYMENT_PHASE) {
+			if (_phase == GamePhase.TROOP_DEPLOYMENT_PHASE || phase == GamePhase.WAITING_FOR_OPPONENTS_PHASE) {
 				return _me.player.numberOfReinforcments;
 			}
 			return 0;
