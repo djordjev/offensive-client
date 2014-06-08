@@ -24,7 +24,6 @@ package wrappers {
 					playerWrapper.userWrapper.facebookUser.setFacebookId(player.user.facebookId.toString());
 				}
 				playerWrapper.userWrapper.user = player.user;
-				playerWrapper.player.user = null;
 				playerWrapper._isDummy = false;
 			} else {
 				playerWrapper._isDummy = true;
