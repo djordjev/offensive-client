@@ -42,7 +42,7 @@ package components {
 		
 		private var _units:Units = new Units();
 		
-		var _statesAdapter:StatesAdapter;
+		private var _statesAdapter:StatesAdapter;
 		
 		public function TerritoryVisual() {
 			super();
