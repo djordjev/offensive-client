@@ -13,7 +13,7 @@ package utils
 		public function Assets() {	
 		}
 		
-		[Embed(source="../../assets/fonts/GearsOfPeace.ttf", fontName="GearsOfPace", mimeType="application/x-font", embedAsCFF="true")]
+		[Embed(source="../../assets/fonts/GearsOfPeace.ttf", fontName="GearsOfPace", mimeType="application/x-font", embedAsCFF="false")]
 		public static const GearsOfPaceFont:Class;
 		
 		[Embed(source="../../assets/gameAssets/MainBackground.jpg")]
