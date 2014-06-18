@@ -27,7 +27,7 @@ package communication
 			if (userIdString != null && userIdString != "") {
 				userIdAsString = userIdString;
 			} else {
-				userIdAsString = Settings.DUMMY_USER_ID;
+				userIdAsString = Settings.DUMMY_USER_ID.toString();
 			}
 		}
 		
