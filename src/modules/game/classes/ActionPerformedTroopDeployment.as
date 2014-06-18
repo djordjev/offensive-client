@@ -1,6 +1,7 @@
 package modules.game.classes {
 	import communication.Me;
 	import modules.game.GameModel;
+	import utils.Alert;
 	import wrappers.TerritoryWrapper;
 	import wrappers.UserWrapper;
 	
@@ -23,7 +24,7 @@ package modules.game.classes {
 			if (territory.owner.userIdAsString == _model.me.userIdAsString) {
 				_model.addReinforcement(territory.territory.id);
 			} else {
-				trace("Can't deploy unit on enemy territory");
+				Alert.showMessage("Mistake", "Can't place unit on opponents territory.");
 			}
 		}
 	
