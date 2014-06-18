@@ -177,11 +177,12 @@ package communication {
 				delegate(receivedMessage);
 			}
 			
-			var timer:Timer = _timers[receivedMessage.ticketId];
-			timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timerIsUp);
-			timer.stop();
-			delete _timers[receivedMessage.ticketId];
-			
+			if (receivedMessage.ticketId != 0) {
+				var timer:Timer = _timers[receivedMessage.ticketId];
+				timer.removeEventListener(TimerEvent.TIMER_COMPLETE, timerIsUp);
+				timer.stop();
+				delete _timers[receivedMessage.ticketId];
+			}
 		}
 		
 		private function timerIsUp(e:TimerEvent):void {

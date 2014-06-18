@@ -7,5 +7,6 @@ package communication {
 		public static const OPEN_GAMES_LIST:int = 6;
 		public static const JOIN_GAME:int = 7;
 		public static const ADD_UNIT:int = 10;
+		public static const JOIN_GAME_NOTIFICATION:int = 19;
 	}
 }

@@ -42,6 +42,7 @@ package modules.main
 		
 		public function initialize(myUserInfo:UserData):void {
 			activeGames = myUserInfo.joinedGames;
+			Communicator.instance.subscribe(HandlerCodes.JOIN_GAME_NOTIFICATION, opponentJoined);
 		}
 		
 		public function requestJoinableGames(callback:Function):void {
@@ -86,6 +87,10 @@ package modules.main
 					callback();
 				}
 			});
+		}
+		
+		private function opponentJoined(message:ProtocolMessage):void {
+			trace("SMBDY JOINED");
 		}
 		
 	}
