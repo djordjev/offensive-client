@@ -1,6 +1,7 @@
 package communication 
 {
 	import communication.protos.UserData;
+	import utils.Settings;
 	import wrappers.FacebookUser;
 	import wrappers.UserWrapper;
 	/**
@@ -9,8 +10,6 @@ package communication
 	 */
 	public class Me 
 	{
-		public static const DUMMY_USER_ID:String = "1";
-		
 		private static var _instance:Me;
 		
 		public static function get instance():Me {
@@ -28,7 +27,7 @@ package communication
 			if (userIdString != null && userIdString != "") {
 				userIdAsString = userIdString;
 			} else {
-				userIdAsString = DUMMY_USER_ID;
+				userIdAsString = Settings.DUMMY_USER_ID;
 			}
 		}
 		
