@@ -112,6 +112,16 @@ package modules.game {
 			var onlyMe:Array = [_me];
 			return onlyMe.concat(_opponents);
 		}
+		
+		public function newPlayerJoined(player:PlayerWrapper):void {
+			for (var i:int = 0; i < _opponents.length; i++) {
+				if ((_opponents[i] as PlayerWrapper).playerId == player.playerId) {
+					_opponents[i] = player;
+					_allPlayers[player.playerId.toString()] = player;
+					break;
+				}
+			}
+		}
 	}
 
 }

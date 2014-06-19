@@ -15,6 +15,7 @@ package modules.main {
 	import communication.protos.UserData;
 	import flash.sampler.NewObjectSample;
 	import modules.base.BaseModel;
+	import modules.game.events.PlayerEvent;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
 	
@@ -103,6 +104,7 @@ package modules.main {
 						// there is still place to put this player
 						game.numberOfJoinedPlayers++;
 						game.players.push(player);
+						dispatchEvent(new PlayerEvent(PlayerEvent.NEW_PLAYER_JOINED, player, game));
 					} else {
 						throw new Error("Trying to add player into fully populated game");
 					}

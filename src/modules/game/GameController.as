@@ -1,4 +1,5 @@
 package modules.game {
+	import com.netease.protobuf.Int64;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
 	import modules.base.BaseController;
@@ -13,6 +14,7 @@ package modules.game {
 	import utils.Globals;
 	import utils.Screens;
 	import wrappers.GameContextWrapper;
+	import wrappers.PlayerWrapper;
 	import wrappers.TerritoryWrapper;
 	
 	/**
@@ -33,6 +35,8 @@ package modules.game {
 		
 		private var _actionPerformed:IGameActionPerformed;
 		
+		private var _currentGameId:Int64;
+		
 		public function get model():GameModel {
 			return _model as GameModel;
 		}
@@ -45,6 +49,10 @@ package modules.game {
 			super(view, model);
 		}
 		
+		public function get currentGameId():Int64 {
+			return _currentGameId;
+		}
+		
 		override protected function addHandlers():void {
 			view.backButton.addEventListener(Event.TRIGGERED, goBack);
 			view.addEventListener(ClickOnTerritory.CLICKED_ON_TERRITORY, clickOnTerritoryHandler);
@@ -52,10 +60,13 @@ package modules.game {
 		}
 		
 		private function goBack(e:Event):void {
+			_currentGameId = null;
 			mainScreenNavigator.showScreen(Screens.MENUS);
 		}
 		
 		public function initForGame(gameContext:GameContextWrapper):void {
+			_currentGameId = gameContext.gameId;
+			
 			model.initForGame(gameContext);
 			// remove after all teritories are always sent
 			for each (var territory:TerritoryWrapper in model.territories) {
@@ -85,6 +96,12 @@ package modules.game {
 		
 		private function changedNumberOfUnitsOnTerritory(e:ChangedNumberOfUnits):void {
 			view.getTerritoryVisual(e.territory).refresh();
+		}
+		
+		public function newPlayerJoined(player:PlayerWrapper):void {
+			model.newPlayerJoined(player);
+			// redraw player list
+			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
 		}
 	
 	}

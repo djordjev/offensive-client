@@ -10,6 +10,7 @@ package modules.main {
 	import flash.display.Bitmap;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
+	import modules.game.events.PlayerEvent;
 	import modules.game.GameController;
 	import starling.display.Image;
 	import starling.events.Event;
@@ -67,6 +68,7 @@ package modules.main {
 			view.addEventListener(GameActionsDialog.REQUEST_LIST_OF_GAMES, getListOfOpenGames);
 			view.gameActionsDialog.existingGamesList.addEventListener(OpenGameEvent.OPEN_GAME, openGame);
 			view.addEventListener(GameManipulationEvent.SELECTED_GAME_ACTION, selectedGameAction);
+			model.addEventListener(PlayerEvent.NEW_PLAYER_JOINED, newPlayerJoined);
 		}
 		
 		private function newOpenGameCreation(e:CreateGameEvent):void {
@@ -108,6 +110,12 @@ package modules.main {
 						view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
 						view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
 					});
+			}
+		}
+		
+		private function newPlayerJoined(e:PlayerEvent):void {
+			if (GameController.instance.currentGameId.toString() == e.game.gameId.toString()) {
+				GameController.instance.newPlayerJoined(e.player);
 			}
 		}
 	
