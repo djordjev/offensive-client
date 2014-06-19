@@ -73,12 +73,12 @@ package components {
 				
 				_territory = value;
 				
-				var territoryClass:Class = Assets.getTerritory(value.territory.id);
+				var territoryClass:Class = Assets.getTerritory(value.id);
 				var bitmap:Bitmap = new territoryClass();
 				_bitmapData = new PixelUtilBitmapData(bitmap.bitmapData);
 				//_nameLabel.text = _territory.name;
 				
-				var position:Point = Territories.getTerritoryPosition(_territory.territory.id);
+				var position:Point = Territories.getTerritoryPosition(_territory.id);
 				this.x = position.x;
 				this.y = position.y;
 				
@@ -87,16 +87,16 @@ package components {
 		}
 		
 		public function refresh():void {
-			var ownerOfTerritory:PlayerWrapper = GameModel.instance.getPlayerByPlayerId(_territory.territory.playerId);
+			var ownerOfTerritory:PlayerWrapper = GameModel.instance.getPlayerByPlayerId(_territory.playerId);
 			if (ownerOfTerritory != null) {
-				var playerColor:uint = PlayerColors.getColor(ownerOfTerritory.player.color);
+				var playerColor:uint = PlayerColors.getColor(ownerOfTerritory.color);
 				var coloredBitmapData:BitmapData = _bitmapData.addColorOverlay(playerColor);
 				_image.source = Texture.fromBitmapData(coloredBitmapData);
 				_units.visible = true;
-				_units.setColorAndUnits(playerColor, _territory.territory.troopsOnIt);
+				_units.setColorAndUnits(playerColor, _territory.troopsOnIt);
 				
-				_units.x = Territories.getUnitsPosition(_territory.territory.id).x;
-				_units.y = Territories.getUnitsPosition(_territory.territory.id).y;
+				_units.x = Territories.getUnitsPosition(_territory.id).x;
+				_units.y = Territories.getUnitsPosition(_territory.id).y;
 			} else {
 				_image.source = Texture.fromBitmapData(_bitmapData.bitmapData);
 				_units.visible = false;

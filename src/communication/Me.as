@@ -2,8 +2,6 @@ package communication
 {
 	import communication.protos.UserData;
 	import utils.Settings;
-	import wrappers.FacebookUser;
-	import wrappers.UserWrapper;
 	/**
 	 * ...
 	 * @author Djordje Vukovic

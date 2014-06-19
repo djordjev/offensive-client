@@ -1,17 +1,16 @@
 package components.classes {
-	import communication.protos.GameContext;
 	import components.common.ComponentWithStates;
 	import components.common.OLabel;
 	import components.common.StatesAdapter;
 	import components.events.MouseClickEvent;
 	import components.events.OpenGameEvent;
 	import feathers.controls.renderers.LayoutGroupListItemRenderer;
-	import feathers.layout.VerticalLayout;
 	import flash.text.TextFormatAlign;
 	import starling.display.Quad;
 	import starling.filters.BlurFilter;
 	import utils.Colors;
 	import utils.States;
+	import wrappers.GameContextWrapper;
 	
 	/**
 	 * ...
@@ -44,9 +43,9 @@ package components.classes {
 			_dirty = true;
 		}
 		
-		public function get dataAsGameContext():GameContext {
-			if (_data is GameContext) {
-				return _data as GameContext;
+		public function get dataAsGameContext():GameContextWrapper {
+			if (_data is GameContextWrapper) {
+				return _data as GameContextWrapper;
 			} else {
 				return null;
 			}
@@ -113,8 +112,9 @@ package components.classes {
 		
 		override protected function commitData():void {
 			if (_dirty && dataAsGameContext != null) {
-				_gameName.text = dataAsGameContext.lightGameContext.gameDescription.gameName;
-				_numberOfPlayers.text = "PLAYERS IN GAME: " +  dataAsGameContext.lightGameContext.gameDescription.numberOfPlayers;
+				_gameName.text = dataAsGameContext.gameName;
+				_numberOfPlayers.text = "PLAYERS IN GAME: " +  dataAsGameContext.numberOfJoinedPlayers + 
+																"/" + dataAsGameContext.numberOfPlayers;
 				_dirty = false;
 			}
 			

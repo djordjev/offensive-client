@@ -7,7 +7,11 @@ package wrappers {
 	 */
 	public class PlayerWrapper {
 		
-		private var _player:Player;
+		public var playerId:int;
+		public var color:int;
+		public var isPlayedMove:Boolean;
+		public var cards:Array;
+		public var numberOdReinforcements:int;
 		
 		public var numberOfTerritories:int;
 		public var isAlive:Boolean = true;
@@ -16,14 +20,20 @@ package wrappers {
 		private var _isDummy:Boolean = false;
 		
 		public static function buildPlayerWrapper(player:Player):PlayerWrapper {
-			var playerWrapper:PlayerWrapper = new PlayerWrapper(player);
+			var playerWrapper:PlayerWrapper = new PlayerWrapper();
+			playerWrapper.playerId = player.playerId;
+			playerWrapper.color = player.color;
+			playerWrapper.isPlayedMove = player.isPlayedMove;
+			playerWrapper.cards = player.cards;
+			playerWrapper.numberOdReinforcements = player.numberOfReinforcments;
+			
 			if (player.hasUser) {
-				playerWrapper.userWrapper = new UserWrapper();
+				var facebookUser:FacebookUser = null;
 				if (player.user.hasFacebookId) {
-					playerWrapper.userWrapper.facebookUser = new FacebookUser();
-					playerWrapper.userWrapper.facebookUser.setFacebookId(player.user.facebookId.toString());
+					facebookUser = new FacebookUser();
+					facebookUser.setFacebookId(player.user.facebookId.toString());
 				}
-				playerWrapper.userWrapper.user = player.user;
+				playerWrapper.userWrapper = UserWrapper.buildUserWrapper(player.user, facebookUser);
 				playerWrapper._isDummy = false;
 			} else {
 				playerWrapper._isDummy = true;
@@ -31,12 +41,7 @@ package wrappers {
 			return playerWrapper;
 		}
 		
-		public function PlayerWrapper(player:Player) {
-			_player = player;
-		}
-		
-		public function get player():Player {
-			return _player;
+		public function PlayerWrapper() {
 		}
 		
 		public function get isDummy():Boolean {
@@ -44,8 +49,8 @@ package wrappers {
 		}
 		
 		public function get userIdAsString():String {
-			if (!_isDummy && userWrapper.user != null) {
-				return userWrapper.user.userId.toString();
+			if (!_isDummy && userWrapper != null) {
+				return userWrapper.userId.toString();
 			} else {
 				return null;
 			}

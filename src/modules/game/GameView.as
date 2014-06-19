@@ -1,19 +1,13 @@
 package modules.game {
-	import com.netease.protobuf.Int64;
-	import communication.protos.GameContext;
 	import components.classes.PlayerRenderer;
-	import components.common.OLabel;
-	import components.common.OLabel;
 	import components.TerritoryVisual;
 	import feathers.controls.Button;
-	import feathers.controls.Label;
 	import feathers.controls.LayoutGroup;
 	import feathers.controls.List;
 	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.controls.Scroller;
 	import feathers.layout.HorizontalLayout;
 	import flash.geom.Point;
-	import flash.sampler.NewObjectSample;
 	import flash.utils.Dictionary;
 	import modules.game.classes.Territories;
 	import starling.display.Image;
@@ -23,7 +17,6 @@ package modules.game {
 	import starling.textures.Texture;
 	import utils.Assets;
 	import utils.Colors;
-	import wrappers.UserWrapper;
 	
 	/**
 	 * ...

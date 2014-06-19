@@ -8,22 +8,29 @@ package wrappers {
 	 * ...
 	 * @author Djordje Vukovic
 	 */
-	public class TerritoryWrapper extends EventDispatcher{
+	public class TerritoryWrapper extends EventDispatcher {
+	
+		public static function buildTerritoryWrapper(territory:Territory):TerritoryWrapper {
+			var wrapper:TerritoryWrapper = new TerritoryWrapper();
+			wrapper.id = territory.id;
+			wrapper.troopsOnIt = territory.troopsOnIt;
+			wrapper.playerId = territory.playerId;
+			return wrapper;
+		}
 		
-		private var _territory:Territory;
+		public var id:int;
+		
+		public var troopsOnIt:int;
+		
+		public var playerId:int;
 		
 		private var _owner:PlayerWrapper;
 		
-		public function TerritoryWrapper(territory:Territory) {
-			_territory = territory;
-		}
-		
-		public function get territory():Territory {
-			return _territory;
+		public function TerritoryWrapper() {
 		}
 		
 		public function get name():String {
-			return Territories.getTerritoryName(_territory.id);
+			return Territories.getTerritoryName(id);
 		}
 		
 		public function get owner():PlayerWrapper {
@@ -32,8 +39,8 @@ package wrappers {
 		
 		public function conquer(conqueror:PlayerWrapper, newTroops:int):void {
 			_owner = conqueror;
-			_territory.troopsOnIt = newTroops;
-			dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, _territory.id, true));
+			troopsOnIt = newTroops;
+			dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, id, true));
 		}
 	
 	}

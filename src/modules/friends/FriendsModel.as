@@ -47,9 +47,8 @@ package modules.friends {
 			Communicator.instance.send(HandlerCodes.FILTER_FRIENDS, request, function friendsListReceived(message:ProtocolMessage):void {
 				var response:FilterFriendsResponse = message.data as FilterFriendsResponse;
 				for each(var user:User in response.friends) {
-					var userWrapper:UserWrapper = new UserWrapper();
-					userWrapper.facebookUser = FacebookUser.facebookUserLightInfo[user.facebookId.toString()];
-					userWrapper.user = user;
+					var userWrapper:UserWrapper = UserWrapper.buildUserWrapper(user, 
+										FacebookUser.facebookUserLightInfo[user.facebookId.toString()]);
 					_friends.push(userWrapper);
 				}
 				

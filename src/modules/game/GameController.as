@@ -1,6 +1,4 @@
 package modules.game {
-	import communication.protos.GameContext;
-	import communication.protos.Territory;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
 	import modules.base.BaseController;
@@ -9,12 +7,12 @@ package modules.game {
 	import modules.game.classes.ActionPerformedWaitingForOpponents;
 	import modules.game.classes.GamePhase;
 	import modules.game.classes.IGameActionPerformed;
-	import modules.game.classes.Territories;
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
 	import starling.events.Event;
 	import utils.Globals;
 	import utils.Screens;
+	import wrappers.GameContextWrapper;
 	import wrappers.TerritoryWrapper;
 	
 	/**
@@ -57,11 +55,11 @@ package modules.game {
 			mainScreenNavigator.showScreen(Screens.MENUS);
 		}
 		
-		public function initForGame(gameContext:GameContext):void {
+		public function initForGame(gameContext:GameContextWrapper):void {
 			model.initForGame(gameContext);
 			// remove after all teritories are always sent
 			for each (var territory:TerritoryWrapper in model.territories) {
-				view.getTerritoryVisual(territory.territory.id).territory = territory;
+				view.getTerritoryVisual(territory.id).territory = territory;
 			}
 			
 			createActionPerformedForPhase();

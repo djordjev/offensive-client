@@ -1,5 +1,4 @@
 package components {
-	import communication.protos.GameContext;
 	import communication.protos.GameDescription;
 	import components.classes.ExistingGamesRenderer;
 	import components.classes.JoinableGamesRenderer;
@@ -10,7 +9,6 @@ package components {
 	import components.events.GameManipulationEvent;
 	import components.events.JoinGameEvent;
 	import components.events.MouseClickEvent;
-	import feathers.controls.Button;
 	import feathers.controls.LayoutGroup;
 	import feathers.controls.List;
 	import feathers.controls.NumericStepper;

@@ -46,7 +46,7 @@ package components.classes {
 		
 		override protected function commitData():void {
 			if (_dirty) {
-				_background.color = PlayerColors.getColor(dataAsPlayersWrapper.player.color);
+				_background.color = PlayerColors.getColor(dataAsPlayersWrapper.color);
 				if (dataAsPlayersWrapper.isDummy) {
 					// this is dummy player. That means that this user is not joined yet.
 					_playerImage.source = Assets.getMissingUserAvatar();
@@ -64,11 +64,11 @@ package components.classes {
 				} else {
 					// this is not facebook user
 					_playerImage.source = Assets.getNonFBUserAvatar();
-					_playerName.text = dataAsPlayersWrapper.userWrapper.user.userId.toString();
+					_playerName.text = dataAsPlayersWrapper.userWrapper.userId.toString();
 				}
 				
 				_playerTerritories.text = "Territories: " + dataAsPlayersWrapper.numberOfTerritories;
-				_cards.text = "Cards: " + dataAsPlayersWrapper.player.cards.length;
+				_cards.text = "Cards: " + dataAsPlayersWrapper.cards.length;
 				_dirty = false;
 			}
 			super.commitData();
