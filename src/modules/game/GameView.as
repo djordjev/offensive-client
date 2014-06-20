@@ -1,5 +1,6 @@
 package modules.game {
 	import components.classes.PlayerRenderer;
+	import components.common.OLabel;
 	import components.TerritoryVisual;
 	import feathers.controls.Button;
 	import feathers.controls.LayoutGroup;
@@ -35,6 +36,10 @@ package modules.game {
 		
 		public var backButton:Button = new Button();
 		public var playersList:List = new List();
+		
+		public var gamePhase:OLabel = new OLabel();
+		public var unitsCount:OLabel = new OLabel();
+		public var numberOfReinforcements:OLabel = new OLabel();
 		
 		// game fields
 		
@@ -105,6 +110,25 @@ package modules.game {
 				playersList.backgroundSkin.alpha = 0;
 			});
 			controlPanel.addChild(playersList);
+			
+			gamePhase.fontSize = 17;
+			gamePhase.x = 620;
+			gamePhase.y = 20;
+			gamePhase.maxWidth = 240;
+			controlPanel.addChild(gamePhase);
+			
+			unitsCount.fontSize = 17;
+			unitsCount.x = 620;
+			unitsCount.y = 60;
+			unitsCount.maxWidth = 240;
+			controlPanel.addChild(unitsCount);
+			
+			numberOfReinforcements.fontSize = 17;
+			numberOfReinforcements.x = 620;
+			numberOfReinforcements.y = 100;
+			numberOfReinforcements.maxWidth = 240;
+			controlPanel.addChild(numberOfReinforcements);
+			
 			
 			this.addChild(controlPanel);
 		}

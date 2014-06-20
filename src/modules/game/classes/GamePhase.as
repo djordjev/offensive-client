@@ -13,6 +13,23 @@ package modules.game.classes {
 		
 		public function GamePhase() {
 		}
+		
+		public static function getPhaseName(phase:int):String {
+			switch(phase) {
+				case WAITING_FOR_OPPONENTS_PHASE:
+					return "Waiting for opponents";
+				case TROOP_DEPLOYMENT_PHASE:
+					return "Troop deployment phase";
+				case ATTACK_PHASE:
+					return "Attack phase";
+				case BATTLE_PHASE:
+					return "Battle phase";
+				case TROOP_RELOCATION_PHASE:
+					return "Troop relocation phase";
+				default:
+					throw new Error("Reguesting name for game phase " + phase);
+			}
+		}
 	
 	}
 

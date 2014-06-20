@@ -29,6 +29,8 @@ package modules.game {
 		/** mapping territory id to TerritoryWrapper */
 		private var _territories:Dictionary;
 		
+		private var _numberOfMyUnits:int;
+		
 		private static var _instance:GameModel;
 		
 		public static function get instance():GameModel {
@@ -54,6 +56,10 @@ package modules.game {
 			return _me;
 		}
 		
+		public function get numberOfMyUnits():int {
+			return _numberOfMyUnits;
+		}
+		
 		public function initForGame(gameContext:GameContextWrapper):void {
 			_gameName = gameContext.gameName;
 			_gameId = gameContext.gameId;
@@ -73,12 +79,16 @@ package modules.game {
 			_phase = gameContext.phase;
 			
 			_territories = new Dictionary();
+			_numberOfMyUnits = 0;
 			for each (var territory:TerritoryWrapper in gameContext.terrotiries) {
 				_territories[territory.id] = territory;
 				var owner:PlayerWrapper = getPlayerByPlayerId(territory.playerId);
 				_territories[territory.id].conquer(owner, territory.troopsOnIt);
 				if (!owner.isDummy) {
 					owner.numberOfTerritories++;
+				}
+				if (owner.userIdAsString == _me.userIdAsString) {
+					_numberOfMyUnits += territory.troopsOnIt;
 				}
 			}
 		}
@@ -104,6 +114,7 @@ package modules.game {
 				_me.numberOdReinforcements--;
 				var territory:TerritoryWrapper = _territories[territoryId];
 				territory.troopsOnIt++;
+				_numberOfMyUnits++;
 				dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, territoryId));
 			}
 		}

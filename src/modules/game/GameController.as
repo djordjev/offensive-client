@@ -53,6 +53,14 @@ package modules.game {
 			return _currentGameId;
 		}
 		
+		public function set numberOfReinforcements(value:int):void {
+			view.numberOfReinforcements.text = "Reinforcements left: " + value.toString();
+		}
+		
+		public function set unitsCount(value:int):void {
+			view.unitsCount.text = "Units in game: " + value.toString();
+		}
+		
 		override protected function addHandlers():void {
 			view.backButton.addEventListener(Event.TRIGGERED, goBack);
 			view.addEventListener(ClickOnTerritory.CLICKED_ON_TERRITORY, clickOnTerritoryHandler);
@@ -76,6 +84,10 @@ package modules.game {
 			createActionPerformedForPhase();
 			// populate players list
 			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
+			
+			view.gamePhase.text = GamePhase.getPhaseName(gameContext.phase);
+			unitsCount = model.numberOfMyUnits;
+			numberOfReinforcements = model.numberOfReinforcements;
 		}
 		
 		private function clickOnTerritoryHandler(e:ClickOnTerritory):void {
@@ -85,9 +97,9 @@ package modules.game {
 		private function createActionPerformedForPhase():void {
 			switch(model.phase) {
 				case GamePhase.WAITING_FOR_OPPONENTS_PHASE:
-					_actionPerformed = new ActionPerformedWaitingForOpponents();
+					//_actionPerformed = new ActionPerformedWaitingForOpponents();
 				case GamePhase.TROOP_DEPLOYMENT_PHASE:
-					_actionPerformed = new ActionPerformedTroopDeployment(model);
+					_actionPerformed = new ActionPerformedTroopDeployment();
 					break;
 				default:
 					_actionPerformed = null;
@@ -103,7 +115,6 @@ package modules.game {
 			// redraw player list
 			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
 		}
-	
 	}
 
 }
