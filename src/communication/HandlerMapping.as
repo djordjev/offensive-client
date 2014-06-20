@@ -1,5 +1,7 @@
 package communication {
 	import communication.protos.AddUnitResponse;
+	import communication.protos.AdvancePhaseNotification;
+	import communication.protos.CommandsSubmittedResponse;
 	import communication.protos.CreateGameResponse;
 	import communication.protos.FilterFriendsResponse;
 	import communication.protos.GetOpenGamesResponse;
@@ -19,7 +21,9 @@ package communication {
 			mapping[HandlerCodes.FILTER_FRIENDS] = FilterFriendsResponse;
 			mapping[HandlerCodes.JOIN_GAME] = JoinGameResponse;
 			mapping[HandlerCodes.ADD_UNIT] = AddUnitResponse;
+			mapping[HandlerCodes.COMMANDS_SUBMIT] = CommandsSubmittedResponse;
 			mapping[HandlerCodes.JOIN_GAME_NOTIFICATION] = JoinGameNotification;
+			mapping[HandlerCodes.ADVANCE_TO_NEXT_PHASE] = AdvancePhaseNotification;
 		}
 	}
 }

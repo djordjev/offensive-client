@@ -3,11 +3,14 @@ package modules.game {
 	import communication.Communicator;
 	import communication.HandlerCodes;
 	import communication.Me;
+	import communication.ProtocolMessage;
 	import communication.protos.AddUnitRequest;
+	import communication.protos.CommandsSubmittedRequest;
 	import flash.utils.Dictionary;
 	import modules.base.BaseModel;
 	import modules.game.classes.GamePhase;
 	import modules.game.events.ChangedNumberOfUnits;
+	import starling.events.Event;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
 	import wrappers.TerritoryWrapper;
@@ -17,6 +20,9 @@ package modules.game {
 	 * @author Djordje Vukovic
 	 */
 	public class GameModel extends BaseModel {
+		
+		public static const GAME_PHASE_COMMITED:String = "game phase changed";
+		public static const ADVANCED_TO_NEXT_PHASE:String = "advanced to next phase";
 		
 		private var _gameName:String;
 		private var _gameId:Int64;
@@ -132,6 +138,18 @@ package modules.game {
 					break;
 				}
 			}
+		}
+		
+		public function submitPhase():void {
+			var request:CommandsSubmittedRequest = new CommandsSubmittedRequest();
+			request.gameId = _gameId;
+			Communicator.instance.send(HandlerCodes.COMMANDS_SUBMIT, request, function phaseChanged(e:ProtocolMessage):void {
+				_phase++;
+				if (_phase > GamePhase.TROOP_RELOCATION_PHASE) {
+					_phase = GamePhase.TROOP_DEPLOYMENT_PHASE;
+				}
+				dispatchEvent(new Event(GAME_PHASE_COMMITED));
+			});
 		}
 	}
 

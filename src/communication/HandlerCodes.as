@@ -7,6 +7,8 @@ package communication {
 		public static const OPEN_GAMES_LIST:int = 6;
 		public static const JOIN_GAME:int = 7;
 		public static const ADD_UNIT:int = 10;
+		public static const COMMANDS_SUBMIT:int = 13;
 		public static const JOIN_GAME_NOTIFICATION:int = 19;
+		public static const ADVANCE_TO_NEXT_PHASE:int = 20;
 	}
 }

@@ -35,6 +35,7 @@ package modules.game {
 		private var _territories:Dictionary = new Dictionary();
 		
 		public var backButton:Button = new Button();
+		public var commitButton:Button = new Button();
 		public var playersList:List = new List();
 		
 		public var gamePhase:OLabel = new OLabel();
@@ -90,10 +91,10 @@ package modules.game {
 			controlPanel.addChild(controlPanelBackground);
 			
 			backButton.label = "Back";
-			backButton.width = 50;
+			backButton.width = 70;
 			backButton.height = 30;
-			backButton.x = 950;
-			backButton.y = 100;
+			backButton.x = 930;
+			backButton.y = 50;
 			controlPanel.addChild(backButton);
 			
 			playersList.x = 10;
@@ -129,6 +130,12 @@ package modules.game {
 			numberOfReinforcements.maxWidth = 240;
 			controlPanel.addChild(numberOfReinforcements);
 			
+			commitButton.label = "Commit";
+			commitButton.x = 930;
+			commitButton.y = 100;
+			commitButton.width = 70;
+			commitButton.height = 30;
+			controlPanel.addChild(commitButton);
 			
 			this.addChild(controlPanel);
 		}

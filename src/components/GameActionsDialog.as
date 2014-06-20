@@ -235,7 +235,7 @@ package components {
 			numberOfPlayersGroup.addChild(numberOfPlayersLabel);
 			
 			_numberOfPlayers = new NumericStepper();
-			_numberOfPlayers.minimum = 3;
+			_numberOfPlayers.minimum = 2;
 			_numberOfPlayers.maximum = 5;
 			_numberOfPlayers.value = 5;
 			_numberOfPlayers.step = 1;

@@ -11,6 +11,7 @@ package modules.game {
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
 	import starling.events.Event;
+	import utils.Alert;
 	import utils.Globals;
 	import utils.Screens;
 	import wrappers.GameContextWrapper;
@@ -64,7 +65,9 @@ package modules.game {
 		override protected function addHandlers():void {
 			view.backButton.addEventListener(Event.TRIGGERED, goBack);
 			view.addEventListener(ClickOnTerritory.CLICKED_ON_TERRITORY, clickOnTerritoryHandler);
+			view.commitButton.addEventListener(Event.TRIGGERED, commitClickHandler);
 			model.addEventListener(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, changedNumberOfUnitsOnTerritory);
+			model.addEventListener(GameModel.GAME_PHASE_COMMITED, gamePhaseCommited);
 		}
 		
 		private function goBack(e:Event):void {
@@ -114,6 +117,26 @@ package modules.game {
 			model.newPlayerJoined(player);
 			// redraw player list
 			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
+		}
+		
+		private function commitClickHandler(e:Event):void {
+			switch(model.phase) {
+				case GamePhase.WAITING_FOR_OPPONENTS_PHASE:
+				case GamePhase.TROOP_DEPLOYMENT_PHASE:
+					if (model.numberOfReinforcements == 0) {
+						model.submitPhase();
+					} else {
+						// can't commit round
+						Alert.showMessage("Can't commit operation",
+							"You can't commit reinforcements phase until you place all reinforcements");
+					}
+				default:
+					return;
+			}
+		}
+		
+		private function gamePhaseCommited(e:Event):void {
+			view.commitButton.isEnabled = false;
 		}
 	}
 

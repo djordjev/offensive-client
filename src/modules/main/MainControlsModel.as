@@ -3,6 +3,7 @@ package modules.main {
 	import communication.Communicator;
 	import communication.HandlerCodes;
 	import communication.ProtocolMessage;
+	import communication.protos.AdvancePhaseNotification;
 	import communication.protos.CreateGameRequest;
 	import communication.protos.CreateGameResponse;
 	import communication.protos.GameContext;
@@ -16,6 +17,7 @@ package modules.main {
 	import flash.sampler.NewObjectSample;
 	import modules.base.BaseModel;
 	import modules.game.events.PlayerEvent;
+	import utils.Alert;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
 	
@@ -50,6 +52,7 @@ package modules.main {
 				activeGames.push(game);
 			}
 			Communicator.instance.subscribe(HandlerCodes.JOIN_GAME_NOTIFICATION, opponentJoined);
+			Communicator.instance.subscribe(HandlerCodes.ADVANCE_TO_NEXT_PHASE, advanceToNextPhase);
 		}
 		
 		public function createOpenGame(gameName:String, numberOfPlayers:int, gameType:int, callback:Function):void {
@@ -110,6 +113,14 @@ package modules.main {
 					}
 				}
 			}
+		}
+		
+		private function advanceToNextPhase(message:ProtocolMessage):void {
+			var response:AdvancePhaseNotification = message.data as AdvancePhaseNotification;
+			//for each(var game:GameContextWrapper in activeGames) {
+				//if(game.gameId.toString() == response.
+			//}
+			Alert.showMessage("New Phase", "Advanced to new phase");
 		}
 	
 	}
