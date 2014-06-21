@@ -21,6 +21,7 @@ package components.common {
 		private var _statesAdapter:StatesAdapter;
 		
 		private var _fontSize:int = FONT_SIZE;
+		private var _fontColor:uint = Colors.BLACK;
 		
 		public function LinkButton() {
 			super();
@@ -32,7 +33,7 @@ package components.common {
 		/* INTERFACE components.common.ComponentWithStates */
 		
 		public function changeToUp():void {
-			_labelForDisplay.fontColor = NORMAL_FONT_COLOR;
+			_labelForDisplay.fontColor = _fontColor;
 			_labelForDisplay.filter = null;
 		}
 		
@@ -56,11 +57,17 @@ package components.common {
 			this.invalidate();
 		}
 		
+		public function set fontColor(value:uint):void {
+			_fontColor = value;
+			_labelForDisplay.fontColor = value;
+			this.invalidate();
+		}
+		
 		override protected function initialize():void {
 			super.initialize();
 			
 			_labelForDisplay.font = OLabel.FONT_GEARS_OF_PACE;
-			_labelForDisplay.fontColor = NORMAL_FONT_COLOR;
+			_labelForDisplay.fontColor = _fontColor;
 			_labelForDisplay.fontSize = _fontSize;
 			this.addChild(_labelForDisplay);
 		}

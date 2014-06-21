@@ -14,9 +14,13 @@ package modules.main {
 	import communication.protos.JoinGameRequest;
 	import communication.protos.JoinGameResponse;
 	import communication.protos.UserData;
+	import components.CurrentPlayerImage;
 	import flash.sampler.NewObjectSample;
 	import modules.base.BaseModel;
+	import modules.game.classes.GamePhase;
 	import modules.game.events.PlayerEvent;
+	import modules.game.GameController;
+	import modules.game.GameModel;
 	import utils.Alert;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
@@ -47,7 +51,7 @@ package modules.main {
 		
 		public function initialize(myUserInfo:UserData):void {
 			activeGames = [];
-			for each(var gameContext:GameContext in myUserInfo.joinedGames) {
+			for each (var gameContext:GameContext in myUserInfo.joinedGames) {
 				var game:GameContextWrapper = GameContextWrapper.buildGameContext(gameContext);
 				activeGames.push(game);
 			}
@@ -106,7 +110,11 @@ package modules.main {
 					if (game.numberOfJoinedPlayers < game.numberOfPlayers) {
 						// there is still place to put this player
 						game.numberOfJoinedPlayers++;
-						game.players.push(player);
+						for (var i:int = 0; i < game.players.length; i++) {
+							if (game.players[i].playerId == player.playerId) {
+								game.players[i] = player;
+							}
+						}
 						dispatchEvent(new PlayerEvent(PlayerEvent.NEW_PLAYER_JOINED, player, game));
 					} else {
 						throw new Error("Trying to add player into fully populated game");
@@ -117,10 +125,19 @@ package modules.main {
 		
 		private function advanceToNextPhase(message:ProtocolMessage):void {
 			var response:AdvancePhaseNotification = message.data as AdvancePhaseNotification;
-			//for each(var game:GameContextWrapper in activeGames) {
-				//if(game.gameId.toString() == response.
-			//}
-			Alert.showMessage("New Phase", "Advanced to new phase");
+			for each (var game:GameContextWrapper in activeGames) {
+				if (game.gameId.toString() == response.gameId.toString()) {
+					game.phase++;
+					if (game.phase > GamePhase.TROOP_RELOCATION_PHASE) {
+						game.phase = GamePhase.TROOP_DEPLOYMENT_PHASE;
+					}
+					if (GameController.instance.currentGameId != null && GameController.instance.currentGameId.toString() == response.gameId.toString()) {
+						Alert.showMessage("", "Advance to new phase");
+						GameModel.instance.advancedToNextPhase();
+					}
+					break;
+				}
+			}
 		}
 	
 	}

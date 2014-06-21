@@ -72,14 +72,12 @@ package utils {
 				titleLabel.fontSize = 14;
 				titleLabel.x = 3;
 				titleLabel.y = 3;
-				titleLabel.text = title;
 				_notificationGroup.addChild(titleLabel);
 				
 				noteLabel= new OLabel();
 				noteLabel.fontSize = 14;
 				noteLabel.y = 20;
 				noteLabel.x = 20;
-				noteLabel.text = note;
 				noteLabel.maxWidth = 280;
 				noteLabel.textRendererProperties.wordWrap = true;
 				_notificationGroup.addChild(noteLabel);
@@ -96,6 +94,9 @@ package utils {
 				noteLabel = _notificationGroup.getChildAt(2) as OLabel;
 				okButton = _notificationGroup.getChildAt(3) as Button;
 			}
+			titleLabel.text = title;
+			noteLabel.text = note;
+			
 			PopUpManager.addPopUp(_notificationGroup);
 			_notificationGroup.validate();
 			background.height = noteLabel.y + noteLabel.height + 30;

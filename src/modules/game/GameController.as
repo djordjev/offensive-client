@@ -4,6 +4,7 @@ package modules.game {
 	import feathers.data.ListCollection;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
+	import modules.game.classes.ActionPerformedAttack;
 	import modules.game.classes.ActionPerformedTroopDeployment;
 	import modules.game.classes.ActionPerformedWaitingForOpponents;
 	import modules.game.classes.GamePhase;
@@ -68,6 +69,7 @@ package modules.game {
 			view.commitButton.addEventListener(Event.TRIGGERED, commitClickHandler);
 			model.addEventListener(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, changedNumberOfUnitsOnTerritory);
 			model.addEventListener(GameModel.GAME_PHASE_COMMITED, gamePhaseCommited);
+			model.addEventListener(GameModel.ADVANCED_TO_NEXT_PHASE, advancedToNextGamePhase);
 		}
 		
 		private function goBack(e:Event):void {
@@ -99,13 +101,14 @@ package modules.game {
 		
 		private function createActionPerformedForPhase():void {
 			switch(model.phase) {
-				case GamePhase.WAITING_FOR_OPPONENTS_PHASE:
-					//_actionPerformed = new ActionPerformedWaitingForOpponents();
 				case GamePhase.TROOP_DEPLOYMENT_PHASE:
 					_actionPerformed = new ActionPerformedTroopDeployment();
 					break;
+				case GamePhase.ATTACK_PHASE:
+					_actionPerformed = new ActionPerformedAttack();
+					break;
 				default:
-					_actionPerformed = null;
+					throw new Error("Can't go into phase " + model.phase);
 			}
 		}
 		
@@ -121,7 +124,6 @@ package modules.game {
 		
 		private function commitClickHandler(e:Event):void {
 			switch(model.phase) {
-				case GamePhase.WAITING_FOR_OPPONENTS_PHASE:
 				case GamePhase.TROOP_DEPLOYMENT_PHASE:
 					if (model.numberOfReinforcements == 0) {
 						model.submitPhase();
@@ -137,6 +139,12 @@ package modules.game {
 		
 		private function gamePhaseCommited(e:Event):void {
 			view.commitButton.isEnabled = false;
+		}
+		
+		private function advancedToNextGamePhase(e:Event):void {
+			view.commitButton.isEnabled = true;
+			view.gamePhase.text = GamePhase.getPhaseName(model.phase);
+			createActionPerformedForPhase();
 		}
 	}
 

@@ -104,7 +104,7 @@ package modules.game {
 		}
 		
 		public function get numberOfReinforcements():int {
-			if (_phase == GamePhase.TROOP_DEPLOYMENT_PHASE || phase == GamePhase.WAITING_FOR_OPPONENTS_PHASE) {
+			if (_phase == GamePhase.TROOP_DEPLOYMENT_PHASE) {
 				return _me.numberOdReinforcements;
 			}
 			return 0;
@@ -144,12 +144,13 @@ package modules.game {
 			var request:CommandsSubmittedRequest = new CommandsSubmittedRequest();
 			request.gameId = _gameId;
 			Communicator.instance.send(HandlerCodes.COMMANDS_SUBMIT, request, function phaseChanged(e:ProtocolMessage):void {
-				_phase++;
-				if (_phase > GamePhase.TROOP_RELOCATION_PHASE) {
-					_phase = GamePhase.TROOP_DEPLOYMENT_PHASE;
-				}
 				dispatchEvent(new Event(GAME_PHASE_COMMITED));
 			});
+		}
+		
+		public function advancedToNextPhase():void {
+			_phase = (_phase + 1) % 4;
+			dispatchEvent(new Event(ADVANCED_TO_NEXT_PHASE));
 		}
 	}
 
