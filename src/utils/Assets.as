@@ -227,6 +227,9 @@ package utils
 			return Assets["Territory_" + id];
 		}
 		
+		[Embed(source="../../assets/gameAssets/arrow.png")]
+		public static const Arrow:Class;
+		
 	}
 
 }

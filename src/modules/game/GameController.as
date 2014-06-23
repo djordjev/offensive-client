@@ -7,13 +7,16 @@ package modules.game {
 	import modules.game.classes.ActionPerformedAttack;
 	import modules.game.classes.ActionPerformedTroopDeployment;
 	import modules.game.classes.ActionPerformedWaitingForOpponents;
+	import modules.game.classes.ArrowManager;
 	import modules.game.classes.GamePhase;
 	import modules.game.classes.IGameActionPerformed;
+	import modules.game.events.AttackEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
 	import starling.events.Event;
 	import utils.Alert;
 	import utils.Globals;
+	import utils.PlayerColors;
 	import utils.Screens;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
@@ -39,6 +42,8 @@ package modules.game {
 		
 		private var _currentGameId:Int64;
 		
+		private var _arrowManager:ArrowManager;
+		
 		public function get model():GameModel {
 			return _model as GameModel;
 		}
@@ -49,6 +54,7 @@ package modules.game {
 		
 		public function GameController(view:FeathersControl, model:BaseModel) {
 			super(view, model);
+			_arrowManager = new ArrowManager(this.view);
 		}
 		
 		public function get currentGameId():Int64 {
@@ -70,6 +76,7 @@ package modules.game {
 			model.addEventListener(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, changedNumberOfUnitsOnTerritory);
 			model.addEventListener(GameModel.GAME_PHASE_COMMITED, gamePhaseCommited);
 			model.addEventListener(GameModel.ADVANCED_TO_NEXT_PHASE, advancedToNextGamePhase);
+			model.addEventListener(AttackEvent.TERRITORY_ATTACK, attackExecuted);
 		}
 		
 		private function goBack(e:Event):void {
@@ -145,6 +152,11 @@ package modules.game {
 			view.commitButton.isEnabled = true;
 			view.gamePhase.text = GamePhase.getPhaseName(model.phase);
 			createActionPerformedForPhase();
+		}
+		
+		private function attackExecuted(e:AttackEvent):void {
+			trace("attack executed");
+			_arrowManager.drawArrow(e.territoryFrom, e.territoryTo, PlayerColors.getColor(model.me.color));
 		}
 	}
 

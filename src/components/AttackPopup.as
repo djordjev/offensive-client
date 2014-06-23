@@ -1,11 +1,13 @@
 package components {
 	import components.common.LinkButton;
 	import components.common.OLabel;
+	import components.events.MouseClickEvent;
 	import feathers.controls.ImageLoader;
 	import feathers.controls.LayoutGroup;
 	import feathers.controls.Slider;
 	import feathers.core.PopUpManager;
 	import starling.display.Quad;
+	import starling.events.Event;
 	import utils.Assets;
 	import utils.Colors;
 	import wrappers.PlayerWrapper;
@@ -16,6 +18,8 @@ package components {
 	 * @author ...
 	 */
 	public class AttackPopup extends LayoutGroup {
+		
+		public static const ATTACK_CANCELED:int = 0;
 		
 		private static const ATTACK_POPUP_WIDTH:int = 300;
 		private static const ATTACK_POPUP_HEIGHT:int = 150;
@@ -37,6 +41,11 @@ package components {
 		
 		private var _unitsInAttack:OLabel = new OLabel();
 		
+		private var _maxUnitsToAttack:uint;
+		private var _currentUnitsToAttack:uint;
+		
+		private var _callback:Function;
+		
 		private static var _instance:AttackPopup;
 		
 		public static function get instance():AttackPopup {
@@ -49,6 +58,13 @@ package components {
 		
 		public function AttackPopup() {
 			super();
+		}
+		
+		private function creationComplete():void {
+			_plusButton.addEventListener(MouseClickEvent.CLICK, addOneUnit);
+			_minusButton.addEventListener(MouseClickEvent.CLICK, removeOneUnit);
+			_cancelButton.addEventListener(MouseClickEvent.CLICK, cancelAttack);
+			_okButton.addEventListener(MouseClickEvent.CLICK, confirmAttack);
 		}
 		
 		override protected function initialize():void 
@@ -101,7 +117,6 @@ package components {
 			_minusButton.fontColor = Colors.WHITE;
 			this.addChild(_minusButton);
 			
-			_unitsInAttack.text = "4";
 			_unitsInAttack.fontSize = 36;
 			_unitsInAttack.x = 130;
 			_unitsInAttack.y = 50;
@@ -119,10 +134,14 @@ package components {
 			_cancelButton.y = 110;
 			_cancelButton.fontColor = Colors.WHITE;
 			this.addChild(_cancelButton);
+			
+			creationComplete();
 		}
 		
-		public function showAttackDialog(me:PlayerWrapper, opponent:PlayerWrapper, 
-										territoryFrom:TerritoryWrapper, territoryTp:TerritoryWrapper):void {
+		public function showAttackDialog(territoryFrom:TerritoryWrapper, territoryTo:TerritoryWrapper, callback:Function):void {
+										
+			var me:PlayerWrapper = territoryFrom.owner;
+			var opponent:PlayerWrapper = territoryTo.owner;
 			if (me.userWrapper.facebookUser != null) {
 				_myImage.source = me.userWrapper.facebookUser.smallImageURL;
 				_myName.text = me.userWrapper.facebookUser.name;
@@ -140,9 +159,45 @@ package components {
 			}
 			
 			_myTerritoryName.text = territoryFrom.name;
-			_opponentTerritoryName.text = territoryTp.name;
+			_opponentTerritoryName.text = territoryTo.name;
+			
+			_maxUnitsToAttack = territoryFrom.troopsOnIt - 1;
+			_currentUnitsToAttack = 1;
+			_unitsInAttack.text = _currentUnitsToAttack.toString();
+			
+			_callback = callback;
 			
 			PopUpManager.addPopUp(this);
+		}
+		
+		private function addOneUnit(event:MouseClickEvent):void {
+			if (_currentUnitsToAttack + 1 <= _maxUnitsToAttack) {
+				_currentUnitsToAttack++;
+				_unitsInAttack.text = _currentUnitsToAttack.toString();
+			}
+		}
+		
+		private function removeOneUnit():void {
+			if (_currentUnitsToAttack > 1) {
+				_currentUnitsToAttack--;
+				_unitsInAttack.text = _currentUnitsToAttack.toString();
+			}
+		}
+		
+		private function cancelAttack(e:MouseClickEvent):void {
+			if (_callback != null) {
+				_callback(ATTACK_CANCELED);
+			}
+			_callback = null;
+			PopUpManager.removePopUp(this);
+		}
+		
+		private function confirmAttack(e:MouseClickEvent):void {
+			if (_callback != null) {
+				_callback(_currentUnitsToAttack);
+			}
+			_callback = null;
+			PopUpManager.removePopUp(this);
 		}
 	
 	}

@@ -28,7 +28,7 @@ package modules.game.classes {
 				_selectedTerritory = territory;
 			} else if (_selectedTerritory == null && territory.owner != _model.me) {
 				Alert.showMessage("Error", "Can't attack from opponent's terrotory");
-			}else if (territory.owner == _model.me) {
+			} else if (territory.owner == _model.me) {
 				// clicked on same territory, deselect it
 				_selectedTerritory = null;
 			} else if (_selectedTerritory.troopsOnIt <= 1) {
@@ -36,10 +36,14 @@ package modules.game.classes {
 				_selectedTerritory = null;
 			} else {
 				// it's OK to attack
-				AttackPopup.instance.showAttackDialog(_model.me, territory.owner, _selectedTerritory, territory);
+				AttackPopup.instance.showAttackDialog(_selectedTerritory, territory, function attackResolution(numberOfUnitsInAttack:int):void {
+						if (numberOfUnitsInAttack != AttackPopup.ATTACK_CANCELED) {
+							_model.attack(_selectedTerritory, territory, numberOfUnitsInAttack);
+						}
+						_selectedTerritory = null;
+					});
 			}
 		}
-	
 	}
 
 }

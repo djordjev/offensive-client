@@ -5,10 +5,13 @@ package modules.game {
 	import communication.Me;
 	import communication.ProtocolMessage;
 	import communication.protos.AddUnitRequest;
+	import communication.protos.AttackRequest;
+	import communication.protos.Command;
 	import communication.protos.CommandsSubmittedRequest;
 	import flash.utils.Dictionary;
 	import modules.base.BaseModel;
 	import modules.game.classes.GamePhase;
+	import modules.game.events.AttackEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import starling.events.Event;
 	import wrappers.GameContextWrapper;
@@ -151,6 +154,19 @@ package modules.game {
 		public function advancedToNextPhase():void {
 			_phase = (_phase + 1) % 4;
 			dispatchEvent(new Event(ADVANCED_TO_NEXT_PHASE));
+		}
+		
+		public function attack(territoryFrom:TerritoryWrapper, territoryTo:TerritoryWrapper, numberOfUnits:uint):void {
+			trace("Attacking " + territoryFrom.name + " to " + territoryTo.name + " with " + numberOfUnits + " units");
+			var request:AttackRequest = new AttackRequest();
+			request.gameId = _gameId;
+			request.command = new Command();
+			request.command.sourceTerritory = territoryFrom.id;
+			request.command.destinationTerritory = territoryTo.id;
+			request.command.numberOfUnits = numberOfUnits;
+			//Communicator.instance.send(HandlerCodes.ATTACK, request, function attackResponseReceived(message:ProtocolMessage):void {
+				dispatchEvent(new AttackEvent(AttackEvent.TERRITORY_ATTACK, territoryFrom, territoryTo, numberOfUnits));
+			//});
 		}
 	}
 

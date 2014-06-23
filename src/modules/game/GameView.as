@@ -32,6 +32,7 @@ package modules.game {
 		private static const CONTROL_PANEL_BACKGROUND_ALPHA:Number = 0.2;
 		
 		private var _mapSprite:Sprite = new Sprite();
+		public var arrowsSprite:Sprite = new Sprite();
 		private var _territories:Dictionary = new Dictionary();
 		
 		public var backButton:Button = new Button();
@@ -70,6 +71,11 @@ package modules.game {
 			
 			// add control panel
 			populateControlPanel();
+			
+			// add arrows sprite
+			arrowsSprite.width = this.width;
+			arrowsSprite.height = this.height;
+			this.addChild(arrowsSprite);
 		}
 		
 		private function populateTerritories():void {
