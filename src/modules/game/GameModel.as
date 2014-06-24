@@ -194,6 +194,7 @@ package modules.game {
 			for each(var territory:Territory in response.territories) {
 				var playerOnIt:PlayerWrapper = getPlayerByPlayerId(territory.playerId);
 				(_territories[territory.id] as TerritoryWrapper).conquer(playerOnIt, territory.troopsOnIt);
+				dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, territory.id));
 			}
 		}
 	}
