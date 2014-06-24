@@ -18,6 +18,7 @@ package modules.game {
 	import utils.Globals;
 	import utils.PlayerColors;
 	import utils.Screens;
+	import utils.Utilities;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
 	import wrappers.TerritoryWrapper;
@@ -85,21 +86,23 @@ package modules.game {
 		}
 		
 		public function initForGame(gameContext:GameContextWrapper):void {
-			_currentGameId = gameContext.gameId;
-			
-			model.initForGame(gameContext);
-			// remove after all teritories are always sent
-			for each (var territory:TerritoryWrapper in model.territories) {
-				view.getTerritoryVisual(territory.id).territory = territory;
-			}
-			
-			createActionPerformedForPhase();
-			// populate players list
-			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
-			
-			view.gamePhase.text = GamePhase.getPhaseName(gameContext.phase);
-			unitsCount = model.numberOfMyUnits;
-			numberOfReinforcements = model.numberOfReinforcements;
+			Utilities.callWhenInitialized(view, function viewInitialized():void {
+				_currentGameId = gameContext.gameId;
+				
+				model.initForGame(gameContext);
+				// remove after all teritories are always sent
+				for each (var territory:TerritoryWrapper in model.territories) {
+					view.getTerritoryVisual(territory.id).territory = territory;
+				}
+					
+				createActionPerformedForPhase();
+				// populate players list
+				view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
+				
+				view.gamePhase.text = GamePhase.getPhaseName(gameContext.phase);
+				unitsCount = model.numberOfMyUnits;
+				numberOfReinforcements = model.numberOfReinforcements;
+			});
 		}
 		
 		private function clickOnTerritoryHandler(e:ClickOnTerritory):void {
@@ -107,14 +110,14 @@ package modules.game {
 		}
 		
 		private function createActionPerformedForPhase():void {
-			switch(model.phase) {
-				case GamePhase.TROOP_DEPLOYMENT_PHASE:
+			switch (model.phase) {
+				case GamePhase.TROOP_DEPLOYMENT_PHASE: 
 					_actionPerformed = new ActionPerformedTroopDeployment();
 					break;
-				case GamePhase.ATTACK_PHASE:
+				case GamePhase.ATTACK_PHASE: 
 					_actionPerformed = new ActionPerformedAttack();
 					break;
-				default:
+				default: 
 					throw new Error("Can't go into phase " + model.phase);
 			}
 		}
@@ -130,16 +133,15 @@ package modules.game {
 		}
 		
 		private function commitClickHandler(e:Event):void {
-			switch(model.phase) {
-				case GamePhase.TROOP_DEPLOYMENT_PHASE:
+			switch (model.phase) {
+				case GamePhase.TROOP_DEPLOYMENT_PHASE: 
 					if (model.numberOfReinforcements == 0) {
 						model.submitPhase();
 					} else {
 						// can't commit round
-						Alert.showMessage("Can't commit operation",
-							"You can't commit reinforcements phase until you place all reinforcements");
+						Alert.showMessage("Can't commit operation", "You can't commit reinforcements phase until you place all reinforcements");
 					}
-				default:
+				default: 
 					return;
 			}
 		}
