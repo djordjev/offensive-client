@@ -59,8 +59,8 @@ package modules.game {
 			seaTexture.repeat = true;
 			var image:Image = new Image(seaTexture);
 			image.setTexCoords(1, new Point(16, 0));
-			image.setTexCoords(2, new Point(0, 24));
-			image.setTexCoords(3, new Point(16, 24));
+			image.setTexCoords(2, new Point(0, 16));
+			image.setTexCoords(3, new Point(16, 16));
 			
 			image.width = WIDTH;
 			image.height = HEIGHT;

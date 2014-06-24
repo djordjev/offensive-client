@@ -164,9 +164,9 @@ package modules.game {
 			request.command.sourceTerritory = territoryFrom.id;
 			request.command.destinationTerritory = territoryTo.id;
 			request.command.numberOfUnits = numberOfUnits;
-			//Communicator.instance.send(HandlerCodes.ATTACK, request, function attackResponseReceived(message:ProtocolMessage):void {
+			Communicator.instance.send(HandlerCodes.ATTACK, request, function attackResponseReceived(message:ProtocolMessage):void {
 				dispatchEvent(new AttackEvent(AttackEvent.TERRITORY_ATTACK, territoryFrom, territoryTo, numberOfUnits));
-			//});
+			});
 		}
 	}
 
