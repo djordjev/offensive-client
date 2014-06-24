@@ -7,6 +7,7 @@ package communication.protos {
 	import flash.utils.IDataOutput;
 	import flash.utils.IExternalizable;
 	import flash.errors.IOError;
+	import communication.protos.Territory;
 	// @@protoc_insertion_point(imports)
 
 	// @@protoc_insertion_point(class_metadata)
@@ -21,9 +22,21 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
+		public static const TERRITORIES:RepeatedFieldDescriptor$TYPE_MESSAGE = new RepeatedFieldDescriptor$TYPE_MESSAGE("communication.protos.AdvancePhaseNotification.territories", "territories", (2 << 3) | com.netease.protobuf.WireType.LENGTH_DELIMITED, function():Class { return communication.protos.Territory; });
+
+		[ArrayElementType("communication.protos.Territory")]
+		public var territories:Array = [];
+
+		/**
+		 *  @private
+		 */
 		override com.netease.protobuf.used_by_generated_code final function writeToBuffer(output:com.netease.protobuf.WritingBuffer):void {
 			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 1);
 			com.netease.protobuf.WriteUtils.write$TYPE_INT64(output, this.gameId);
+			for (var territories$index:uint = 0; territories$index < this.territories.length; ++territories$index) {
+				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.LENGTH_DELIMITED, 2);
+				com.netease.protobuf.WriteUtils.write$TYPE_MESSAGE(output, this.territories[territories$index]);
+			}
 			for (var fieldKey:* in this) {
 				super.writeUnknown(output, fieldKey);
 			}
@@ -43,6 +56,9 @@ package communication.protos {
 					}
 					++gameId$count;
 					this.gameId = com.netease.protobuf.ReadUtils.read$TYPE_INT64(input);
+					break;
+				case 2:
+					this.territories.push(com.netease.protobuf.ReadUtils.read$TYPE_MESSAGE(input, new communication.protos.Territory()));
 					break;
 				default:
 					super.readUnknown(input, tag);

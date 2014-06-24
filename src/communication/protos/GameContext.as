@@ -7,10 +7,10 @@ package communication.protos {
 	import flash.utils.IDataOutput;
 	import flash.utils.IExternalizable;
 	import flash.errors.IOError;
-	import communication.protos.Command;
-	import communication.protos.Territory;
-	import communication.protos.LightGameContext;
 	import communication.protos.Alliance;
+	import communication.protos.LightGameContext;
+	import communication.protos.Territory;
+	import communication.protos.Command;
 	// @@protoc_insertion_point(imports)
 
 	// @@protoc_insertion_point(class_metadata)
