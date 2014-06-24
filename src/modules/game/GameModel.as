@@ -5,9 +5,11 @@ package modules.game {
 	import communication.Me;
 	import communication.ProtocolMessage;
 	import communication.protos.AddUnitRequest;
+	import communication.protos.AdvancePhaseNotification;
 	import communication.protos.AttackRequest;
 	import communication.protos.Command;
 	import communication.protos.CommandsSubmittedRequest;
+	import communication.protos.Territory;
 	import flash.utils.Dictionary;
 	import modules.base.BaseModel;
 	import modules.game.classes.GamePhase;
@@ -151,8 +153,22 @@ package modules.game {
 			});
 		}
 		
-		public function advancedToNextPhase():void {
+		public function advancedToNextPhase(response:AdvancePhaseNotification):void {
 			_phase = (_phase + 1) % 4;
+			switch(_phase) {
+				case GamePhase.TROOP_DEPLOYMENT_PHASE:
+					advanceToTroopDeploymentPhase(response);
+					break;
+				case GamePhase.ATTACK_PHASE:
+					advanceToAttackPhase(response);
+					break;
+				case GamePhase.BATTLE_PHASE:
+					break;
+				case GamePhase.TROOP_RELOCATION_PHASE:
+					break;
+				default:
+					break;
+			}
 			dispatchEvent(new Event(ADVANCED_TO_NEXT_PHASE));
 		}
 		
@@ -167,6 +183,18 @@ package modules.game {
 			Communicator.instance.send(HandlerCodes.ATTACK, request, function attackResponseReceived(message:ProtocolMessage):void {
 				dispatchEvent(new AttackEvent(AttackEvent.TERRITORY_ATTACK, territoryFrom, territoryTo, numberOfUnits));
 			});
+		}
+		
+		private function advanceToTroopDeploymentPhase(response:AdvancePhaseNotification):void {
+			// should add effects of troop relocation phase
+		}
+		
+		private function advanceToAttackPhase(response:AdvancePhaseNotification):void {
+			// update number of units on territories
+			for each(var territory:Territory in response.territories) {
+				var playerOnIt:PlayerWrapper = getPlayerByPlayerId(territory.playerId);
+				(_territories[territory.id] as TerritoryWrapper).conquer(playerOnIt, territory.troopsOnIt);
+			}
 		}
 	}
 

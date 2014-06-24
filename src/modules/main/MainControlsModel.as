@@ -133,7 +133,7 @@ package modules.main {
 					}
 					if (GameController.instance.currentGameId != null && GameController.instance.currentGameId.toString() == response.gameId.toString()) {
 						Alert.showMessage("", "Advance to new phase");
-						GameModel.instance.advancedToNextPhase();
+						GameModel.instance.advancedToNextPhase(response);
 					}
 					break;
 				}

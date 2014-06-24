@@ -40,9 +40,9 @@ package wrappers {
 		public function conquer(conqueror:PlayerWrapper, newTroops:int):void {
 			_owner = conqueror;
 			troopsOnIt = newTroops;
+			playerId = conqueror.playerId;
 			dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, id, true));
 		}
-	
 	}
 
 }
