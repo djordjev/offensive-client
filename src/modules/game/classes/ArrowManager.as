@@ -18,7 +18,7 @@ package modules.game.classes {
 		private static const ARROW_TWEEK:int = 6;
 		private static const ARROW_ALPHA:Number = 0.5;
 		
-		var _arrowSprite:Sprite;
+		private var _arrowSprite:Sprite;
 		
 		public function ArrowManager(view:GameView) {
 			_arrowSprite = view.arrowsSprite;
