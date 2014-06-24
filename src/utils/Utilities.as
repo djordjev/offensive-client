@@ -15,7 +15,7 @@ package utils {
 		
 		public static function callWhenInitialized(component:FeathersControl, callback:Function):void {
 			if (component.isInitialized) {
-				if (callback == null) {
+				if (callback != null) {
 					callback();
 				}
 			} else {
