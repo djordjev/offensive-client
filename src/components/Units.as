@@ -50,7 +50,10 @@ package components {
 				_background.source = Texture.fromBitmapData(bitmapData);
 				_color = color;
 			}
+			setUnits(numberOfUnits);
+		}
 		
+		public function setUnits(numberOfUnits:uint):void {
 			if (_unitsLabel.text != numberOfUnits.toString()) {
 				_unitsLabel.text = numberOfUnits.toString();
 			}

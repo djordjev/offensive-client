@@ -1,5 +1,7 @@
 package modules.game {
 	import com.netease.protobuf.Int64;
+	import communication.protos.Command;
+	import components.TerritoryVisual;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
 	import modules.base.BaseController;
@@ -94,28 +96,60 @@ package modules.game {
 				for each (var territory:TerritoryWrapper in model.territories) {
 					view.getTerritoryVisual(territory.id).territory = territory;
 				}
-					
-				createActionPerformedForPhase();
+				
+				_arrowManager.clearAllArrows();
+				switchToCurrentGamePhase();
 				// populate players list
 				view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
 				
-				view.gamePhase.text = GamePhase.getPhaseName(gameContext.phase);
 				unitsCount = model.numberOfMyUnits;
-				numberOfReinforcements = model.numberOfReinforcements;
+				
+				switchToCurrentGamePhase();
+				
 			});
+		}
+		
+		private function openingInTroopDeployment():void {
+			_actionPerformed = new ActionPerformedTroopDeployment();
+			
+			view.numberOfReinforcements.visible = true;
+			numberOfReinforcements = model.numberOfReinforcements;
+		}
+		
+		private function openingInAttackPhase():void {
+			_actionPerformed = new ActionPerformedAttack();
+			
+			view.numberOfReinforcements.visible = false;
+			// show pending commands
+			for each(var command:Command in model.pendingCommands) {
+				var sourceTerritory:TerritoryWrapper = model.getTerritory(command.sourceTerritory);
+				var destinationTerritory:TerritoryWrapper = model.getTerritory(command.destinationTerritory);
+				
+				_arrowManager.drawArrow(sourceTerritory, destinationTerritory, PlayerColors.getColor(model.me.color));
+			}
+		}
+		
+		private function openingInBattlePhase():void {
+			trace("Battle phase");
 		}
 		
 		private function clickOnTerritoryHandler(e:ClickOnTerritory):void {
 			_actionPerformed.clickOnTerritory(e.territory);
 		}
 		
-		private function createActionPerformedForPhase():void {
+		private function switchToCurrentGamePhase():void {
+			view.gamePhase.text = GamePhase.getPhaseName(model.phase);
+			_arrowManager.clearAllArrows();
+			
 			switch (model.phase) {
 				case GamePhase.TROOP_DEPLOYMENT_PHASE: 
-					_actionPerformed = new ActionPerformedTroopDeployment();
+					openingInTroopDeployment();
 					break;
 				case GamePhase.ATTACK_PHASE: 
-					_actionPerformed = new ActionPerformedAttack();
+					openingInAttackPhase();
+					break;
+				case GamePhase.BATTLE_PHASE:
+					openingInBattlePhase();
 					break;
 				default: 
 					throw new Error("Can't go into phase " + model.phase);
@@ -123,7 +157,7 @@ package modules.game {
 		}
 		
 		private function changedNumberOfUnitsOnTerritory(e:ChangedNumberOfUnits):void {
-			view.getTerritoryVisual(e.territory).refresh();
+			view.getTerritoryVisual(e.territory).refreshWholeComponent();
 		}
 		
 		public function newPlayerJoined(player:PlayerWrapper):void {
@@ -153,11 +187,12 @@ package modules.game {
 		private function advancedToNextGamePhase(e:Event):void {
 			view.commitButton.isEnabled = true;
 			view.gamePhase.text = GamePhase.getPhaseName(model.phase);
-			createActionPerformedForPhase();
+			switchToCurrentGamePhase();
 		}
 		
 		private function attackExecuted(e:AttackEvent):void {
-			trace("attack executed");
+			var visualTerritory:TerritoryVisual = view.getTerritoryVisual(e.territoryFrom.id);
+			visualTerritory.refreshNumberOfUnits();
 			_arrowManager.drawArrow(e.territoryFrom, e.territoryTo, PlayerColors.getColor(model.me.color));
 		}
 	}

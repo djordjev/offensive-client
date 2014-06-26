@@ -82,11 +82,11 @@ package components {
 				this.x = position.x;
 				this.y = position.y;
 				
-				refresh();
+				refreshWholeComponent();
 			}
 		}
 		
-		public function refresh():void {
+		public function refreshWholeComponent():void {
 			var ownerOfTerritory:PlayerWrapper = GameModel.instance.getPlayerByPlayerId(_territory.playerId);
 			if (ownerOfTerritory != null) {
 				var playerColor:uint = PlayerColors.getColor(ownerOfTerritory.color);
@@ -100,6 +100,12 @@ package components {
 			} else {
 				_image.source = Texture.fromBitmapData(_bitmapData.bitmapData);
 				_units.visible = false;
+			}
+		}
+		
+		public function refreshNumberOfUnits():void {
+			if (_territory.owner != null) {
+				_units.setUnits(_territory.troopsOnIt);
 			}
 		}
 		

@@ -39,6 +39,7 @@ package modules.game {
 		private var _allPlayers:Dictionary; // Dictionary playerId -> PlayerWrapper
 		/** mapping territory id to TerritoryWrapper */
 		private var _territories:Dictionary;
+		private var _pendingCommands:Array;
 		
 		private var _numberOfMyUnits:int;
 		
@@ -69,6 +70,10 @@ package modules.game {
 		
 		public function get numberOfMyUnits():int {
 			return _numberOfMyUnits;
+		}
+		
+		public function get pendingCommands():Array {
+			return _pendingCommands;
 		}
 		
 		public function initForGame(gameContext:GameContextWrapper):void {
@@ -102,6 +107,8 @@ package modules.game {
 					_numberOfMyUnits += territory.troopsOnIt;
 				}
 			}
+			
+			_pendingCommands = gameContext.pendingCommands;
 		}
 		
 		public function getPlayerByPlayerId(playerId:int):PlayerWrapper {
@@ -181,6 +188,7 @@ package modules.game {
 			request.command.destinationTerritory = territoryTo.id;
 			request.command.numberOfUnits = numberOfUnits;
 			Communicator.instance.send(HandlerCodes.ATTACK, request, function attackResponseReceived(message:ProtocolMessage):void {
+				territoryFrom.troopsOnIt -= numberOfUnits;
 				dispatchEvent(new AttackEvent(AttackEvent.TERRITORY_ATTACK, territoryFrom, territoryTo, numberOfUnits));
 			});
 		}
@@ -196,6 +204,10 @@ package modules.game {
 				(_territories[territory.id] as TerritoryWrapper).conquer(playerOnIt, territory.troopsOnIt);
 				dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, territory.id));
 			}
+		}
+		
+		public function getTerritory(id:int):TerritoryWrapper {
+			return _territories[id] as TerritoryWrapper;
 		}
 	}
 

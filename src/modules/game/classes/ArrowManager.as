@@ -73,7 +73,7 @@ package modules.game.classes {
 			_arrowSprite.addChild(image);
 		}
 		
-		public function removeAllArrows():void {
+		public function clearAllArrows():void {
 			_arrowSprite.removeChildren();
 		}
 	

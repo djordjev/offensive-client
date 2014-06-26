@@ -114,7 +114,8 @@ package modules.main {
 		}
 		
 		private function newPlayerJoined(e:PlayerEvent):void {
-			if (GameController.instance.currentGameId.toString() == e.game.gameId.toString()) {
+			if (GameController.instance.currentGameId != null && 
+				GameController.instance.currentGameId.toString() == e.game.gameId.toString()) {
 				GameController.instance.newPlayerJoined(e.player);
 			}
 		}
