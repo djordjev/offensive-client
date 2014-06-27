@@ -98,7 +98,6 @@ package modules.game {
 				}
 				
 				_arrowManager.clearAllArrows();
-				switchToCurrentGamePhase();
 				// populate players list
 				view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
 				

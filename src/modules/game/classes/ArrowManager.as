@@ -6,6 +6,8 @@ package modules.game.classes {
 	import modules.game.GameView;
 	import starling.display.Sprite;
 	import starling.textures.Texture;
+	import starling.utils.HAlign;
+	import starling.utils.VAlign;
 	import utils.Assets;
 	import wrappers.TerritoryWrapper;
 	
@@ -15,7 +17,7 @@ package modules.game.classes {
 	 */
 	public class ArrowManager {
 		
-		private static const ARROW_TWEEK:int = 6;
+		private static const ARROW_TWEEK:int = 12;
 		private static const ARROW_ALPHA:Number = 0.5;
 		
 		private var _arrowSprite:Sprite;
@@ -39,23 +41,23 @@ package modules.game.classes {
 			
 			// create arrow texture
 			var texture:Texture = Texture.fromBitmapData(arrow.bitmapData);
-			var texture3grid:Scale3Textures = new Scale3Textures(texture, 1, 1);
+			var texture3grid:Scale3Textures = new Scale3Textures(texture, 17, 1);
 			
 			var image:Scale3Image = new Scale3Image(texture3grid);
 			image.alpha = ARROW_ALPHA;
 			
-			var sourcePosition:Point = Territories.getTerritoryPosition(source.id);
-			var sourceUnitPosition:Point = Territories.getUnitsPosition(source.id);
-			sourcePosition.x += sourceUnitPosition.x;
-			sourcePosition.y += sourceUnitPosition.y;
+			var sourcePosition:Point = Territories.getTerritoryPosition(source.id).clone();
+			var sourceUnitPosition:Point = Territories.getUnitsPosition(source.id).clone();
+			sourcePosition.x += sourceUnitPosition.x + ARROW_TWEEK;
+			sourcePosition.y += sourceUnitPosition.y + ARROW_TWEEK;
 			
-			var destinationPosition:Point = Territories.getTerritoryPosition(dest.id);
-			var destionationUnitPosition:Point = Territories.getUnitsPosition(dest.id);
+			var destinationPosition:Point = Territories.getTerritoryPosition(dest.id).clone();
+			var destionationUnitPosition:Point = Territories.getUnitsPosition(dest.id).clone();
 			destinationPosition.x += destionationUnitPosition.x + ARROW_TWEEK;
 			destinationPosition.y += destionationUnitPosition.y + ARROW_TWEEK;
 			
 			var arrowLength:int = Math.sqrt(Math.pow(destinationPosition.x - sourcePosition.x, 2) + 
-											Math.pow(destinationPosition.y - sourcePosition.y, 2));
+											Math.pow(destinationPosition.y - sourcePosition.y, 2)) - ARROW_TWEEK;
 			
 			image.width = arrowLength;
 			
@@ -64,8 +66,7 @@ package modules.game.classes {
 			
 			var angle:Number = Math.atan2(destinationPosition.y - sourcePosition.y, destinationPosition.x - sourcePosition.x);
 			
-			image.pivotX = 0;
-			//image.pivotY = 12;
+			image.alignPivot(HAlign.LEFT, VAlign.CENTER);
 			
 			image.rotation = angle;
 			
