@@ -175,6 +175,10 @@ package modules.game {
 						// can't commit round
 						Alert.showMessage("Can't commit operation", "You can't commit reinforcements phase until you place all reinforcements");
 					}
+					break;
+				case GamePhase.ATTACK_PHASE:
+					model.submitPhase();
+					break;
 				default: 
 					return;
 			}
