@@ -19,6 +19,7 @@ package modules.main {
 	import communication.protos.UserData;
 	import components.CurrentPlayerImage;
 	import flash.sampler.NewObjectSample;
+	import flash.utils.Dictionary;
 	import modules.base.BaseModel;
 	import modules.game.classes.GamePhase;
 	import modules.game.events.PlayerEvent;
@@ -45,6 +46,9 @@ package modules.main {
 		/** Array of GameContextWrapper */
 		public var activeGames:Array;
 		
+		/** Shows to same objects as activeGames. Mappint gameId.toString() -> GameContextWrapper */
+		public var activeGamesDictionary:Dictionary;
+		
 		/** Array of open games that are available for joining. Array of GameDescription */
 		public var openGamesAvailableForJoin:Array = [];
 		
@@ -54,9 +58,11 @@ package modules.main {
 		
 		public function initialize(myUserInfo:UserData):void {
 			activeGames = [];
+			activeGamesDictionary = new Dictionary();
 			for each (var gameContext:GameContext in myUserInfo.joinedGames) {
 				var game:GameContextWrapper = GameContextWrapper.buildGameContext(gameContext);
 				activeGames.push(game);
+				activeGamesDictionary[game.gameId.toString()] = game;
 			}
 			Communicator.instance.subscribe(HandlerCodes.JOIN_GAME_NOTIFICATION, opponentJoined);
 			Communicator.instance.subscribe(HandlerCodes.ADVANCE_TO_NEXT_PHASE, advanceToNextPhase);
@@ -78,6 +84,7 @@ package modules.main {
 					
 					var responseGame:GameContextWrapper = GameContextWrapper.buildGameContext(gameCreatedResponse.gameContext);
 					activeGames.push(responseGame);
+					activeGamesDictionary[responseGame.gameId.toString()] = responseGame;
 					if (callback != null) {
 						callback();
 					}
@@ -102,6 +109,7 @@ package modules.main {
 					var response:JoinGameResponse = message.data as JoinGameResponse;
 					var responseGame:GameContextWrapper = GameContextWrapper.buildGameContext(response.gameContext);
 					activeGames.push(responseGame);
+					activeGamesDictionary[responseGame.gameId.toString()] = responseGame;
 					if (callback != null) {
 						callback();
 					}
@@ -114,29 +122,28 @@ package modules.main {
 		}
 		
 		private function addPlayerToGame(player:PlayerWrapper, gameId:Int64):void {
-			for each (var game:GameContextWrapper in activeGames) {
-				if (game.gameId.toString() == gameId.toString()) {
-					if (game.numberOfJoinedPlayers < game.numberOfPlayers) {
-						// there is still place to put this player
-						game.numberOfJoinedPlayers++;
-						for (var i:int = 0; i < game.players.length; i++) {
-							if (game.players[i].playerId == player.playerId) {
-								game.players[i] = player;
-							}
+			var game:GameContextWrapper = activeGamesDictionary[gameId.toString()];
+			if (game != null) {
+				if (game.numberOfJoinedPlayers < game.numberOfPlayers) {
+					// there is still place to put this player
+					game.numberOfJoinedPlayers++;
+					for (var i:int = 0; i < game.players.length; i++) {
+						if (game.players[i].playerId == player.playerId) {
+							game.players[i] = player;
 						}
-						dispatchEvent(new PlayerEvent(PlayerEvent.NEW_PLAYER_JOINED, player, game));
-					} else {
-						throw new Error("Trying to add player into fully populated game");
 					}
+					dispatchEvent(new PlayerEvent(PlayerEvent.NEW_PLAYER_JOINED, player, game));
+				} else {
+					throw new Error("Trying to add player into fully populated game");
 				}
 			}
 		}
 		
 		private function advanceToNextPhase(message:ProtocolMessage):void {
 			var response:AdvancePhaseNotification = message.data as AdvancePhaseNotification;
-			for each (var game:GameContextWrapper in activeGames) {
-				if (game.gameId.toString() == response.gameId.toString()) {
-					game.phase++;
+			var game:GameContextWrapper = activeGamesDictionary[response.gameId.toString()];
+			if (game != null) {
+				game.phase++;
 					if (game.phase > GamePhase.TROOP_RELOCATION_PHASE) {
 						game.phase = GamePhase.TROOP_DEPLOYMENT_PHASE;
 					}
@@ -144,23 +151,19 @@ package modules.main {
 						Alert.showMessage("", "Advance to new phase");
 						GameModel.instance.advancedToNextPhase(response);
 					}
-					break;
-				}
 			}
 		}
 		
 		private function allCommandsSubmitted(e:ProtocolMessage):void {
 			var allCommands:AllCommands = e.data as AllCommands;
-			if (GameModel.instance.gameId != null &&
-				allCommands.gameId.toString() == GameModel.instance.gameId.toString()) {
+			if (GameModel.instance.gameId != null && allCommands.gameId.toString() == GameModel.instance.gameId.toString()) {
 				GameModel.instance.allCommandsReceived(allCommands);
 			}
 		}
 		
 		private function borderClashes(e:ProtocolMessage):void {
 			var borderClashes:BorderClashes = e.data as BorderClashes;
-			if (GameModel.instance.gameId != null &&
-				borderClashes.gameId.toString() == GameModel.instance.gameId.toString()) {
+			if (GameModel.instance.gameId != null && borderClashes.gameId.toString() == GameModel.instance.gameId.toString()) {
 				GameModel.instance.borderClashesReceived(borderClashes);
 			}
 		}

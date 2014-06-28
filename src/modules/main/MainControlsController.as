@@ -10,11 +10,13 @@ package modules.main {
 	import flash.display.Bitmap;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
+	import modules.game.classes.GamePhase;
 	import modules.game.events.PlayerEvent;
 	import modules.game.GameController;
 	import starling.display.Image;
 	import starling.events.Event;
 	import starling.textures.Texture;
+	import utils.Alert;
 	import utils.Assets;
 	import utils.FacebookCommunicator;
 	import utils.Globals;
@@ -85,8 +87,13 @@ package modules.main {
 		}
 		
 		private function openGame(e:OpenGameEvent):void {
-			mainScreenNavigator.showScreen(Screens.GAME);
-			GameController.instance.initForGame(e.gameContext);
+			if (e.gameContext.phase != GamePhase.BATTLE_PHASE) {
+				mainScreenNavigator.showScreen(Screens.GAME);
+				GameController.instance.initForGame(e.gameContext);
+			} else {
+				Alert.showMessage("", "Can't join game in battle phase. Try again in few moments");
+			}
+			
 		}
 		
 		private function selectedGameAction(e:GameManipulationEvent):void {
