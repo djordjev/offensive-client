@@ -166,6 +166,7 @@ package modules.game {
 		}
 		
 		private function commitClickHandler(e:Event):void {
+			view.commitButton.isEnabled = false;
 			switch (model.phase) {
 				case GamePhase.TROOP_DEPLOYMENT_PHASE: 
 					if (model.numberOfReinforcements == 0) {
@@ -184,7 +185,7 @@ package modules.game {
 		}
 		
 		private function gamePhaseCommited(e:Event):void {
-			view.commitButton.isEnabled = false;
+			trace("Game phase commited response OK");
 		}
 		
 		private function advancedToNextGamePhase(e:Event):void {
