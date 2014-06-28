@@ -4,6 +4,9 @@ package modules.main {
 	import communication.HandlerCodes;
 	import communication.ProtocolMessage;
 	import communication.protos.AdvancePhaseNotification;
+	import communication.protos.AllCommands;
+	import communication.protos.BorderClashes;
+	import communication.protos.Command;
 	import communication.protos.CreateGameRequest;
 	import communication.protos.CreateGameResponse;
 	import communication.protos.GameContext;
@@ -57,6 +60,12 @@ package modules.main {
 			}
 			Communicator.instance.subscribe(HandlerCodes.JOIN_GAME_NOTIFICATION, opponentJoined);
 			Communicator.instance.subscribe(HandlerCodes.ADVANCE_TO_NEXT_PHASE, advanceToNextPhase);
+			
+			// attach listeners
+			Communicator.instance.subscribe(HandlerCodes.ALL_COMMANDS_BATTLE_PHASE, allCommandsSubmitted);
+			Communicator.instance.subscribe(HandlerCodes.BORDER_CLASHES, borderClashes);
+			Communicator.instance.subscribe(HandlerCodes.PLAYER_ROLLED_DICE, playerRolledDice);
+			Communicator.instance.subscribe(HandlerCodes.ADVANCE_TO_NEXT_BATTLE, advanceToNextBattle);
 		}
 		
 		public function createOpenGame(gameName:String, numberOfPlayers:int, gameType:int, callback:Function):void {
@@ -139,7 +148,30 @@ package modules.main {
 				}
 			}
 		}
-	
+		
+		private function allCommandsSubmitted(e:ProtocolMessage):void {
+			var allCommands:AllCommands = e.data as AllCommands;
+			if (GameModel.instance.gameId != null &&
+				allCommands.gameId.toString() == GameModel.instance.gameId.toString()) {
+				GameModel.instance.allCommandsReceived(allCommands);
+			}
+		}
+		
+		private function borderClashes(e:ProtocolMessage):void {
+			var borderClashes:BorderClashes = e.data as BorderClashes;
+			if (GameModel.instance.gameId != null &&
+				borderClashes.gameId.toString() == GameModel.instance.gameId.toString()) {
+				GameModel.instance.borderClashesReceived(borderClashes);
+			}
+		}
+		
+		private function playerRolledDice(e:ProtocolMessage):void {
+			trace("player rolled dice");
+		}
+		
+		private function advanceToNextBattle(e:ProtocolMessage):void {
+			trace("advance to next battle");
+		}
 	}
 
 }

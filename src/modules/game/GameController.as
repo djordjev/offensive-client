@@ -1,5 +1,6 @@
 package modules.game {
 	import com.netease.protobuf.Int64;
+	import communication.protos.BattleInfo;
 	import communication.protos.Command;
 	import components.TerritoryVisual;
 	import feathers.core.FeathersControl;
@@ -43,8 +44,6 @@ package modules.game {
 		
 		private var _actionPerformed:IGameActionPerformed;
 		
-		private var _currentGameId:Int64;
-		
 		private var _arrowManager:ArrowManager;
 		
 		public function get model():GameModel {
@@ -61,7 +60,7 @@ package modules.game {
 		}
 		
 		public function get currentGameId():Int64 {
-			return _currentGameId;
+			return model.gameId;
 		}
 		
 		public function set numberOfReinforcements(value:int):void {
@@ -80,17 +79,17 @@ package modules.game {
 			model.addEventListener(GameModel.GAME_PHASE_COMMITED, gamePhaseCommited);
 			model.addEventListener(GameModel.ADVANCED_TO_NEXT_PHASE, advancedToNextGamePhase);
 			model.addEventListener(AttackEvent.TERRITORY_ATTACK, attackExecuted);
+			model.addEventListener(GameModel.ALL_COMMANDS_RECEIVED, displayAllCommands);
+			model.addEventListener(GameModel.BORDER_CLASHES_RECEIVED, displayBorderClashes);
 		}
 		
 		private function goBack(e:Event):void {
-			_currentGameId = null;
+			model.disposeModel();
 			mainScreenNavigator.showScreen(Screens.MENUS);
 		}
 		
 		public function initForGame(gameContext:GameContextWrapper):void {
 			Utilities.callWhenInitialized(view, function viewInitialized():void {
-				_currentGameId = gameContext.gameId;
-				
 				model.initForGame(gameContext);
 				// remove after all teritories are always sent
 				for each (var territory:TerritoryWrapper in model.territories) {
@@ -130,6 +129,7 @@ package modules.game {
 		
 		private function openingInBattlePhase():void {
 			trace("Battle phase");
+			_arrowManager.clearAllArrows();
 		}
 		
 		private function clickOnTerritoryHandler(e:ClickOnTerritory):void {
@@ -197,6 +197,22 @@ package modules.game {
 			var visualTerritory:TerritoryVisual = view.getTerritoryVisual(e.territoryFrom.id);
 			visualTerritory.refreshNumberOfUnits();
 			_arrowManager.drawArrow(e.territoryFrom, e.territoryTo, PlayerColors.getColor(model.me.color));
+		}
+		
+		private function displayAllCommands(e:Event):void {
+			for each(var command:Command in model.allCommands) {
+				var source:TerritoryWrapper = model.getTerritory(command.sourceTerritory);
+				var dest:TerritoryWrapper = model.getTerritory(command.destinationTerritory);
+				_arrowManager.drawArrow(source, dest, PlayerColors.getColor(source.owner.playerId));
+			}
+		}
+		
+		private function displayBorderClashes(e:Event):void {
+			for each(var battleInfo:BattleInfo in model.borderClashes) {
+				var territory1:TerritoryWrapper = model.getTerritory(battleInfo.oneSide[0]);
+				var territory2:TerritoryWrapper = model.getTerritory(battleInfo.otherSide[0]);
+				_arrowManager.drawDoubleArrow(territory1, territory2);
+			}
 		}
 	}
 

@@ -230,6 +230,9 @@ package utils
 		[Embed(source="../../assets/gameAssets/arrow.png")]
 		public static const Arrow:Class;
 		
+		[Embed(source="../../assets/gameAssets/double_arrow.png")]
+		public static const DoubleArrow:Class;
+		
 	}
 
 }

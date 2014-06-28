@@ -6,7 +6,9 @@ package modules.game {
 	import communication.ProtocolMessage;
 	import communication.protos.AddUnitRequest;
 	import communication.protos.AdvancePhaseNotification;
+	import communication.protos.AllCommands;
 	import communication.protos.AttackRequest;
+	import communication.protos.BorderClashes;
 	import communication.protos.Command;
 	import communication.protos.CommandsSubmittedRequest;
 	import communication.protos.Territory;
@@ -28,6 +30,8 @@ package modules.game {
 		
 		public static const GAME_PHASE_COMMITED:String = "game phase changed";
 		public static const ADVANCED_TO_NEXT_PHASE:String = "advanced to next phase";
+		public static const ALL_COMMANDS_RECEIVED:String = "all commands received";
+		public static const BORDER_CLASHES_RECEIVED:String = "border clashes received";
 		
 		private var _gameName:String;
 		private var _gameId:Int64;
@@ -42,6 +46,9 @@ package modules.game {
 		private var _pendingCommands:Array;
 		
 		private var _numberOfMyUnits:int;
+		
+		private var _allCommands:Array;
+		private var _borderClashes:Array;
 		
 		private static var _instance:GameModel;
 		
@@ -76,6 +83,18 @@ package modules.game {
 			return _pendingCommands;
 		}
 		
+		public function get gameId():Int64 {
+			return _gameId;
+		}
+		
+		public function get allCommands():Array {
+			return _allCommands;
+		}
+		
+		public function get borderClashes():Array {
+			return _borderClashes;
+		}
+		
 		public function initForGame(gameContext:GameContextWrapper):void {
 			_gameName = gameContext.gameName;
 			_gameId = gameContext.gameId;
@@ -108,6 +127,8 @@ package modules.game {
 				}
 			}
 			
+			_allCommands = null;
+			_borderClashes = null;
 			_pendingCommands = gameContext.pendingCommands;
 		}
 		
@@ -208,6 +229,33 @@ package modules.game {
 		
 		public function getTerritory(id:int):TerritoryWrapper {
 			return _territories[id] as TerritoryWrapper;
+		}
+		
+		public function disposeModel():void {
+			_gameId == null;
+			_allCommands = null;
+			_borderClashes = null;
+			// reset other fields
+		}
+		
+		public function allCommandsReceived(allCommands:AllCommands):void {
+			if (_phase == GamePhase.BATTLE_PHASE) {
+				_allCommands = allCommands.commands;
+				dispatchEvent(new Event(ALL_COMMANDS_RECEIVED));
+			} else {
+				trace("Received all commands in phase that is not battle phase. Phase " +
+					GamePhase.getPhaseName(_phase));
+			}
+		}
+		
+		public function borderClashesReceived(borderClashes:BorderClashes):void {
+			if (_phase == GamePhase.BATTLE_PHASE) {
+				_borderClashes = borderClashes.battleInfo;
+				dispatchEvent(new Event(BORDER_CLASHES_RECEIVED));
+			} else {
+				trace("Received border clashes in phase that is not battle phase. Phase " +
+					GamePhase.getPhaseName(_phase));
+			}
 		}
 	}
 

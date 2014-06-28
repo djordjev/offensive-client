@@ -46,15 +46,8 @@ package modules.game.classes {
 			var image:Scale3Image = new Scale3Image(texture3grid);
 			image.alpha = ARROW_ALPHA;
 			
-			var sourcePosition:Point = Territories.getTerritoryPosition(source.id).clone();
-			var sourceUnitPosition:Point = Territories.getUnitsPosition(source.id).clone();
-			sourcePosition.x += sourceUnitPosition.x + ARROW_TWEEK;
-			sourcePosition.y += sourceUnitPosition.y + ARROW_TWEEK;
-			
-			var destinationPosition:Point = Territories.getTerritoryPosition(dest.id).clone();
-			var destionationUnitPosition:Point = Territories.getUnitsPosition(dest.id).clone();
-			destinationPosition.x += destionationUnitPosition.x + ARROW_TWEEK;
-			destinationPosition.y += destionationUnitPosition.y + ARROW_TWEEK;
+			var sourcePosition:Point = calculateTargetPosition(source);
+			var destinationPosition:Point = calculateTargetPosition(dest);
 			
 			var arrowLength:int = Math.sqrt(Math.pow(destinationPosition.x - sourcePosition.x, 2) + 
 											Math.pow(destinationPosition.y - sourcePosition.y, 2)) - ARROW_TWEEK;
@@ -72,6 +65,44 @@ package modules.game.classes {
 			
 			
 			_arrowSprite.addChild(image);
+		}
+		
+		public function drawDoubleArrow(territory1:TerritoryWrapper, territory2:TerritoryWrapper):void {
+			var arrow:Bitmap = new Assets.DoubleArrow();
+			
+			var texture:Texture = Texture.fromBitmapData(arrow.bitmapData);
+			var texture3grid:Scale3Textures = new Scale3Textures(texture, 40, 1);
+			
+			var image:Scale3Image = new Scale3Image(texture3grid);
+			image.alpha = ARROW_ALPHA;
+			
+			var sourcePosition:Point = calculateTargetPosition(territory1);
+			var destPosition:Point = calculateTargetPosition(territory2);
+			
+			var arrowLength:int = Math.sqrt(Math.pow(destPosition.x - sourcePosition.x, 2) + 
+											Math.pow(destPosition.y - sourcePosition.y, 2)) - ARROW_TWEEK;
+			
+			image.width = arrowLength;
+			
+			image.x = sourcePosition.x;
+			image.y = sourcePosition.y;
+			
+			var angle:Number = Math.atan2(destPosition.y - sourcePosition.y, destPosition.x - sourcePosition.x);
+			
+			image.alignPivot(HAlign.LEFT, VAlign.CENTER);
+			
+			image.rotation = angle;
+			
+			
+			_arrowSprite.addChild(image);
+		}
+		
+		private function calculateTargetPosition(territory:TerritoryWrapper):Point {
+			var position:Point = Territories.getTerritoryPosition(territory.id).clone();
+			var unitsOffset:Point = Territories.getUnitsPosition(territory.id);
+			position.x += unitsOffset.x + ARROW_TWEEK;
+			position.y += unitsOffset.y + ARROW_TWEEK;
+			return position;
 		}
 		
 		public function clearAllArrows():void {

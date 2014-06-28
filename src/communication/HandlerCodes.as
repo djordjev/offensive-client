@@ -9,6 +9,11 @@ package communication {
 		public static const ADD_UNIT:int = 10;
 		public static const ATTACK:int = 12;
 		public static const COMMANDS_SUBMIT:int = 13;
+		public static const ALL_COMMANDS_BATTLE_PHASE:int = 14;
+		public static const BORDER_CLASHES:int = 15;
+		public static const ADVANCE_TO_NEXT_BATTLE:int = 16;
+		public static const ROLL_DICE:int = 17;
+		public static const PLAYER_ROLLED_DICE:int = 18;
 		public static const JOIN_GAME_NOTIFICATION:int = 19;
 		public static const ADVANCE_TO_NEXT_PHASE:int = 20;
 	}
