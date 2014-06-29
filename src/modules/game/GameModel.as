@@ -47,7 +47,9 @@ package modules.game {
 		
 		private var _numberOfMyUnits:int;
 		
+		/** All commands in battle phase */
 		private var _allCommands:Array;
+		
 		private var _borderClashes:Array;
 		
 		private static var _instance:GameModel;

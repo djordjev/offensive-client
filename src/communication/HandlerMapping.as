@@ -12,8 +12,11 @@ package communication {
 	import communication.protos.GetUserDataResponse;
 	import communication.protos.JoinGameNotification;
 	import communication.protos.JoinGameResponse;
+	import communication.protos.MultipleAttacks;
 	import communication.protos.PlayerRolledDice;
 	import communication.protos.RollDiceResponse;
+	import communication.protos.SingleAttacks;
+	import communication.protos.SpoilsOfWar;
 
 	import flash.utils.Dictionary;
 
@@ -36,6 +39,9 @@ package communication {
 			mapping[HandlerCodes.PLAYER_ROLLED_DICE] = PlayerRolledDice;
 			mapping[HandlerCodes.JOIN_GAME_NOTIFICATION] = JoinGameNotification;
 			mapping[HandlerCodes.ADVANCE_TO_NEXT_PHASE] = AdvancePhaseNotification;
+			mapping[HandlerCodes.MULTIPLE_ATTACKS] = MultipleAttacks;
+			mapping[HandlerCodes.SINGLE_ATTACKS] = SingleAttacks;
+			mapping[HandlerCodes.SPOILS_OF_WAR] = SpoilsOfWar;
 		}
 	}
 }

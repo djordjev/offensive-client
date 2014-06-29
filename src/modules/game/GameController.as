@@ -5,6 +5,7 @@ package modules.game {
 	import components.TerritoryVisual;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
+	import flash.utils.Dictionary;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
 	import modules.game.classes.ActionPerformedAttack;
@@ -130,6 +131,7 @@ package modules.game {
 		private function openingInBattlePhase():void {
 			trace("Battle phase");
 			_arrowManager.clearAllArrows();
+			view.commitButton.isEnabled = false;
 		}
 		
 		private function clickOnTerritoryHandler(e:ClickOnTerritory):void {
@@ -201,19 +203,42 @@ package modules.game {
 		}
 		
 		private function displayAllCommands(e:Event):void {
+			var source:TerritoryWrapper;
+			var dest:TerritoryWrapper;
+			var regularCommands:Dictionary = new Dictionary();
+			// this array has to have even number of elements, so clash is attack on position i and i+1 
+			var borderClashes:Array = [];
 			for each(var command:Command in model.allCommands) {
-				var source:TerritoryWrapper = model.getTerritory(command.sourceTerritory);
-				var dest:TerritoryWrapper = model.getTerritory(command.destinationTerritory);
-				_arrowManager.drawArrow(source, dest, PlayerColors.getColor(source.owner.playerId));
+				source = model.getTerritory(command.sourceTerritory);
+				dest = model.getTerritory(command.destinationTerritory);
+				if (regularCommands[dest.id + "*" + source.id] != null) {
+					// this is border clash
+					var otherCommand:Command = regularCommands[dest.id + "*" + source.id];
+					delete regularCommands[dest.id + "*" + source.id];
+					borderClashes.push(otherCommand);
+					borderClashes.push(command);
+				} else {
+					// potential regular attack
+					regularCommands[source.id + "*" + dest.id] = command;
+				}
+			}
+			
+			// draw regular attack
+			for each(var regularCommand:Command in regularCommands) {
+				source = model.getTerritory(regularCommand.sourceTerritory);
+				dest = model.getTerritory(regularCommand.destinationTerritory);
+				_arrowManager.drawArrow(source, dest, PlayerColors.getColor(source.owner.color));
+			}
+			
+			// draw border clashes
+			for (var i:int = 0; i < borderClashes.length; i += 2) {
+				source = model.getTerritory(borderClashes[i].sourceTerritory);
+				dest = model.getTerritory(borderClashes[i + 1].sourceTerritory);
+				_arrowManager.drawDoubleArrow(source, dest);
 			}
 		}
 		
 		private function displayBorderClashes(e:Event):void {
-			for each(var battleInfo:BattleInfo in model.borderClashes) {
-				var territory1:TerritoryWrapper = model.getTerritory(battleInfo.oneSide[0]);
-				var territory2:TerritoryWrapper = model.getTerritory(battleInfo.otherSide[0]);
-				_arrowManager.drawDoubleArrow(territory1, territory2);
-			}
 		}
 	}
 

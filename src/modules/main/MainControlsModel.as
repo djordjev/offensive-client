@@ -69,9 +69,11 @@ package modules.main {
 			
 			// attach listeners
 			Communicator.instance.subscribe(HandlerCodes.ALL_COMMANDS_BATTLE_PHASE, allCommandsSubmitted);
+			
 			Communicator.instance.subscribe(HandlerCodes.BORDER_CLASHES, borderClashes);
-			Communicator.instance.subscribe(HandlerCodes.PLAYER_ROLLED_DICE, playerRolledDice);
-			Communicator.instance.subscribe(HandlerCodes.ADVANCE_TO_NEXT_BATTLE, advanceToNextBattle);
+			Communicator.instance.subscribe(HandlerCodes.MULTIPLE_ATTACKS, multipleAttacks);
+			Communicator.instance.subscribe(HandlerCodes.SINGLE_ATTACKS, singleAttacks);
+			Communicator.instance.subscribe(HandlerCodes.SPOILS_OF_WAR, spoilsOfWar);
 		}
 		
 		public function createOpenGame(gameName:String, numberOfPlayers:int, gameType:int, callback:Function):void {
@@ -156,7 +158,9 @@ package modules.main {
 		
 		private function allCommandsSubmitted(e:ProtocolMessage):void {
 			var allCommands:AllCommands = e.data as AllCommands;
-			if (GameModel.instance.gameId != null && allCommands.gameId.toString() == GameModel.instance.gameId.toString()) {
+			var currentGameId:Int64 = GameModel.instance.gameId;
+			
+			if (currentGameId != null && allCommands.gameId.toString() == currentGameId.toString()) {
 				GameModel.instance.allCommandsReceived(allCommands);
 			}
 		}
@@ -168,12 +172,16 @@ package modules.main {
 			}
 		}
 		
-		private function playerRolledDice(e:ProtocolMessage):void {
-			trace("player rolled dice");
+		private function multipleAttacks(e:ProtocolMessage):void {
+			
 		}
 		
-		private function advanceToNextBattle(e:ProtocolMessage):void {
-			trace("advance to next battle");
+		private function singleAttacks(e:ProtocolMessage):void {
+			
+		}
+		
+		private function spoilsOfWar(e:ProtocolMessage):void {
+			
 		}
 	}
 

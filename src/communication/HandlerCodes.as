@@ -16,5 +16,8 @@ package communication {
 		public static const PLAYER_ROLLED_DICE:int = 18;
 		public static const JOIN_GAME_NOTIFICATION:int = 19;
 		public static const ADVANCE_TO_NEXT_PHASE:int = 20;
+		public static const MULTIPLE_ATTACKS:int = 21;
+		public static const SINGLE_ATTACKS:int = 22;
+		public static const SPOILS_OF_WAR:int = 23;
 	}
 }
