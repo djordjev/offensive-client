@@ -24,6 +24,8 @@ package modules.game {
 	 * @author Djordje Vukovic
 	 */
 	public class GameView extends LayoutGroup {
+		public static const NORMAL_SCALE:Number = 1024 / 2000;
+		
 		private static const WIDTH:int = 1024;
 		private static const HEIGHT:int = 768;
 		
@@ -85,6 +87,7 @@ package modules.game {
 				_mapSprite.addChild(visualTerritory);
 			}
 			
+			_mapSprite.name = "Map Sprite";
 			this.addChild(_mapSprite);
 		}
 		
@@ -153,6 +156,30 @@ package modules.game {
 		
 		private function playersListItemRendererFactoryFunction():IListItemRenderer {
 			return new PlayerRenderer();
+		}
+		
+		public function set mapScale(value:Number):void {
+			_mapSprite.scaleX = _mapSprite.scaleY = value;
+		}
+		
+		public function set mapX(value:Number):void {
+			_mapSprite.x = value;
+		}
+		
+		public function set mapY(value:Number):void {
+			_mapSprite.y = value;
+		}
+		
+		public function get mapY():Number {
+			return _mapSprite.y;
+		}
+		
+		public function get mapX():Number {
+			return _mapSprite.x;
+		}
+		
+		public function get mapScale():Number {
+			return _mapSprite.scaleX;
 		}
 	}
 

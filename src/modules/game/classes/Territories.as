@@ -151,58 +151,58 @@ package modules.game.classes {
 			if (_territoriesPositions == null) {
 				_territoriesPositions = new Dictionary();
 				// points for N. America
-				_territoriesPositions[ALASKA] = new Point(50, 80);
-				_territoriesPositions[EASTERN_US] = new Point(153, 153);
-				_territoriesPositions[WESTERN_US] = new Point(107, 154);
-				_territoriesPositions[ALBERTA] = new Point(133, 115);
-				_territoriesPositions[QUEBEC] = new Point(272, 108);
-				_territoriesPositions[ONTARIO] = new Point(207, 117);
-				_territoriesPositions[NORTHWEST_TERRITORY] = new Point(130, 70);
-				_territoriesPositions[GREENLAND] = new Point(330, 35);
-				_territoriesPositions[CENTRAL_AMERICA] = new Point(114, 214);
+				_territoriesPositions[ALASKA] = new Point(97, 156);
+				_territoriesPositions[EASTERN_US] = new Point(299, 299);
+				_territoriesPositions[WESTERN_US] = new Point(209, 300);
+				_territoriesPositions[ALBERTA] = new Point(260, 224);
+				_territoriesPositions[QUEBEC] = new Point(531, 211);
+				_territoriesPositions[ONTARIO] = new Point(404, 228);
+				_territoriesPositions[NORTHWEST_TERRITORY] = new Point(253, 136);
+				_territoriesPositions[GREENLAND] = new Point(644, 38);
+				_territoriesPositions[CENTRAL_AMERICA] = new Point(222, 418);
 				
 				// points in S.America
-				_territoriesPositions[VENEZUELA] = new Point(192, 318);
-				_territoriesPositions[PERU] = new Point(182, 362);
-				_territoriesPositions[BRAZIL] = new Point(211, 349);
-				_territoriesPositions[ARGENTINA] = new Point(224, 443);
+				_territoriesPositions[VENEZUELA] = new Point(375, 621);
+				_territoriesPositions[PERU] = new Point(355, 707);
+				_territoriesPositions[BRAZIL] = new Point(412, 681);
+				_territoriesPositions[ARGENTINA] = new Point(437, 865);
 				
 				// points in Africa
-				_territoriesPositions[NORTH_AFRICA] = new Point(379, 246);
-				_territoriesPositions[EGYPT] = new Point(469, 257);
-				_territoriesPositions[EAST_AFRICA] = new Point(518, 300);
-				_territoriesPositions[CONGO] = new Point(472, 379);
-				_territoriesPositions[SOUTH_AFRICA] = new Point(478, 443);
-				_territoriesPositions[MADAGASCAR] = new Point(625, 386);
+				_territoriesPositions[NORTH_AFRICA] = new Point(740, 480);
+				_territoriesPositions[EGYPT] = new Point(916, 502);
+				_territoriesPositions[EAST_AFRICA] = new Point(1011, 585);
+				_territoriesPositions[CONGO] = new Point(921, 740);
+				_territoriesPositions[SOUTH_AFRICA] = new Point(933, 865);
+				_territoriesPositions[MADAGASCAR] = new Point(1220, 753);
 				
 				// points in Europe
-				_territoriesPositions[WESTERN_EUROPE] = new Point(368, 175);
-				_territoriesPositions[SOUTHERN_EUROPE] = new Point(451, 185);
-				_territoriesPositions[UKRAINE] = new Point(502, 108);
-				_territoriesPositions[NORTHERN_EUROPE] = new Point(440, 149);
-				_territoriesPositions[SCANDINAVIA] = new Point(457, 106);
-				_territoriesPositions[ICELAND] = new Point(450, 70);
-				_territoriesPositions[GREAT_BRITAIN] = new Point(378, 104);
+				_territoriesPositions[WESTERN_EUROPE] = new Point(718, 341);
+				_territoriesPositions[SOUTHERN_EUROPE] = new Point(880, 361);
+				_territoriesPositions[UKRAINE] = new Point(980, 211);
+				_territoriesPositions[NORTHERN_EUROPE] = new Point(859, 291);
+				_territoriesPositions[SCANDINAVIA] = new Point(892, 207);
+				_territoriesPositions[ICELAND] = new Point(879, 136);
+				_territoriesPositions[GREAT_BRITAIN] = new Point(738, 203);
 				
 				// points in Asia
-				_territoriesPositions[AFGHANISTAN] = new Point(584, 156);
-				_territoriesPositions[CHINA] = new Point(678, 177);
-				_territoriesPositions[INDIA] = new Point(645, 218);
-				_territoriesPositions[IRKUTSK] = new Point(707, 127);
-				_territoriesPositions[JAPAN] = new Point(915, 210);
-				_territoriesPositions[KAMCHATKA] = new Point(818, 108);
-				_territoriesPositions[MIDDLE_EAST] = new Point(525, 206);
-				_territoriesPositions[MONGOLIA] = new Point(712, 164);
-				_territoriesPositions[SIAM] = new Point(757, 259);
-				_territoriesPositions[SIBERIA] = new Point(671, 87);
-				_territoriesPositions[URAL] = new Point(595, 92);
-				_territoriesPositions[YAKUTSK] = new Point(709, 97);
+				_territoriesPositions[AFGHANISTAN] = new Point(1140, 304);
+				_territoriesPositions[CHINA] = new Point(1324, 345);
+				_territoriesPositions[INDIA] = new Point(1259, 425);
+				_territoriesPositions[IRKUTSK] = new Point(1380, 248);
+				_territoriesPositions[JAPAN] = new Point(1787, 410);
+				_territoriesPositions[KAMCHATKA] = new Point(1597, 210);
+				_territoriesPositions[MIDDLE_EAST] = new Point(1025, 402);
+				_territoriesPositions[MONGOLIA] = new Point(1390, 320);
+				_territoriesPositions[SIAM] = new Point(1478, 505);
+				_territoriesPositions[SIBERIA] = new Point(1310, 170);
+				_territoriesPositions[URAL] = new Point(1162, 179);
+				_territoriesPositions[YAKUTSK] = new Point(1384, 189);
 				
 				// points in Australia
-				_territoriesPositions[NEW_GUINEA] = new Point(881, 341);
-				_territoriesPositions[EASTERN_AUSTRALIA] = new Point(914, 434);
-				_territoriesPositions[WESTERN_AUSTRALIA] = new Point(859, 443);
-				_territoriesPositions[INDONESIA] = new Point(759, 344);
+				_territoriesPositions[NEW_GUINEA] = new Point(1720, 666);
+				_territoriesPositions[EASTERN_AUSTRALIA] = new Point(1785, 847);
+				_territoriesPositions[WESTERN_AUSTRALIA] = new Point(1677, 865);
+				_territoriesPositions[INDONESIA] = new Point(1482, 671);
 			}
 			
 			return _territoriesPositions[id];

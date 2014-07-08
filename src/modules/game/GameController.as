@@ -5,6 +5,7 @@ package modules.game {
 	import components.TerritoryVisual;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
+	import flash.geom.Point;
 	import flash.utils.Dictionary;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
@@ -14,9 +15,13 @@ package modules.game {
 	import modules.game.classes.ArrowManager;
 	import modules.game.classes.GamePhase;
 	import modules.game.classes.IGameActionPerformed;
+	import modules.game.classes.Territories;
 	import modules.game.events.AttackEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
+	import starling.animation.Transitions;
+	import starling.animation.Tween;
+	import starling.core.Starling;
 	import starling.events.Event;
 	import utils.Alert;
 	import utils.Globals;
@@ -32,6 +37,8 @@ package modules.game {
 	 * @author Djordje Vukovic
 	 */
 	public class GameController extends BaseController {
+		
+		private static const ZOOM_ANIMATION_DURATION:int = 1; // in seconds
 		
 		private static var _instance:GameController;
 		
@@ -105,6 +112,7 @@ package modules.game {
 				
 				switchToCurrentGamePhase();
 				
+				view.mapScale = GameView.NORMAL_SCALE;
 			});
 		}
 		
@@ -168,7 +176,7 @@ package modules.game {
 		}
 		
 		private function commitClickHandler(e:Event):void {
-			view.commitButton.isEnabled = false;
+			/*view.commitButton.isEnabled = false;
 			switch (model.phase) {
 				case GamePhase.TROOP_DEPLOYMENT_PHASE: 
 					if (model.numberOfReinforcements == 0) {
@@ -183,7 +191,9 @@ package modules.game {
 					break;
 				default: 
 					return;
-			}
+			}*/
+			
+			focusOn([model.getTerritory(Territories.UKRAINE)]);
 		}
 		
 		private function gamePhaseCommited(e:Event):void {
@@ -236,6 +246,43 @@ package modules.game {
 				dest = model.getTerritory(borderClashes[i + 1].sourceTerritory);
 				_arrowManager.drawDoubleArrow(source, dest);
 			}
+		}
+		
+		private function focusOn(territories:Array):void {
+			var lowY:int = int.MAX_VALUE;
+			var lowX:int = int.MAX_VALUE;
+			var highY:int = 0;
+			var highX:int = 0;
+			
+			for each(var territory:TerritoryWrapper in territories) {
+				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
+				var visualTerritoryPosition:Point = Territories.getTerritoryPosition(territory.id);
+				
+				lowY = Math.min(lowY, visualTerritoryPosition.y);
+				lowX = Math.min(lowX, visualTerritoryPosition.x);
+				
+				highX = Math.max(highX, visualTerritoryPosition.x + visualTerritory.width);
+				highY = Math.max(highY, visualTerritoryPosition.y + visualTerritory.height);
+			}
+			
+			var xOffset = Math.max(0, (Globals.SCREEN_WIDTH - (highX - lowX)) / 2);
+			var yOffset = Math.max(0, (Globals.SCREEN_HEIGHT - (highY - lowY)) / 2);
+			
+			var tween:Tween = new Tween(view, ZOOM_ANIMATION_DURATION, Transitions.EASE_IN);
+			tween.animate("mapX", -(lowX - xOffset));
+			tween.animate("mapY", -(lowY - yOffset));
+			tween.animate("mapScale", 1);
+			
+			Starling.juggler.add(tween);
+		}
+		
+		private function focusMap():void {
+			var tween:Tween = new Tween(view, ZOOM_ANIMATION_DURATION, Transitions.EASE_IN);
+			tween.animate("mapX", 0);
+			tween.animate("mapY", 0);
+			tween.animate("mapScale", GameView.NORMAL_SCALE);
+			
+			Starling.juggler.add(tween);
 		}
 		
 		private function displayBorderClashes(e:Event):void {

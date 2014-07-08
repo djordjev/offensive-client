@@ -1,11 +1,14 @@
-package utils 
-{
+package utils {
+	
 	/**
 	 * ...
 	 * @author Djordje Vukovic
 	 */
-	public dynamic class Globals 
-	{
+	public dynamic class Globals {
+		
+		public static const SCREEN_WIDTH:int = 1024;
+		public static const SCREEN_HEIGHT:int = 768;
+		
 		private static var _instance:Globals;
 		
 		public static function get instance():Globals {
@@ -20,7 +23,7 @@ package utils
 		
 		public function Globals() {
 		}
-		
+	
 	}
 
 }
