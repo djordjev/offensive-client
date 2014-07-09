@@ -176,7 +176,7 @@ package modules.game {
 		}
 		
 		private function commitClickHandler(e:Event):void {
-			/*view.commitButton.isEnabled = false;
+			view.commitButton.isEnabled = false;
 			switch (model.phase) {
 				case GamePhase.TROOP_DEPLOYMENT_PHASE: 
 					if (model.numberOfReinforcements == 0) {
@@ -191,9 +191,7 @@ package modules.game {
 					break;
 				default: 
 					return;
-			}*/
-			
-			focusOn([model.getTerritory(Territories.UKRAINE)]);
+			}
 		}
 		
 		private function gamePhaseCommited(e:Event):void {
@@ -265,8 +263,8 @@ package modules.game {
 				highY = Math.max(highY, visualTerritoryPosition.y + visualTerritory.height);
 			}
 			
-			var xOffset = Math.max(0, (Globals.SCREEN_WIDTH - (highX - lowX)) / 2);
-			var yOffset = Math.max(0, (Globals.SCREEN_HEIGHT - (highY - lowY)) / 2);
+			var xOffset:int = Math.max(0, (Globals.SCREEN_WIDTH - (highX - lowX)) / 2);
+			var yOffset:int = Math.max(0, (Globals.SCREEN_HEIGHT - (highY - lowY)) / 2);
 			
 			var tween:Tween = new Tween(view, ZOOM_ANIMATION_DURATION, Transitions.EASE_IN);
 			tween.animate("mapX", -(lowX - xOffset));
