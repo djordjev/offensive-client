@@ -15,7 +15,7 @@ package components {
 	 */
 	public class Units extends LayoutGroup {
 		
-		private static const CIRCLE_RADIUS:uint = 12;
+		private static const CIRCLE_RADIUS:uint = 25;
 		
 		private var _background:ImageLoader = new ImageLoader();
 		private var _unitsLabel:OLabel = new OLabel();
@@ -34,6 +34,7 @@ package components {
 			_unitsLabel.width = 2 * CIRCLE_RADIUS;
 			_unitsLabel.height = 2 * CIRCLE_RADIUS;
 			_unitsLabel.textAlign = TextFormatAlign.CENTER;
+			_unitsLabel.fontSize = 25;
 			this.addChild(_unitsLabel);
 		}
 		
