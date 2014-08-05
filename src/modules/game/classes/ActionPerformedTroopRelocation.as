@@ -1,4 +1,6 @@
 package modules.game.classes {
+	import modules.game.GameController;
+	import modules.game.GameModel;
 	import wrappers.TerritoryWrapper;
 	
 	/**
