@@ -1,4 +1,5 @@
 package modules.game.classes {
+	import wrappers.TerritoryWrapper;
 	
 	/**
 	 * ...
