@@ -4,6 +4,7 @@ package modules.main {
 	import communication.HandlerCodes;
 	import communication.ProtocolMessage;
 	import communication.protos.AdvancePhaseNotification;
+	import communication.protos.AdvanceToNextBattle;
 	import communication.protos.AllCommands;
 	import communication.protos.BorderClashes;
 	import communication.protos.Command;
@@ -74,6 +75,8 @@ package modules.main {
 			Communicator.instance.subscribe(HandlerCodes.MULTIPLE_ATTACKS, multipleAttacks);
 			Communicator.instance.subscribe(HandlerCodes.SINGLE_ATTACKS, singleAttacks);
 			Communicator.instance.subscribe(HandlerCodes.SPOILS_OF_WAR, spoilsOfWar);
+			
+			Communicator.instance.subscribe(HandlerCodes.ADVANCE_TO_NEXT_BATTLE, advanceToNextBattle);
 		}
 		
 		public function createOpenGame(gameName:String, numberOfPlayers:int, gameType:int, callback:Function):void {
@@ -150,7 +153,6 @@ package modules.main {
 						game.phase = GamePhase.TROOP_DEPLOYMENT_PHASE;
 					}
 					if (GameController.instance.currentGameId != null && GameController.instance.currentGameId.toString() == response.gameId.toString()) {
-						Alert.showMessage("", "Advance to new phase");
 						GameModel.instance.advancedToNextPhase(response);
 					}
 			}
@@ -182,6 +184,13 @@ package modules.main {
 		
 		private function spoilsOfWar(e:ProtocolMessage):void {
 			
+		}
+		
+		private function advanceToNextBattle(e:ProtocolMessage):void {
+			var advanceMessage:AdvanceToNextBattle = e.data as AdvanceToNextBattle;
+			if (GameModel.instance.gameId != null && advanceMessage.gameId.toString() == GameModel.instance.gameId.toString()) {
+				GameModel.instance.advanceToNextBattle(advanceMessage.battleInfo);
+			}
 		}
 	}
 

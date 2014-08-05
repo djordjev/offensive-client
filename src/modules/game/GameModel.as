@@ -8,6 +8,7 @@ package modules.game {
 	import communication.protos.AdvancePhaseNotification;
 	import communication.protos.AllCommands;
 	import communication.protos.AttackRequest;
+	import communication.protos.BattleInfo;
 	import communication.protos.BorderClashes;
 	import communication.protos.Command;
 	import communication.protos.CommandsSubmittedRequest;
@@ -15,6 +16,7 @@ package modules.game {
 	import flash.utils.Dictionary;
 	import modules.base.BaseModel;
 	import modules.game.classes.GamePhase;
+	import modules.game.events.AdvanceToNextBattleEvent;
 	import modules.game.events.AttackEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import starling.events.Event;
@@ -258,6 +260,10 @@ package modules.game {
 				trace("Received border clashes in phase that is not battle phase. Phase " +
 					GamePhase.getPhaseName(_phase));
 			}
+		}
+		
+		public function advanceToNextBattle(battleInfo:BattleInfo):void {
+			dispatchEvent(new AdvanceToNextBattleEvent(battleInfo));
 		}
 	}
 

@@ -16,6 +16,7 @@ package modules.game {
 	import modules.game.classes.GamePhase;
 	import modules.game.classes.IGameActionPerformed;
 	import modules.game.classes.Territories;
+	import modules.game.events.AdvanceToNextBattleEvent;
 	import modules.game.events.AttackEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
@@ -89,6 +90,8 @@ package modules.game {
 			model.addEventListener(AttackEvent.TERRITORY_ATTACK, attackExecuted);
 			model.addEventListener(GameModel.ALL_COMMANDS_RECEIVED, displayAllCommands);
 			model.addEventListener(GameModel.BORDER_CLASHES_RECEIVED, displayBorderClashes);
+			
+			model.addEventListener(AdvanceToNextBattleEvent.ADVANCE_NO_NEXT_BATTLE, advanceToBattle);
 		}
 		
 		private function goBack(e:Event):void {
@@ -98,22 +101,22 @@ package modules.game {
 		
 		public function initForGame(gameContext:GameContextWrapper):void {
 			Utilities.callWhenInitialized(view, function viewInitialized():void {
-				model.initForGame(gameContext);
-				// remove after all teritories are always sent
-				for each (var territory:TerritoryWrapper in model.territories) {
-					view.getTerritoryVisual(territory.id).territory = territory;
-				}
-				
-				_arrowManager.clearAllArrows();
-				// populate players list
-				view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
-				
-				unitsCount = model.numberOfMyUnits;
-				
-				switchToCurrentGamePhase();
-				
-				view.mapScale = GameView.NORMAL_SCALE;
-			});
+					model.initForGame(gameContext);
+					// remove after all teritories are always sent
+					for each (var territory:TerritoryWrapper in model.territories) {
+						view.getTerritoryVisual(territory.id).territory = territory;
+					}
+					
+					_arrowManager.clearAllArrows();
+					// populate players list
+					view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
+					
+					unitsCount = model.numberOfMyUnits;
+					
+					switchToCurrentGamePhase();
+					
+					view.mapScale = GameView.NORMAL_SCALE;
+				});
 		}
 		
 		private function openingInTroopDeployment():void {
@@ -128,12 +131,16 @@ package modules.game {
 			
 			view.numberOfReinforcements.visible = false;
 			// show pending commands
-			for each(var command:Command in model.pendingCommands) {
+			for each (var command:Command in model.pendingCommands) {
 				var sourceTerritory:TerritoryWrapper = model.getTerritory(command.sourceTerritory);
 				var destinationTerritory:TerritoryWrapper = model.getTerritory(command.destinationTerritory);
 				
 				_arrowManager.drawArrow(sourceTerritory, destinationTerritory, PlayerColors.getColor(model.me.color));
 			}
+		}
+		
+		private function openingInTroopRelocationPhase():void {
+			focusMap();
 		}
 		
 		private function openingInBattlePhase():void {
@@ -157,8 +164,11 @@ package modules.game {
 				case GamePhase.ATTACK_PHASE: 
 					openingInAttackPhase();
 					break;
-				case GamePhase.BATTLE_PHASE:
+				case GamePhase.BATTLE_PHASE: 
 					openingInBattlePhase();
+					break;
+				case GamePhase.TROOP_RELOCATION_PHASE: 
+					openingInTroopRelocationPhase();
 					break;
 				default: 
 					throw new Error("Can't go into phase " + model.phase);
@@ -186,7 +196,7 @@ package modules.game {
 						Alert.showMessage("Can't commit operation", "You can't commit reinforcements phase until you place all reinforcements");
 					}
 					break;
-				case GamePhase.ATTACK_PHASE:
+				case GamePhase.ATTACK_PHASE: 
 					model.submitPhase();
 					break;
 				default: 
@@ -216,7 +226,7 @@ package modules.game {
 			var regularCommands:Dictionary = new Dictionary();
 			// this array has to have even number of elements, so clash is attack on position i and i+1 
 			var borderClashes:Array = [];
-			for each(var command:Command in model.allCommands) {
+			for each (var command:Command in model.allCommands) {
 				source = model.getTerritory(command.sourceTerritory);
 				dest = model.getTerritory(command.destinationTerritory);
 				if (regularCommands[dest.id + "*" + source.id] != null) {
@@ -232,7 +242,7 @@ package modules.game {
 			}
 			
 			// draw regular attack
-			for each(var regularCommand:Command in regularCommands) {
+			for each (var regularCommand:Command in regularCommands) {
 				source = model.getTerritory(regularCommand.sourceTerritory);
 				dest = model.getTerritory(regularCommand.destinationTerritory);
 				_arrowManager.drawArrow(source, dest, PlayerColors.getColor(source.owner.color));
@@ -246,13 +256,13 @@ package modules.game {
 			}
 		}
 		
-		private function focusOn(territories:Array):void {
+		private function focusOn(territories:Array, callback:Function = null):void {
 			var lowY:int = int.MAX_VALUE;
 			var lowX:int = int.MAX_VALUE;
 			var highY:int = 0;
 			var highX:int = 0;
 			
-			for each(var territory:TerritoryWrapper in territories) {
+			for each (var territory:TerritoryWrapper in territories) {
 				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
 				var visualTerritoryPosition:Point = Territories.getTerritoryPosition(territory.id);
 				
@@ -271,19 +281,75 @@ package modules.game {
 			tween.animate("mapY", -(lowY - yOffset));
 			tween.animate("mapScale", 1);
 			
+			tween.onComplete = callback;
+			
 			Starling.juggler.add(tween);
 		}
 		
-		private function focusMap():void {
+		private function focusMap(callback:Function = null):void {
 			var tween:Tween = new Tween(view, ZOOM_ANIMATION_DURATION, Transitions.EASE_IN);
 			tween.animate("mapX", 0);
 			tween.animate("mapY", 0);
 			tween.animate("mapScale", GameView.NORMAL_SCALE);
 			
+			tween.onComplete = callback;
+			
 			Starling.juggler.add(tween);
 		}
 		
 		private function displayBorderClashes(e:Event):void {
+			trace("Border clashes");
+		}
+		
+		private function advanceToBattle(event:AdvanceToNextBattleEvent) {
+			focusMap(function focusOutFinished():void {
+					var affectedTerritories:Dictionary = new Dictionary();
+					var myTerritory:TerritoryWrapper = null;
+					var command:Command;
+					
+					for each (command in event.battleInfo.oneSide.concat(event.battleInfo.otherSide)) {
+						var source:TerritoryWrapper = model.getTerritory(command.sourceTerritory);
+						var destionation:TerritoryWrapper = model.getTerritory(command.destinationTerritory);
+						
+						affectedTerritories[source.id.toString()] = source;
+						affectedTerritories[destionation.id.toString()] = destionation;
+						
+						if (source.owner.playerId == model.me.playerId) {
+							myTerritory = source;
+						}
+						
+						if (destionation.owner.playerId == model.me.playerId) {
+							myTerritory = destionation;
+						}
+					}
+					
+					var allTerritories:Array = [];
+					
+					for each (var t:TerritoryWrapper in affectedTerritories) {
+						allTerritories.push(t);
+					}
+					
+					displayBattle(allTerritories, myTerritory);
+				});
+		
+		}
+		
+		/** @param territories - Array of TerritoryWrapper */
+		private function displayBattle(territories:Array, myTerritory:TerritoryWrapper):void {
+			var myTerritoryComponent:TerritoryVisual = null;
+			
+			// focus on selected territories
+			focusOn(territories, function focusOnFinished():void {
+					for each (var territory:TerritoryWrapper in territories) {
+						var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
+						if (myTerritory != null && myTerritory.id.toString() == territory.id.toString()) {
+							visualTerritory.battleDisplay.show(true);
+						} else {
+							visualTerritory.battleDisplay.show(false);
+						}
+					}
+				});
+		
 		}
 	}
 
