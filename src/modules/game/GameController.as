@@ -11,6 +11,7 @@ package modules.game {
 	import modules.base.BaseModel;
 	import modules.game.classes.ActionPerformedAttack;
 	import modules.game.classes.ActionPerformedTroopDeployment;
+	import modules.game.classes.ActionPerformedTroopRelocation;
 	import modules.game.classes.ActionPerformedWaitingForOpponents;
 	import modules.game.classes.ArrowManager;
 	import modules.game.classes.GamePhase;
@@ -142,6 +143,8 @@ package modules.game {
 		}
 		
 		private function openingInTroopRelocationPhase():void {
+			_actionPerformed = new ActionPerformedTroopRelocation();
+			
 			focusMap();
 		}
 		
