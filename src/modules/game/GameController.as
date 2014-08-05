@@ -55,6 +55,8 @@ package modules.game {
 		
 		private var _arrowManager:ArrowManager;
 		
+		private var _mapZoom:Number = GameView.NORMAL_SCALE;
+		
 		public function get model():GameModel {
 			return _model as GameModel;
 		}
@@ -135,7 +137,7 @@ package modules.game {
 				var sourceTerritory:TerritoryWrapper = model.getTerritory(command.sourceTerritory);
 				var destinationTerritory:TerritoryWrapper = model.getTerritory(command.destinationTerritory);
 				
-				_arrowManager.drawArrow(sourceTerritory, destinationTerritory, PlayerColors.getColor(model.me.color));
+				_arrowManager.drawArrow(sourceTerritory, destinationTerritory, PlayerColors.getColor(model.me.color), _mapZoom);
 			}
 		}
 		
@@ -217,7 +219,7 @@ package modules.game {
 		private function attackExecuted(e:AttackEvent):void {
 			var visualTerritory:TerritoryVisual = view.getTerritoryVisual(e.territoryFrom.id);
 			visualTerritory.refreshNumberOfUnits();
-			_arrowManager.drawArrow(e.territoryFrom, e.territoryTo, PlayerColors.getColor(model.me.color));
+			_arrowManager.drawArrow(e.territoryFrom, e.territoryTo, PlayerColors.getColor(model.me.color), _mapZoom);
 		}
 		
 		private function displayAllCommands(e:Event):void {
@@ -245,14 +247,14 @@ package modules.game {
 			for each (var regularCommand:Command in regularCommands) {
 				source = model.getTerritory(regularCommand.sourceTerritory);
 				dest = model.getTerritory(regularCommand.destinationTerritory);
-				_arrowManager.drawArrow(source, dest, PlayerColors.getColor(source.owner.color));
+				_arrowManager.drawArrow(source, dest, PlayerColors.getColor(source.owner.color), _mapZoom);
 			}
 			
 			// draw border clashes
 			for (var i:int = 0; i < borderClashes.length; i += 2) {
 				source = model.getTerritory(borderClashes[i].sourceTerritory);
 				dest = model.getTerritory(borderClashes[i + 1].sourceTerritory);
-				_arrowManager.drawDoubleArrow(source, dest);
+				_arrowManager.drawDoubleArrow(source, dest, _mapZoom);
 			}
 		}
 		
@@ -281,7 +283,13 @@ package modules.game {
 			tween.animate("mapY", -(lowY - yOffset));
 			tween.animate("mapScale", 1);
 			
-			tween.onComplete = callback;
+			var self:GameController = this;
+			tween.onComplete = function():void {
+				self._mapZoom = 1;
+				if (callback != null) {
+					callback();
+				}
+			};
 			
 			Starling.juggler.add(tween);
 		}
@@ -292,7 +300,13 @@ package modules.game {
 			tween.animate("mapY", 0);
 			tween.animate("mapScale", GameView.NORMAL_SCALE);
 			
-			tween.onComplete = callback;
+			var self:GameController = this;
+			tween.onComplete = function ():void {
+				self._mapZoom = GameView.NORMAL_SCALE;
+				if (callback != null) {
+					callback();
+				}
+			};
 			
 			Starling.juggler.add(tween);
 		}
