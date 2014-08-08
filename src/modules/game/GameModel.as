@@ -35,6 +35,8 @@ package modules.game {
 		public static const ALL_COMMANDS_RECEIVED:String = "all commands received";
 		public static const BORDER_CLASHES_RECEIVED:String = "border clashes received";
 		
+		public static const MAX_DICES:int = 3;
+		
 		private var _gameName:String;
 		private var _gameId:Int64;
 		private var _me:PlayerWrapper;

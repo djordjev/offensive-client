@@ -1,11 +1,16 @@
 package components {
+	import components.common.LinkButton;
+	import components.common.OLabel;
+	import components.events.MouseClickEvent;
 	import feathers.controls.Button;
 	import feathers.controls.ImageLoader;
 	import feathers.controls.LayoutGroup;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.VerticalLayout;
+	import modules.game.GameModel;
 	import starling.display.Quad;
 	import starling.events.Event;
+	import utils.Assets;
 	import utils.Colors;
 	
 	/**
@@ -16,8 +21,14 @@ package components {
 		
 		public static const ROLL_CLICKED:String = "roll button clicked on component";
 		
-		public var rollButton:Button = new Button();
+		public var rollButton:LinkButton = new LinkButton();
+		
+		public var remainingTime:OLabel = new OLabel();
+		
+		/** Array of ImageLoader's */
 		public var dices:Array = [];
+		
+		private var _headerGroup:LayoutGroup = new LayoutGroup();
 		
 		public function TerritoryBattle() {
 			super();
@@ -26,8 +37,9 @@ package components {
 		override protected function initialize():void {
 			super.initialize();
 			
-			var background:Quad = new Quad(250, 100, Colors.BLACK);
+			var background:Quad = new Quad(200, 110, Colors.BLACK);
 			this.addChild(background);
+			background.alpha = 0.8;
 			
 			
 			var mainGroup:LayoutGroup = new LayoutGroup();
@@ -36,17 +48,30 @@ package components {
 			mainGroup.layout = new VerticalLayout();
 			(mainGroup.layout as VerticalLayout).gap = 5;
 			
-			rollButton.label = "ROLL";
+			_headerGroup.layout = new HorizontalLayout();
+			(_headerGroup.layout as HorizontalLayout).gap = 40;
+			
+			rollButton.label = "Roll";
+			rollButton.fontColor = Colors.WHITE;
+			rollButton.fontSize = 20;
 			rollButton.visible = false;
-			rollButton.addEventListener(Event.TRIGGERED, function (e:Event):void {
-				dispatchEvent(new Event(ROLL_CLICKED));
+			rollButton.addEventListener(MouseClickEvent.CLICK, function (e:Event):void {
+				dispatchEvent(new Event(ROLL_CLICKED, true));
 			});
 			
-			mainGroup.addChild(rollButton);
+			remainingTime.fontSize = 20;
+			remainingTime.fontColor = Colors.WHITE;
+
+			_headerGroup.addChild(rollButton);
+			_headerGroup.addChild(remainingTime);
+			
+			mainGroup.addChild(_headerGroup);
 			
 			var dicesGroup:LayoutGroup = new LayoutGroup();
+			dicesGroup.width = 170;
+			dicesGroup.height = 50;
 			dicesGroup.layout = new HorizontalLayout();
-			(dicesGroup.layout as HorizontalLayout).gap = 5;
+			(dicesGroup.layout as HorizontalLayout).gap = 10;
 			
 			mainGroup.addChild(dicesGroup);
 			
@@ -61,11 +86,27 @@ package components {
 		public function show(showRoll:Boolean = false):void {
 			this.visible = true;
 			
-			rollButton.visible = showRoll;
+			_headerGroup.visible = showRoll;
 		}
 		
 		public function hide():void {
 			this.visible = false;
+		}
+		
+		public function setRemainingTime(remaining:int):void {
+			remainingTime.text = remaining.toString();
+		}
+		
+		public function setDices(values:Array):void {
+			
+			for (var i:int; i < GameModel.MAX_DICES; i++) {
+				if (i < values.length) {
+					dices[i].source = Assets.getDice(values[i]);
+				} else {
+					dices[i].source = null;
+				}
+				
+			}
 		}
 	
 	}
