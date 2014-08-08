@@ -17,7 +17,7 @@ package modules.game.classes {
 	 */
 	public class ArrowManager {
 		
-		private static const ARROW_TWEEK:int = 12;
+		private static const ARROW_TWEEK:int = 25;
 		private static const ARROW_ALPHA:Number = 0.5;
 		
 		private var _arrowSprite:Sprite;
@@ -41,13 +41,13 @@ package modules.game.classes {
 			
 			// create arrow texture
 			var texture:Texture = Texture.fromBitmapData(arrow.bitmapData);
-			var texture3grid:Scale3Textures = new Scale3Textures(texture, 17, 1);
+			var texture3grid:Scale3Textures = new Scale3Textures(texture, 38, 1);
 			
 			var image:Scale3Image = new Scale3Image(texture3grid);
 			image.alpha = ARROW_ALPHA;
 			
-			var sourcePosition:Point = calculateTargetPosition(source, zoom);
-			var destinationPosition:Point = calculateTargetPosition(dest, zoom);
+			var sourcePosition:Point = calculateTargetPosition(source);
+			var destinationPosition:Point = calculateTargetPosition(dest);
 			
 			var arrowLength:int = Math.sqrt(Math.pow(destinationPosition.x - sourcePosition.x, 2) + 
 											Math.pow(destinationPosition.y - sourcePosition.y, 2)) - ARROW_TWEEK;
@@ -63,7 +63,6 @@ package modules.game.classes {
 			
 			image.rotation = angle;
 			
-			
 			_arrowSprite.addChild(image);
 		}
 		
@@ -71,13 +70,13 @@ package modules.game.classes {
 			var arrow:Bitmap = new Assets.DoubleArrow();
 			
 			var texture:Texture = Texture.fromBitmapData(arrow.bitmapData);
-			var texture3grid:Scale3Textures = new Scale3Textures(texture, 40, 1);
+			var texture3grid:Scale3Textures = new Scale3Textures(texture, 80, 1);
 			
 			var image:Scale3Image = new Scale3Image(texture3grid);
 			image.alpha = ARROW_ALPHA;
 			
-			var sourcePosition:Point = calculateTargetPosition(territory1, zoom);
-			var destPosition:Point = calculateTargetPosition(territory2, zoom);
+			var sourcePosition:Point = calculateTargetPosition(territory1);
+			var destPosition:Point = calculateTargetPosition(territory2);
 			
 			var arrowLength:int = Math.sqrt(Math.pow(destPosition.x - sourcePosition.x, 2) + 
 											Math.pow(destPosition.y - sourcePosition.y, 2)) - ARROW_TWEEK;
@@ -97,13 +96,11 @@ package modules.game.classes {
 			_arrowSprite.addChild(image);
 		}
 		
-		private function calculateTargetPosition(territory:TerritoryWrapper, zoom:Number):Point {
+		private function calculateTargetPosition(territory:TerritoryWrapper):Point {
 			var position:Point = Territories.getTerritoryPosition(territory.id).clone();
-			position.x *= zoom;
-			position.y *= zoom;
 			var unitsOffset:Point = Territories.getUnitsPosition(territory.id);
-			position.x += (unitsOffset.x * zoom) + (ARROW_TWEEK * zoom) ;
-			position.y += (unitsOffset.y * zoom) + (ARROW_TWEEK * zoom);
+			position.x += unitsOffset.x + ARROW_TWEEK;
+			position.y += unitsOffset.y + ARROW_TWEEK;
 			return position;
 		}
 		

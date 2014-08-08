@@ -318,7 +318,7 @@ package modules.game {
 			trace("Border clashes");
 		}
 		
-		private function advanceToBattle(event:AdvanceToNextBattleEvent) {
+		private function advanceToBattle(event:AdvanceToNextBattleEvent):void {
 			focusMap(function focusOutFinished():void {
 					var affectedTerritories:Dictionary = new Dictionary();
 					var myTerritory:TerritoryWrapper = null;

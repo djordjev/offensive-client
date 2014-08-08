@@ -45,6 +45,8 @@ package modules.game {
 		public var unitsCount:OLabel = new OLabel();
 		public var numberOfReinforcements:OLabel = new OLabel();
 		
+		private var _wholeMap:LayoutGroup = new LayoutGroup();
+		
 		// game fields
 		
 		public function GameView() {
@@ -68,6 +70,8 @@ package modules.game {
 			image.height = HEIGHT;
 			this.addChild(image);
 			
+			this.addChild(_wholeMap);
+			
 			// add terrotories components
 			populateTerritories();
 			
@@ -77,7 +81,9 @@ package modules.game {
 			// add arrows sprite
 			arrowsSprite.width = this.width;
 			arrowsSprite.height = this.height;
-			this.addChild(arrowsSprite);
+			
+			_wholeMap.addChild(_mapSprite);
+			_wholeMap.addChild(arrowsSprite);
 		}
 		
 		private function populateTerritories():void {
@@ -88,7 +94,6 @@ package modules.game {
 			}
 			
 			_mapSprite.name = "Map Sprite";
-			this.addChild(_mapSprite);
 		}
 		
 		private function populateControlPanel():void {
@@ -159,27 +164,27 @@ package modules.game {
 		}
 		
 		public function set mapScale(value:Number):void {
-			_mapSprite.scaleX = _mapSprite.scaleY = value;
+			_wholeMap.scaleX = _wholeMap.scaleY = value;
 		}
 		
 		public function set mapX(value:Number):void {
-			_mapSprite.x = value;
+			_wholeMap.x = value;
 		}
 		
 		public function set mapY(value:Number):void {
-			_mapSprite.y = value;
+			_wholeMap.y = value;
 		}
 		
 		public function get mapY():Number {
-			return _mapSprite.y;
+			return _wholeMap.y;
 		}
 		
 		public function get mapX():Number {
-			return _mapSprite.x;
+			return _wholeMap.x;
 		}
 		
 		public function get mapScale():Number {
-			return _mapSprite.scaleX;
+			return _wholeMap.scaleX;
 		}
 	}
 
