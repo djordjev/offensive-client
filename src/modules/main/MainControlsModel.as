@@ -17,6 +17,10 @@ package modules.main {
 	import communication.protos.JoinGameNotification;
 	import communication.protos.JoinGameRequest;
 	import communication.protos.JoinGameResponse;
+	import communication.protos.MultipleAttacks;
+	import communication.protos.PlayerRolledDice;
+	import communication.protos.SingleAttacks;
+	import communication.protos.SpoilsOfWar;
 	import communication.protos.UserData;
 	import components.CurrentPlayerImage;
 	import flash.sampler.NewObjectSample;
@@ -77,6 +81,7 @@ package modules.main {
 			Communicator.instance.subscribe(HandlerCodes.SPOILS_OF_WAR, spoilsOfWar);
 			
 			Communicator.instance.subscribe(HandlerCodes.ADVANCE_TO_NEXT_BATTLE, advanceToNextBattle);
+			Communicator.instance.subscribe(HandlerCodes.PLAYER_ROLLED_DICE, playerRolledDice);
 		}
 		
 		public function createOpenGame(gameName:String, numberOfPlayers:int, gameType:int, callback:Function):void {
@@ -175,21 +180,37 @@ package modules.main {
 		}
 		
 		private function multipleAttacks(e:ProtocolMessage):void {
-			
+			var multipleAttacks:MultipleAttacks = e.data as MultipleAttacks;
+			if (GameModel.instance.gameId != null && multipleAttacks.gameId.toString() == GameModel.instance.gameId.toString()) {
+				GameModel.instance.multipleAttacksReceived(multipleAttacks);
+			}
 		}
 		
 		private function singleAttacks(e:ProtocolMessage):void {
-			
+			var singleAttacks:SingleAttacks = e.data as SingleAttacks;
+			if (GameModel.instance.gameId != null && singleAttacks.gameId.toString() == GameModel.instance.gameId.toString()) {
+				GameModel.instance.singleAttacksReceived(singleAttacks);
+			}
 		}
 		
 		private function spoilsOfWar(e:ProtocolMessage):void {
-			
+			var spoilsOfWar:SpoilsOfWar = e.data as SpoilsOfWar;
+			if (GameModel.instance.gameId != null && spoilsOfWar.gameId.toString() == GameModel.instance.gameId.toString()) {
+				GameModel.instance.spoilsOfWarReceived(spoilsOfWar);
+			}
 		}
 		
 		private function advanceToNextBattle(e:ProtocolMessage):void {
 			var advanceMessage:AdvanceToNextBattle = e.data as AdvanceToNextBattle;
 			if (GameModel.instance.gameId != null && advanceMessage.gameId.toString() == GameModel.instance.gameId.toString()) {
 				GameModel.instance.advanceToNextBattle(advanceMessage.battleInfo);
+			}
+		}
+		
+		private function playerRolledDice(e:ProtocolMessage):void {
+			var rolledDice:PlayerRolledDice = e.data as PlayerRolledDice;
+			if (GameModel.instance.gameId != null && rolledDice.gameId.toString() == GameModel.instance.gameId.toString()) {
+				GameModel.instance.opponentRolledDice(rolledDice);
 			}
 		}
 	}

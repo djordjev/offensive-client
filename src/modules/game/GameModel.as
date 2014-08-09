@@ -12,6 +12,11 @@ package modules.game {
 	import communication.protos.BorderClashes;
 	import communication.protos.Command;
 	import communication.protos.CommandsSubmittedRequest;
+	import communication.protos.MultipleAttacks;
+	import communication.protos.PlayerRolledDice;
+	import communication.protos.RollDiceClicked;
+	import communication.protos.SingleAttacks;
+	import communication.protos.SpoilsOfWar;
 	import communication.protos.Territory;
 	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
@@ -35,8 +40,13 @@ package modules.game {
 		
 		public static const GAME_PHASE_COMMITED:String = "game phase changed";
 		public static const ADVANCED_TO_NEXT_PHASE:String = "advanced to next phase";
+		
 		public static const ALL_COMMANDS_RECEIVED:String = "all commands received";
+		
 		public static const BORDER_CLASHES_RECEIVED:String = "border clashes received";
+		public static const MULTIPLE_ATTACKS_RECEIVED:String = "multiple attacks received";
+		public static const SINGLE_ATTACKS_RECEIVED:String = "single attacks received";
+		public static const SPOILS_OF_WAR_RECEIVED:String = "spoils of war received";
 		
 		public static const MAX_DICES:int = 3;
 		
@@ -59,7 +69,7 @@ package modules.game {
 		/** All commands in battle phase */
 		private var _allCommands:Array;
 		
-		private var _borderClashes:Array;
+		private var _subphaseBattles:Array;
 		
 		private var _currentBattle:BattleInfo;
 		
@@ -107,7 +117,7 @@ package modules.game {
 		}
 		
 		public function get borderClashes():Array {
-			return _borderClashes;
+			return _subphaseBattles;
 		}
 		
 		public function get currentBattle():BattleInfo {
@@ -147,7 +157,7 @@ package modules.game {
 			}
 			
 			_allCommands = null;
-			_borderClashes = null;
+			_subphaseBattles = null;
 			_pendingCommands = gameContext.pendingCommands;
 		}
 		
@@ -254,7 +264,7 @@ package modules.game {
 		public function disposeModel():void {
 			_gameId == null;
 			_allCommands = null;
-			_borderClashes = null;
+			_subphaseBattles = null;
 			_currentBattle = null;
 			if (_currentBattleTimer != null) {
 				_currentBattleTimer.stop();
@@ -275,10 +285,40 @@ package modules.game {
 		
 		public function borderClashesReceived(borderClashes:BorderClashes):void {
 			if (_phase == GamePhase.BATTLE_PHASE) {
-				_borderClashes = borderClashes.battleInfo;
+				_subphaseBattles = borderClashes.battleInfo;
 				dispatchEvent(new Event(BORDER_CLASHES_RECEIVED));
 			} else {
 				trace("Received border clashes in phase that is not battle phase. Phase " +
+					GamePhase.getPhaseName(_phase));
+			}
+		}
+		
+		public function multipleAttacksReceived(multipleAttacks:MultipleAttacks):void {
+			if (_phase == GamePhase.BATTLE_PHASE) {
+				_subphaseBattles = multipleAttacks.battleInfo;
+				dispatchEvent(new Event(MULTIPLE_ATTACKS_RECEIVED));
+			} else {
+				trace("Received multiple attacks in phase that is not battle phase. Phase " + 
+					GamePhase.getPhaseName(_phase));
+			}
+		}
+		
+		public function singleAttacksReceived(singleAttacks:SingleAttacks):void {
+			if (_phase == GamePhase.BATTLE_PHASE) {
+				_subphaseBattles = singleAttacks.battleInfo;
+				dispatchEvent(new Event(MULTIPLE_ATTACKS_RECEIVED));
+			} else {
+				trace("Received single attacks in phase that is not battle phase. Phase " + 
+					GamePhase.getPhaseName(_phase));
+			}
+		}
+		
+		public function spoilsOfWarReceived(spoilsOfWar:SpoilsOfWar):void {
+			if (_phase == GamePhase.BATTLE_PHASE) {
+				_subphaseBattles = spoilsOfWar.battleInfo;
+				dispatchEvent(new Event(MULTIPLE_ATTACKS_RECEIVED));
+			} else {
+				trace("Received spoils of war in phase that is not battle phase. Phase " + 
 					GamePhase.getPhaseName(_phase));
 			}
 		}
@@ -296,6 +336,13 @@ package modules.game {
 			_currentBattleTimer.start();
 			dispatchEvent(new BattleEvent(BattleEvent.ADVANCE_NO_NEXT_BATTLE, battleInfo, TIME_FOR_ROLL));
 		}
+		
+		public function rollDice():void {
+			Communicator.instance.send(HandlerCodes.ROLL_DICE, new RollDiceClicked(), null);
+		}
+		
+		public function opponentRolledDice(roll:PlayerRolledDice):void {
+			
+		}
 	}
-
 }

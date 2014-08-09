@@ -2,6 +2,8 @@ package modules.game {
 	import com.netease.protobuf.Int64;
 	import communication.protos.BattleInfo;
 	import communication.protos.Command;
+	import components.events.MouseClickEvent;
+	import components.TerritoryBattle;
 	import components.TerritoryVisual;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
@@ -92,11 +94,17 @@ package modules.game {
 			model.addEventListener(GameModel.ADVANCED_TO_NEXT_PHASE, advancedToNextGamePhase);
 			model.addEventListener(AttackEvent.TERRITORY_ATTACK, attackExecuted);
 			model.addEventListener(GameModel.ALL_COMMANDS_RECEIVED, displayAllCommands);
+			
 			model.addEventListener(GameModel.BORDER_CLASHES_RECEIVED, displayBorderClashes);
+			model.addEventListener(GameModel.MULTIPLE_ATTACKS_RECEIVED, displayMultipleAttacks);
+			model.addEventListener(GameModel.SINGLE_ATTACKS_RECEIVED, displaySingleAttacks);
+			model.addEventListener(GameModel.SPOILS_OF_WAR_RECEIVED, displaySpoilsOfWar);
 			
 			model.addEventListener(BattleEvent.ADVANCE_NO_NEXT_BATTLE, advanceToBattle);
 			model.addEventListener(BattleEvent.BATTLE_TIME_UP, rollingFinished);
 			model.addEventListener(BattleEvent.BATTLE_TIMER_TICK, battleTimerTick);
+			
+			view.addEventListener(TerritoryBattle.ROLL_CLICKED, rollClicked);
 		}
 		
 		private function goBack(e:Event):void {
@@ -320,6 +328,18 @@ package modules.game {
 			trace("Border clashes");
 		}
 		
+		private function displayMultipleAttacks(e:Event):void {
+			trace("Multiple attacks");
+		}
+		
+		private function displaySingleAttacks(Event):void {
+			trace("Single attacks");
+		}
+		
+		private function displaySpoilsOfWar(Event):void {
+			trace("Spoils of War");
+		}
+		
 		private function advanceToBattle(event:BattleEvent):void {
 			focusMap(function focusOutFinished():void {
 					var affectedTerritories:Dictionary = new Dictionary();
@@ -384,6 +404,10 @@ package modules.game {
 		
 		private function removeAllBattleInfos():void {
 			view.battleInfoGroup.removeChildren();
+		}
+		
+		private function rollClicked(e:MouseClickEvent):void {
+			
 		}
 	}
 
