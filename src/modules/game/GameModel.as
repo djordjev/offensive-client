@@ -13,13 +13,16 @@ package modules.game {
 	import communication.protos.Command;
 	import communication.protos.CommandsSubmittedRequest;
 	import communication.protos.Territory;
+	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
+	import flash.utils.Timer;
 	import modules.base.BaseModel;
 	import modules.game.classes.GamePhase;
-	import modules.game.events.AdvanceToNextBattleEvent;
+	import modules.game.events.BattleEvent;
 	import modules.game.events.AttackEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import starling.events.Event;
+	import utils.Globals;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
 	import wrappers.TerritoryWrapper;
@@ -36,6 +39,8 @@ package modules.game {
 		public static const BORDER_CLASHES_RECEIVED:String = "border clashes received";
 		
 		public static const MAX_DICES:int = 3;
+		
+		private static const TIME_FOR_ROLL:int = 10;
 		
 		private var _gameName:String;
 		private var _gameId:Int64;
@@ -55,6 +60,10 @@ package modules.game {
 		private var _allCommands:Array;
 		
 		private var _borderClashes:Array;
+		
+		private var _currentBattle:BattleInfo;
+		
+		private var _currentBattleTimer:Timer;
 		
 		private static var _instance:GameModel;
 		
@@ -99,6 +108,10 @@ package modules.game {
 		
 		public function get borderClashes():Array {
 			return _borderClashes;
+		}
+		
+		public function get currentBattle():BattleInfo {
+			return _currentBattle;
 		}
 		
 		public function initForGame(gameContext:GameContextWrapper):void {
@@ -189,6 +202,7 @@ package modules.game {
 		
 		public function advancedToNextPhase(response:AdvancePhaseNotification):void {
 			_phase = (_phase + 1) % 4;
+			_currentBattle = null;
 			switch(_phase) {
 				case GamePhase.TROOP_DEPLOYMENT_PHASE:
 					advanceToTroopDeploymentPhase(response);
@@ -241,6 +255,11 @@ package modules.game {
 			_gameId == null;
 			_allCommands = null;
 			_borderClashes = null;
+			_currentBattle = null;
+			if (_currentBattleTimer != null) {
+				_currentBattleTimer.stop();
+				_currentBattleTimer = null;
+			}
 			// reset other fields
 		}
 		
@@ -265,7 +284,17 @@ package modules.game {
 		}
 		
 		public function advanceToNextBattle(battleInfo:BattleInfo):void {
-			dispatchEvent(new AdvanceToNextBattleEvent(battleInfo));
+			_currentBattle = battleInfo;
+			_currentBattleTimer = new Timer(Globals.ONE_SECOND, TIME_FOR_ROLL);
+			_currentBattleTimer.addEventListener(TimerEvent.TIMER, function tickTimer(e:TimerEvent):void {
+				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIMER_TICK, _currentBattle, 
+												TIME_FOR_ROLL - (e.currentTarget as Timer).repeatCount));
+			});
+			_currentBattleTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function rollTimeUp(e:TimerEvent):void {
+				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIME_UP, _currentBattle, 0));
+			});
+			_currentBattleTimer.start();
+			dispatchEvent(new BattleEvent(BattleEvent.ADVANCE_NO_NEXT_BATTLE, battleInfo, TIME_FOR_ROLL));
 		}
 	}
 

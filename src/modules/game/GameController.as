@@ -17,7 +17,7 @@ package modules.game {
 	import modules.game.classes.GamePhase;
 	import modules.game.classes.IGameActionPerformed;
 	import modules.game.classes.Territories;
-	import modules.game.events.AdvanceToNextBattleEvent;
+	import modules.game.events.BattleEvent;
 	import modules.game.events.AttackEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
@@ -94,7 +94,9 @@ package modules.game {
 			model.addEventListener(GameModel.ALL_COMMANDS_RECEIVED, displayAllCommands);
 			model.addEventListener(GameModel.BORDER_CLASHES_RECEIVED, displayBorderClashes);
 			
-			model.addEventListener(AdvanceToNextBattleEvent.ADVANCE_NO_NEXT_BATTLE, advanceToBattle);
+			model.addEventListener(BattleEvent.ADVANCE_NO_NEXT_BATTLE, advanceToBattle);
+			model.addEventListener(BattleEvent.BATTLE_TIME_UP, battleFinished);
+			model.addEventListener(BattleEvent.BATTLE_TIMER_TICK, battleTimerTick);
 		}
 		
 		private function goBack(e:Event):void {
@@ -318,7 +320,7 @@ package modules.game {
 			trace("Border clashes");
 		}
 		
-		private function advanceToBattle(event:AdvanceToNextBattleEvent):void {
+		private function advanceToBattle(event:BattleEvent):void {
 			focusMap(function focusOutFinished():void {
 					var affectedTerritories:Dictionary = new Dictionary();
 					var myTerritory:TerritoryWrapper = null;
@@ -348,7 +350,14 @@ package modules.game {
 					
 					displayBattle(allTerritories, myTerritory);
 				});
+		}
 		
+		private function battleTimerTick(e:BattleEvent):void {
+			
+		}
+		
+		private function battleFinished(e:BattleEvent):void {
+			
 		}
 		
 		/** @param territories - Array of TerritoryWrapper */

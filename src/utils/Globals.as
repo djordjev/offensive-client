@@ -9,6 +9,8 @@ package utils {
 		public static const SCREEN_WIDTH:int = 1024;
 		public static const SCREEN_HEIGHT:int = 768;
 		
+		public static const ONE_SECOND:int = 1000;
+		
 		private static var _instance:Globals;
 		
 		public static function get instance():Globals {
