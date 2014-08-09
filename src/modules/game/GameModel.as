@@ -40,7 +40,7 @@ package modules.game {
 		
 		public static const MAX_DICES:int = 3;
 		
-		private static const TIME_FOR_ROLL:int = 10;
+		private static const TIME_FOR_ROLL:int = 2; // seconds
 		
 		private var _gameName:String;
 		private var _gameId:Int64;

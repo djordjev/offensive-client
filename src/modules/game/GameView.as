@@ -46,6 +46,7 @@ package modules.game {
 		public var numberOfReinforcements:OLabel = new OLabel();
 		
 		private var _wholeMap:LayoutGroup = new LayoutGroup();
+		private var _battleInfoGroup:LayoutGroup = new LayoutGroup();
 		
 		// game fields
 		
@@ -72,6 +73,8 @@ package modules.game {
 			
 			this.addChild(_wholeMap);
 			
+			this.addChild(_battleInfoGroup);
+			
 			// add terrotories components
 			populateTerritories();
 			
@@ -84,6 +87,10 @@ package modules.game {
 			
 			_wholeMap.addChild(_mapSprite);
 			_wholeMap.addChild(arrowsSprite);
+		}
+		
+		public function get battleInfoGroup():LayoutGroup {
+			return _battleInfoGroup;
 		}
 		
 		private function populateTerritories():void {

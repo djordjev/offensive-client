@@ -41,12 +41,13 @@ package components {
 		private var _nameLabel:OLabel = new OLabel();
 		
 		private var _units:Units = new Units();
-		private var _battleDisplay:TerritoryBattle = new TerritoryBattle();
+		private var _battleDisplay:TerritoryBattle;
 		
 		private var _statesAdapter:StatesAdapter;
 		
 		public function TerritoryVisual() {
 			super();
+			_battleDisplay = new TerritoryBattle(this);
 			_statesAdapter = new StatesAdapter(this);
 			addEventListener(MouseClickEvent.CLICK, mouseClicked);
 		}
@@ -71,8 +72,6 @@ package components {
 			this.addChild(_nameLabel);
 			
 			this.addChild(_units);
-			this.addChild(_battleDisplay);
-			_battleDisplay.hide();
 		}
 		
 		public function set territory(value:TerritoryWrapper):void {
@@ -105,12 +104,9 @@ package components {
 				_units.x = Territories.getUnitsPosition(_territory.id).x;
 				_units.y = Territories.getUnitsPosition(_territory.id).y;
 				
-				_battleDisplay.x = _units.x + _units.width + 10;
-				_battleDisplay.y = _units.y;
 			} else {
 				_image.source = Texture.fromBitmapData(_bitmapData.bitmapData);
 				_units.visible = false;
-				_battleDisplay.hide();
 			}
 		}
 		

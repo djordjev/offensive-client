@@ -95,7 +95,7 @@ package modules.game {
 			model.addEventListener(GameModel.BORDER_CLASHES_RECEIVED, displayBorderClashes);
 			
 			model.addEventListener(BattleEvent.ADVANCE_NO_NEXT_BATTLE, advanceToBattle);
-			model.addEventListener(BattleEvent.BATTLE_TIME_UP, battleFinished);
+			model.addEventListener(BattleEvent.BATTLE_TIME_UP, rollingFinished);
 			model.addEventListener(BattleEvent.BATTLE_TIMER_TICK, battleTimerTick);
 		}
 		
@@ -356,8 +356,12 @@ package modules.game {
 			
 		}
 		
-		private function battleFinished(e:BattleEvent):void {
-			
+		private function rollingFinished(e:BattleEvent):void {
+		//	battleFinished();
+		}
+		
+		private function battleFinished():void {
+			removeAllBattleInfos();
 		}
 		
 		/** @param territories - Array of TerritoryWrapper */
@@ -376,6 +380,10 @@ package modules.game {
 					}
 				});
 		
+		}
+		
+		private function removeAllBattleInfos():void {
+			view.battleInfoGroup.removeChildren();
 		}
 	}
 

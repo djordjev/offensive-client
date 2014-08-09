@@ -7,6 +7,9 @@ package components {
 	import feathers.controls.LayoutGroup;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.VerticalLayout;
+	import flash.geom.Point;
+	import modules.game.classes.Territories;
+	import modules.game.GameController;
 	import modules.game.GameModel;
 	import starling.display.Quad;
 	import starling.events.Event;
@@ -30,7 +33,10 @@ package components {
 		
 		private var _headerGroup:LayoutGroup = new LayoutGroup();
 		
-		public function TerritoryBattle() {
+		private var _territoryComponent:TerritoryVisual;
+		
+		public function TerritoryBattle(territoryComponent:TerritoryVisual) {
+			_territoryComponent = territoryComponent;
 			super();
 		}
 		
@@ -54,7 +60,6 @@ package components {
 			rollButton.label = "Roll";
 			rollButton.fontColor = Colors.WHITE;
 			rollButton.fontSize = 20;
-			rollButton.visible = false;
 			rollButton.addEventListener(MouseClickEvent.CLICK, function (e:Event):void {
 				dispatchEvent(new Event(ROLL_CLICKED, true));
 			});
@@ -84,13 +89,30 @@ package components {
 		}
 		
 		public function show(showRoll:Boolean = false):void {
-			this.visible = true;
-			
+			addBattleInfoComponent();
 			_headerGroup.visible = showRoll;
 		}
 		
-		public function hide():void {
-			this.visible = false;
+		private function addBattleInfoComponent():void {
+			var targetPoint:Point = new Point(_territoryComponent.x, _territoryComponent.y);
+			
+			var unitsPosition:Point = Territories.getUnitsPosition(_territoryComponent.territory.id);
+			
+			targetPoint.x += unitsPosition.x;
+			targetPoint.y += unitsPosition.y;
+			
+			targetPoint.x += 50;
+			
+			targetPoint.x *= 1 / GameController.instance.view.mapScale;
+			targetPoint.y *= 1 / GameController.instance.view.mapScale;
+			
+			targetPoint.x -= Math.abs(GameController.instance.view.mapX);
+			targetPoint.y -= Math.abs(GameController.instance.view.mapY);
+			
+			x = targetPoint.x;
+			y = targetPoint.y;
+			
+			GameController.instance.view.battleInfoGroup.addChild(this);
 		}
 		
 		public function setRemainingTime(remaining:int):void {
