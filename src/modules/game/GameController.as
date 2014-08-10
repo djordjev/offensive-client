@@ -1,6 +1,5 @@
 package modules.game {
 	import com.netease.protobuf.Int64;
-	import communication.protos.BattleInfo;
 	import communication.protos.Command;
 	import components.events.MouseClickEvent;
 	import components.TerritoryBattle;
@@ -14,13 +13,12 @@ package modules.game {
 	import modules.game.classes.ActionPerformedAttack;
 	import modules.game.classes.ActionPerformedTroopDeployment;
 	import modules.game.classes.ActionPerformedTroopRelocation;
-	import modules.game.classes.ActionPerformedWaitingForOpponents;
 	import modules.game.classes.ArrowManager;
 	import modules.game.classes.GamePhase;
 	import modules.game.classes.IGameActionPerformed;
 	import modules.game.classes.Territories;
-	import modules.game.events.BattleEvent;
 	import modules.game.events.AttackEvent;
+	import modules.game.events.BattleEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
 	import starling.animation.Transitions;
@@ -59,6 +57,8 @@ package modules.game {
 		private var _arrowManager:ArrowManager;
 		
 		private var _mapZoom:Number = GameView.NORMAL_SCALE;
+		
+		private var _territoriesInCurrentBattle:Array = [];
 		
 		public function get model():GameModel {
 			return _model as GameModel;
@@ -101,7 +101,7 @@ package modules.game {
 			model.addEventListener(GameModel.SPOILS_OF_WAR_RECEIVED, displaySpoilsOfWar);
 			
 			model.addEventListener(BattleEvent.ADVANCE_NO_NEXT_BATTLE, advanceToBattle);
-			model.addEventListener(BattleEvent.BATTLE_TIME_UP, rollingFinished);
+			model.addEventListener(BattleEvent.BATTLE_TIME_UP, roundFinished);
 			model.addEventListener(BattleEvent.BATTLE_TIMER_TICK, battleTimerTick);
 			
 			view.addEventListener(TerritoryBattle.ROLL_CLICKED, rollClicked);
@@ -130,6 +130,7 @@ package modules.game {
 					
 					view.mapScale = GameView.NORMAL_SCALE;
 				});
+			_territoriesInCurrentBattle = [];
 		}
 		
 		private function openingInTroopDeployment():void {
@@ -314,7 +315,7 @@ package modules.game {
 			tween.animate("mapScale", GameView.NORMAL_SCALE);
 			
 			var self:GameController = this;
-			tween.onComplete = function ():void {
+			tween.onComplete = function():void {
 				self._mapZoom = GameView.NORMAL_SCALE;
 				if (callback != null) {
 					callback();
@@ -341,46 +342,47 @@ package modules.game {
 		}
 		
 		private function advanceToBattle(event:BattleEvent):void {
-			focusMap(function focusOutFinished():void {
-					var affectedTerritories:Dictionary = new Dictionary();
-					var myTerritory:TerritoryWrapper = null;
-					var command:Command;
-					
-					for each (command in event.battleInfo.oneSide.concat(event.battleInfo.otherSide)) {
-						var source:TerritoryWrapper = model.getTerritory(command.sourceTerritory);
-						var destionation:TerritoryWrapper = model.getTerritory(command.destinationTerritory);
-						
-						affectedTerritories[source.id.toString()] = source;
-						affectedTerritories[destionation.id.toString()] = destionation;
-						
-						if (source.owner.playerId == model.me.playerId) {
-							myTerritory = source;
-						}
-						
-						if (destionation.owner.playerId == model.me.playerId) {
-							myTerritory = destionation;
-						}
-					}
-					
-					var allTerritories:Array = [];
-					
-					for each (var t:TerritoryWrapper in affectedTerritories) {
-						allTerritories.push(t);
-					}
-					
-					displayBattle(allTerritories, myTerritory);
-				});
+			var affectedTerritories:Dictionary = new Dictionary();
+			var myTerritory:TerritoryWrapper = null;
+			var command:Command;
+			
+			for each (command in event.battleInfo.oneSide.concat(event.battleInfo.otherSide)) {
+				var source:TerritoryWrapper = model.getTerritory(command.sourceTerritory);
+				var destionation:TerritoryWrapper = model.getTerritory(command.destinationTerritory);
+				
+				affectedTerritories[source.id.toString()] = source;
+				affectedTerritories[destionation.id.toString()] = destionation;
+				
+				if (source.owner.playerId == model.me.playerId) {
+					myTerritory = source;
+				}
+				
+				if (destionation.owner.playerId == model.me.playerId) {
+					myTerritory = destionation;
+				}
+			}
+			
+			_territoriesInCurrentBattle = [];
+			
+			for each (var t:TerritoryWrapper in affectedTerritories) {
+				_territoriesInCurrentBattle.push(t);
+			}
+			
+			displayBattle(_territoriesInCurrentBattle, myTerritory);
 		}
 		
 		private function battleTimerTick(e:BattleEvent):void {
-			
+			for each(var territory:TerritoryVisual in _territoriesInCurrentBattle) {
+				territory.battleDisplay.setRemainingTime(e.remainingTime);
+			}
 		}
 		
-		private function rollingFinished(e:BattleEvent):void {
-		//	battleFinished();
+		private function roundFinished(e:BattleEvent):void {
+			//	battleFinished();
 		}
 		
 		private function battleFinished():void {
+			_territoriesInCurrentBattle = [];
 			removeAllBattleInfos();
 		}
 		
@@ -407,7 +409,7 @@ package modules.game {
 		}
 		
 		private function rollClicked(e:MouseClickEvent):void {
-			
+		
 		}
 	}
 

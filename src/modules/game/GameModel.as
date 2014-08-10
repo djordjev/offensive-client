@@ -23,11 +23,12 @@ package modules.game {
 	import flash.utils.Timer;
 	import modules.base.BaseModel;
 	import modules.game.classes.GamePhase;
-	import modules.game.events.BattleEvent;
 	import modules.game.events.AttackEvent;
+	import modules.game.events.BattleEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import starling.events.Event;
 	import utils.Globals;
+	import wrappers.BattleInfoWrapper;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
 	import wrappers.TerritoryWrapper;
@@ -50,7 +51,7 @@ package modules.game {
 		
 		public static const MAX_DICES:int = 3;
 		
-		private static const TIME_FOR_ROLL:int = 2; // seconds
+		private static const TIME_FOR_ROLL:int = 8; // seconds
 		
 		private var _gameName:String;
 		private var _gameId:Int64;
@@ -71,9 +72,12 @@ package modules.game {
 		
 		private var _subphaseBattles:Array;
 		
-		private var _currentBattle:BattleInfo;
+		private var _currentBattle:BattleInfoWrapper;
 		
 		private var _currentBattleTimer:Timer;
+		private var _rolledInCurrentRound:Boolean = false;
+		/** Mapping playerId to his radom generator */
+		private var _currentBattleRandomGenerators:Dictionary = new Dictionary();
 		
 		private static var _instance:GameModel;
 		
@@ -120,11 +124,12 @@ package modules.game {
 			return _subphaseBattles;
 		}
 		
-		public function get currentBattle():BattleInfo {
+		public function get currentBattle():BattleInfoWrapper {
 			return _currentBattle;
 		}
 		
 		public function initForGame(gameContext:GameContextWrapper):void {
+			_currentBattleRandomGenerators = new Dictionary();
 			_gameName = gameContext.gameName;
 			_gameId = gameContext.gameId;
 			_opponents = [];
@@ -159,6 +164,8 @@ package modules.game {
 			_allCommands = null;
 			_subphaseBattles = null;
 			_pendingCommands = gameContext.pendingCommands;
+			
+			_rolledInCurrentRound = false;
 		}
 		
 		public function getPlayerByPlayerId(playerId:int):PlayerWrapper {
@@ -270,6 +277,8 @@ package modules.game {
 				_currentBattleTimer.stop();
 				_currentBattleTimer = null;
 			}
+			_currentBattleRandomGenerators = new Dictionary();
+			_rolledInCurrentRound = false;
 			// reset other fields
 		}
 		
@@ -324,25 +333,40 @@ package modules.game {
 		}
 		
 		public function advanceToNextBattle(battleInfo:BattleInfo):void {
-			_currentBattle = battleInfo;
+			_currentBattle = BattleInfoWrapper.buildBattleInfoWrapper(battleInfo);
+			_rolledInCurrentRound = false;
 			_currentBattleTimer = new Timer(Globals.ONE_SECOND, TIME_FOR_ROLL);
 			_currentBattleTimer.addEventListener(TimerEvent.TIMER, function tickTimer(e:TimerEvent):void {
 				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIMER_TICK, _currentBattle, 
 												TIME_FOR_ROLL - (e.currentTarget as Timer).repeatCount));
 			});
 			_currentBattleTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function rollTimeUp(e:TimerEvent):void {
+				roundFinished();
 				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIME_UP, _currentBattle, 0));
 			});
+			
 			_currentBattleTimer.start();
 			dispatchEvent(new BattleEvent(BattleEvent.ADVANCE_NO_NEXT_BATTLE, battleInfo, TIME_FOR_ROLL));
 		}
 		
+		private function roundFinished():void {
+			if (!_rolledInCurrentRound) {
+				rollDice();
+			}
+			_rolledInCurrentRound = false;
+		}
+		
+		private function battleFinished():void {
+			_currentBattleRandomGenerators = new Dictionary();
+		}
+		
 		public function rollDice():void {
 			Communicator.instance.send(HandlerCodes.ROLL_DICE, new RollDiceClicked(), null);
+			_rolledInCurrentRound = true;
 		}
 		
 		public function opponentRolledDice(roll:PlayerRolledDice):void {
-			
+			//var opponent:PlayerWrapper = roll.
 		}
 	}
 }
