@@ -62,23 +62,25 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
-		public static const SEED:FieldDescriptor$TYPE_INT64 = new FieldDescriptor$TYPE_INT64("communication.protos.Command.seed", "seed", (5 << 3) | com.netease.protobuf.WireType.VARINT);
+		public static const SEED:FieldDescriptor$TYPE_INT32 = new FieldDescriptor$TYPE_INT32("communication.protos.Command.seed", "seed", (5 << 3) | com.netease.protobuf.WireType.VARINT);
 
-		private var seed$field:Int64;
+		private var seed$field:int;
 
 		public function clearSeed():void {
-			seed$field = null;
+			hasField$0 &= 0xfffffffd;
+			seed$field = new int();
 		}
 
 		public function get hasSeed():Boolean {
-			return seed$field != null;
+			return (hasField$0 & 0x2) != 0;
 		}
 
-		public function set seed(value:Int64):void {
+		public function set seed(value:int):void {
+			hasField$0 |= 0x2;
 			seed$field = value;
 		}
 
-		public function get seed():Int64 {
+		public function get seed():int {
 			return seed$field;
 		}
 
@@ -98,7 +100,7 @@ package communication.protos {
 			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.numberOfUnits);
 			if (hasSeed) {
 				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 5);
-				com.netease.protobuf.WriteUtils.write$TYPE_INT64(output, seed$field);
+				com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, seed$field);
 			}
 			for (var fieldKey:* in this) {
 				super.writeUnknown(output, fieldKey);
@@ -150,7 +152,7 @@ package communication.protos {
 						throw new flash.errors.IOError('Bad data format: Command.seed cannot be set twice.');
 					}
 					++seed$count;
-					this.seed = com.netease.protobuf.ReadUtils.read$TYPE_INT64(input);
+					this.seed = com.netease.protobuf.ReadUtils.read$TYPE_INT32(input);
 					break;
 				default:
 					super.readUnknown(input, tag);

@@ -7,7 +7,6 @@ package communication.protos {
 	import flash.utils.IDataOutput;
 	import flash.utils.IExternalizable;
 	import flash.errors.IOError;
-	import communication.protos.User;
 	// @@protoc_insertion_point(imports)
 
 	// @@protoc_insertion_point(class_metadata)
@@ -22,9 +21,9 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
-		public static const USER:FieldDescriptor$TYPE_MESSAGE = new FieldDescriptor$TYPE_MESSAGE("communication.protos.PlayerRolledDice.user", "user", (2 << 3) | com.netease.protobuf.WireType.LENGTH_DELIMITED, function():Class { return communication.protos.User; });
+		public static const PLAYERID:FieldDescriptor$TYPE_INT32 = new FieldDescriptor$TYPE_INT32("communication.protos.PlayerRolledDice.playerId", "playerId", (2 << 3) | com.netease.protobuf.WireType.VARINT);
 
-		public var user:communication.protos.User;
+		public var playerId:int;
 
 		/**
 		 *  @private
@@ -32,8 +31,8 @@ package communication.protos {
 		override com.netease.protobuf.used_by_generated_code final function writeToBuffer(output:com.netease.protobuf.WritingBuffer):void {
 			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 1);
 			com.netease.protobuf.WriteUtils.write$TYPE_INT64(output, this.gameId);
-			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.LENGTH_DELIMITED, 2);
-			com.netease.protobuf.WriteUtils.write$TYPE_MESSAGE(output, this.user);
+			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 2);
+			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.playerId);
 			for (var fieldKey:* in this) {
 				super.writeUnknown(output, fieldKey);
 			}
@@ -44,7 +43,7 @@ package communication.protos {
 		 */
 		override com.netease.protobuf.used_by_generated_code final function readFromSlice(input:flash.utils.IDataInput, bytesAfterSlice:uint):void {
 			var gameId$count:uint = 0;
-			var user$count:uint = 0;
+			var playerId$count:uint = 0;
 			while (input.bytesAvailable > bytesAfterSlice) {
 				var tag:uint = com.netease.protobuf.ReadUtils.read$TYPE_UINT32(input);
 				switch (tag >> 3) {
@@ -56,12 +55,11 @@ package communication.protos {
 					this.gameId = com.netease.protobuf.ReadUtils.read$TYPE_INT64(input);
 					break;
 				case 2:
-					if (user$count != 0) {
-						throw new flash.errors.IOError('Bad data format: PlayerRolledDice.user cannot be set twice.');
+					if (playerId$count != 0) {
+						throw new flash.errors.IOError('Bad data format: PlayerRolledDice.playerId cannot be set twice.');
 					}
-					++user$count;
-					this.user = new communication.protos.User();
-					com.netease.protobuf.ReadUtils.read$TYPE_MESSAGE(input, this.user);
+					++playerId$count;
+					this.playerId = com.netease.protobuf.ReadUtils.read$TYPE_INT32(input);
 					break;
 				default:
 					super.readUnknown(input, tag);
