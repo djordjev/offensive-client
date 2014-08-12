@@ -14,6 +14,9 @@ package wrappers {
 			var command:Command;
 			var commandWrapper:CommandWrapper;
 			
+			wrapper.oneSide = [];
+			wrapper.otherSide = [];
+			
 			for each(command in battleInfo.oneSide) {
 				commandWrapper = CommandWrapper.buildCommandWrapper(command);
 				wrapper.oneSide.push(commandWrapper);

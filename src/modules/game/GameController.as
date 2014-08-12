@@ -30,6 +30,7 @@ package modules.game {
 	import utils.PlayerColors;
 	import utils.Screens;
 	import utils.Utilities;
+	import wrappers.CommandWrapper;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
 	import wrappers.TerritoryWrapper;
@@ -347,11 +348,11 @@ package modules.game {
 		private function advanceToBattle(event:BattleEvent):void {
 			var affectedTerritories:Dictionary = new Dictionary();
 			var myTerritory:TerritoryWrapper = null;
-			var command:Command;
+			var command:CommandWrapper
 			
 			for each (command in event.battleInfo.oneSide.concat(event.battleInfo.otherSide)) {
-				var source:TerritoryWrapper = model.getTerritory(command.sourceTerritory);
-				var destionation:TerritoryWrapper = model.getTerritory(command.destinationTerritory);
+				var source:TerritoryWrapper = command.sourceTerrotiry;
+				var destionation:TerritoryWrapper = command.destionationTerritory;
 				
 				affectedTerritories[source.id.toString()] = source;
 				affectedTerritories[destionation.id.toString()] = destionation;
