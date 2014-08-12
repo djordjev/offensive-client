@@ -37,12 +37,21 @@ package wrappers {
 		
 		private var _allCommands:Array = [];
 		
+		private var _numberOfRolledDices:int;
 		
 		public function BattleInfoWrapper() {
 		}
 		
 		public function get allCommands():Array {
 			return _allCommands;
+		}
+		
+		public function incrementNumberOfRolledDices():void {
+			_numberOfRolledDices++;
+		}
+		
+		public function isAllDicesRolled():Boolean {
+			return _numberOfRolledDices >= oneSide.length + otherSide.length;
 		}
 	
 	}

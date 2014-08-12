@@ -23,6 +23,8 @@ package wrappers {
 			
 			commandWrapper._randomGenerator = new RandomGenerator();
 			commandWrapper._randomGenerator.initWithSeed(commandWrapper.seed);
+			
+			return commandWrapper;
 		}
 		
 		public var commandId:int;
@@ -37,8 +39,14 @@ package wrappers {
 		
 		private var _dices:Array;
 		
+		private var _rolled:Boolean = false;
+		
 		public function CommandWrapper() {
 		
+		}
+		
+		public function get isRolled():Boolean {
+			return _rolled;
 		}
 		
 		public function dices():Array {
@@ -57,16 +65,19 @@ package wrappers {
 			_randomGenerator.getNext(1, MAX_NUMBER_ON_DICE + 1);
 		}
 		
-		private function getDicesResult():Array {
+		private function getDicesResult():void {
 			var numberOfDices:int = Math.min(MAX_NUMBER_OF_DICES, numberOfUnits);
 			
-			_dices:Array = [];
+			var _dices:Array = [];
 			
 			for (var i:int = 0; i < numberOfDices; i++) {
 				_dices.push(getNextRandomNumber());
 			}
 			
 			_dices.sort(Array.NUMERIC);
+			_dices.reverse();
+			
+			_rolled = true;
 		}
 	
 	}

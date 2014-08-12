@@ -77,12 +77,6 @@ package modules.game {
 		private var _currentBattle:BattleInfoWrapper;
 		
 		private var _currentBattleTimer:Timer;
-		private var _rolledInCurrentRound:Boolean = false;
-		/** Mapping playerId to his radom generator */
-		private var _currentBattleRandomGenerators:Dictionary = new Dictionary();
-		
-		/** Mapping playerId to array of dices */
-		private var _dicesInCurrentRound:Dictionary = new Dictionary();
 		
 		private static var _instance:GameModel;
 		
@@ -133,12 +127,7 @@ package modules.game {
 			return _currentBattle;
 		}
 		
-		public function get dicesInCurrentRound():Dictionary {
-			return _dicesInCurrentRound;
-		}
-		
 		public function initForGame(gameContext:GameContextWrapper):void {
-			_currentBattleRandomGenerators = new Dictionary();
 			_gameName = gameContext.gameName;
 			_gameId = gameContext.gameId;
 			_opponents = [];
@@ -173,8 +162,6 @@ package modules.game {
 			_allCommands = null;
 			_subphaseBattles = null;
 			_pendingCommands = gameContext.pendingCommands;
-			
-			_rolledInCurrentRound = false;
 		}
 		
 		public function getPlayerByPlayerId(playerId:int):PlayerWrapper {
@@ -286,9 +273,6 @@ package modules.game {
 				_currentBattleTimer.stop();
 				_currentBattleTimer = null;
 			}
-			_currentBattleRandomGenerators = new Dictionary();
-			_rolledInCurrentRound = false;
-			_dicesInCurrentRound = new Dictionary();
 			// reset other fields
 		}
 		
@@ -344,8 +328,6 @@ package modules.game {
 		
 		public function advanceToNextBattle(battleInfo:BattleInfo):void {
 			_currentBattle = BattleInfoWrapper.buildBattleInfoWrapper(battleInfo);
-			_rolledInCurrentRound = false;
-			_dicesInCurrentRound = new Dictionary();
 			_currentBattleTimer = new Timer(Globals.ONE_SECOND, TIME_FOR_ROLL);
 			_currentBattleTimer.addEventListener(TimerEvent.TIMER, function tickTimer(e:TimerEvent):void {
 				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIMER_TICK, _currentBattle, 
@@ -357,20 +339,24 @@ package modules.game {
 			});
 			
 			_currentBattleTimer.start();
-			dispatchEvent(new BattleEvent(BattleEvent.ADVANCE_NO_NEXT_BATTLE, battleInfo, TIME_FOR_ROLL));
+			dispatchEvent(new BattleEvent(BattleEvent.ADVANCE_NO_NEXT_BATTLE, _currentBattle, TIME_FOR_ROLL));
 		}
 		
 		private function roundFinished():void {
-			if (!_rolledInCurrentRound) {
-				rollDice();
+			
+			var command:CommandWrapper;
+			
+			for each(command in _currentBattle.allCommands) {
+				if (command.sourceTerrotiry.owner.playerId.toString() == _me.playerId.toString()) {
+					rollMyDice(territories[command.sourceTerrotiry.id]);
+				}
 			}
+			
 			calculateCasualties();
 			
-			for each(var command:CommandWrapper in _currentBattle.allCommands) {
+			for each(command in _currentBattle.allCommands) {
 				command.clearDices();
 			}
-			
-			_rolledInCurrentRound = false;
 		}
 		
 		private function calculateCasualties():void {
@@ -378,24 +364,31 @@ package modules.game {
 		}
 		
 		private function battleFinished():void {
-			_currentBattleRandomGenerators = new Dictionary();
 		}
 		
-		public function rollDice(playerRolling:PlayerWrapper, attackFrom:TerritoryWrapper):Array {
+		public function rollMyDice(attackFrom:TerritoryWrapper):void {
 			Communicator.instance.send(HandlerCodes.ROLL_DICE, new RollDiceClicked(), null);
-			_rolledInCurrentRound = true;
-			
+			rollDice(attackFrom);
+		}
+		
+		public function opponentRolledDice(roll:PlayerRolledDice):void {
+			rollDice(_territories[roll.territoryId]);
+		}
+		
+		private function rollDice(territoryFrom:TerritoryWrapper):void {
 			for each(var command:CommandWrapper in _currentBattle.allCommands) {
-				if (command.sourceTerrotiry.id == attackFrom.id) {
-					command.dices(); // generate numbers
+				if (command.sourceTerrotiry.id == territoryFrom.id) {
+					command.dices();
+					_currentBattle.incrementNumberOfRolledDices();
 					dispatchEvent(new DicesEvent(DicesEvent.DICES_ROLLED, command));
 					break;
 				}
 			}
-		}
-		
-		public function opponentRolledDice(roll:PlayerRolledDice):void {
-			trace("OPPONENT ROLLED DICES");
+			
+			if (_currentBattle.isAllDicesRolled) {
+				_currentBattleTimer.stop();
+				_currentBattleTimer.dispatchEvent(new TimerEvent(TimerEvent.TIMER_COMPLETE));
+			}
 		}
 	}
 }

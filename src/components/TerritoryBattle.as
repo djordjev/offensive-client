@@ -1,7 +1,9 @@
 package components {
+	import communication.protos.RollDiceClicked;
 	import components.common.LinkButton;
 	import components.common.OLabel;
 	import components.events.MouseClickEvent;
+	import components.events.RollDicesClickEvent;
 	import feathers.controls.Button;
 	import feathers.controls.ImageLoader;
 	import feathers.controls.LayoutGroup;
@@ -21,8 +23,6 @@ package components {
 	 * @author ...
 	 */
 	public class TerritoryBattle extends LayoutGroup {
-		
-		public static const ROLL_CLICKED:String = "roll button clicked on component";
 		
 		public var rollButton:LinkButton = new LinkButton();
 		
@@ -61,7 +61,8 @@ package components {
 			rollButton.fontColor = Colors.WHITE;
 			rollButton.fontSize = 20;
 			rollButton.addEventListener(MouseClickEvent.CLICK, function (e:Event):void {
-				dispatchEvent(new Event(ROLL_CLICKED, true));
+				dispatchEvent(new RollDicesClickEvent(RollDicesClickEvent.ROLL_CLICKED, 
+								_territoryComponent.territory, true));
 			});
 			
 			remainingTime.fontSize = 20;

@@ -1,8 +1,7 @@
 package modules.game {
 	import com.netease.protobuf.Int64;
 	import communication.protos.Command;
-	import components.events.MouseClickEvent;
-	import components.TerritoryBattle;
+	import components.events.RollDicesClickEvent;
 	import components.TerritoryVisual;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
@@ -21,6 +20,7 @@ package modules.game {
 	import modules.game.events.BattleEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
+	import modules.game.events.DicesEvent;
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
 	import starling.core.Starling;
@@ -104,7 +104,10 @@ package modules.game {
 			model.addEventListener(BattleEvent.BATTLE_TIME_UP, roundFinished);
 			model.addEventListener(BattleEvent.BATTLE_TIMER_TICK, battleTimerTick);
 			
-			view.addEventListener(TerritoryBattle.ROLL_CLICKED, rollClicked);
+			model.addEventListener(DicesEvent.DICES_ROLLED, opponentRolledDices);
+			//model.addEventListener
+			
+			view.addEventListener(RollDicesClickEvent.ROLL_CLICKED, rollClicked);
 		}
 		
 		private function goBack(e:Event):void {
@@ -381,6 +384,12 @@ package modules.game {
 			//	battleFinished();
 		}
 		
+		private function opponentRolledDices(e:DicesEvent):void {
+			var territoryComponent:TerritoryVisual = view.getTerritoryVisual(e.command.sourceTerrotiry.id);
+			
+			territoryComponent.battleDisplay.setDices(e.command.dices());
+		}
+		
 		private function battleFinished():void {
 			_territoriesInCurrentBattle = [];
 			removeAllBattleInfos();
@@ -408,8 +417,10 @@ package modules.game {
 			view.battleInfoGroup.removeChildren();
 		}
 		
-		private function rollClicked(e:MouseClickEvent):void {
-		
+		private function rollClicked(e:RollDicesClickEvent):void {
+			var territory:TerritoryWrapper = e.territoryClicked;
+			
+			model.rollMyDice(territory);
 		}
 	}
 
