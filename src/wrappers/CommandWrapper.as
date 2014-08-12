@@ -68,7 +68,7 @@ package wrappers {
 		private function getDicesResult():void {
 			var numberOfDices:int = Math.min(MAX_NUMBER_OF_DICES, numberOfUnits);
 			
-			var _dices:Array = [];
+			_dices = [];
 			
 			for (var i:int = 0; i < numberOfDices; i++) {
 				_dices.push(getNextRandomNumber());
