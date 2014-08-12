@@ -376,8 +376,9 @@ package modules.game {
 		}
 		
 		private function battleTimerTick(e:BattleEvent):void {
-			for each(var territory:TerritoryVisual in _territoriesInCurrentBattle) {
-				territory.battleDisplay.setRemainingTime(e.remainingTime);
+			for each(var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
+				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
+				visualTerritory.battleDisplay.setRemainingTime(e.remainingTime);
 			}
 		}
 		
