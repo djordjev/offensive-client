@@ -1,5 +1,6 @@
 package wrappers {
 	import communication.protos.BattleInfo;
+	import communication.protos.Command;
 	
 	/**
 	 * ...
@@ -10,17 +11,38 @@ package wrappers {
 		public static function buildBattleInfoWrapper(battleInfo:BattleInfo):BattleInfoWrapper {
 			var wrapper:BattleInfoWrapper = new BattleInfoWrapper();
 			
-			wrapper.oneSide = CommandWrapper.buildCommandWrapper(battleInfo.oneSide);
-			wrapper.otherSide = CommandWrapper.buildCommandWrapper(battleInfo.otherSide);
+			var command:Command;
+			var commandWrapper:CommandWrapper;
+			
+			for each(command in battleInfo.oneSide) {
+				commandWrapper = CommandWrapper.buildCommandWrapper(command);
+				wrapper.oneSide.push(commandWrapper);
+				wrapper._allCommands.push(commandWrapper);
+			}
+			
+			for each(command in battleInfo.otherSide) {
+				commandWrapper = CommandWrapper.buildCommandWrapper(command);
+				wrapper.otherSide.push(commandWrapper);
+				wrapper._allCommands.push(commandWrapper);
+			}
 			
 			return wrapper;
 		}
 		
-		public var oneSide:CommandWrapper;
-		public var otherSide:CommandWrapper;
+		/**Array of CommandWrappers */
+		public var oneSide:Array;
+		
+		/** Array of CommandWrappers */
+		public var otherSide:Array;
+		
+		private var _allCommands:Array = [];
+		
 		
 		public function BattleInfoWrapper() {
+		}
 		
+		public function get allCommands():Array {
+			return _allCommands;
 		}
 	
 	}

@@ -26,9 +26,11 @@ package modules.game {
 	import modules.game.events.AttackEvent;
 	import modules.game.events.BattleEvent;
 	import modules.game.events.ChangedNumberOfUnits;
+	import modules.game.events.DicesEvent;
 	import starling.events.Event;
 	import utils.Globals;
 	import wrappers.BattleInfoWrapper;
+	import wrappers.CommandWrapper;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
 	import wrappers.TerritoryWrapper;
@@ -79,6 +81,9 @@ package modules.game {
 		/** Mapping playerId to his radom generator */
 		private var _currentBattleRandomGenerators:Dictionary = new Dictionary();
 		
+		/** Mapping playerId to array of dices */
+		private var _dicesInCurrentRound:Dictionary = new Dictionary();
+		
 		private static var _instance:GameModel;
 		
 		public static function get instance():GameModel {
@@ -126,6 +131,10 @@ package modules.game {
 		
 		public function get currentBattle():BattleInfoWrapper {
 			return _currentBattle;
+		}
+		
+		public function get dicesInCurrentRound():Dictionary {
+			return _dicesInCurrentRound;
 		}
 		
 		public function initForGame(gameContext:GameContextWrapper):void {
@@ -279,6 +288,7 @@ package modules.game {
 			}
 			_currentBattleRandomGenerators = new Dictionary();
 			_rolledInCurrentRound = false;
+			_dicesInCurrentRound = new Dictionary();
 			// reset other fields
 		}
 		
@@ -335,6 +345,7 @@ package modules.game {
 		public function advanceToNextBattle(battleInfo:BattleInfo):void {
 			_currentBattle = BattleInfoWrapper.buildBattleInfoWrapper(battleInfo);
 			_rolledInCurrentRound = false;
+			_dicesInCurrentRound = new Dictionary();
 			_currentBattleTimer = new Timer(Globals.ONE_SECOND, TIME_FOR_ROLL);
 			_currentBattleTimer.addEventListener(TimerEvent.TIMER, function tickTimer(e:TimerEvent):void {
 				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIMER_TICK, _currentBattle, 
@@ -353,20 +364,38 @@ package modules.game {
 			if (!_rolledInCurrentRound) {
 				rollDice();
 			}
+			calculateCasualties();
+			
+			for each(var command:CommandWrapper in _currentBattle.allCommands) {
+				command.clearDices();
+			}
+			
 			_rolledInCurrentRound = false;
+		}
+		
+		private function calculateCasualties():void {
+			
 		}
 		
 		private function battleFinished():void {
 			_currentBattleRandomGenerators = new Dictionary();
 		}
 		
-		public function rollDice():void {
+		public function rollDice(playerRolling:PlayerWrapper, attackFrom:TerritoryWrapper):Array {
 			Communicator.instance.send(HandlerCodes.ROLL_DICE, new RollDiceClicked(), null);
 			_rolledInCurrentRound = true;
+			
+			for each(var command:CommandWrapper in _currentBattle.allCommands) {
+				if (command.sourceTerrotiry.id == attackFrom.id) {
+					command.dices; // generate numbers
+					dispatchEvent(new DicesEvent(DicesEvent.DICES_ROLLED, command));
+					break;
+				}
+			}
 		}
 		
 		public function opponentRolledDice(roll:PlayerRolledDice):void {
-			//var opponent:PlayerWrapper = roll.
+			trace("OPPONENT ROLLED DICES");
 		}
 	}
 }
