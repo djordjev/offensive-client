@@ -21,9 +21,9 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
-		public static const PLAYERID:FieldDescriptor$TYPE_INT32 = new FieldDescriptor$TYPE_INT32("communication.protos.PlayerRolledDice.playerId", "playerId", (2 << 3) | com.netease.protobuf.WireType.VARINT);
+		public static const TERRITORYID:FieldDescriptor$TYPE_INT32 = new FieldDescriptor$TYPE_INT32("communication.protos.PlayerRolledDice.territoryId", "territoryId", (2 << 3) | com.netease.protobuf.WireType.VARINT);
 
-		public var playerId:int;
+		public var territoryId:int;
 
 		/**
 		 *  @private
@@ -32,7 +32,7 @@ package communication.protos {
 			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 1);
 			com.netease.protobuf.WriteUtils.write$TYPE_INT64(output, this.gameId);
 			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 2);
-			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.playerId);
+			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.territoryId);
 			for (var fieldKey:* in this) {
 				super.writeUnknown(output, fieldKey);
 			}
@@ -43,7 +43,7 @@ package communication.protos {
 		 */
 		override com.netease.protobuf.used_by_generated_code final function readFromSlice(input:flash.utils.IDataInput, bytesAfterSlice:uint):void {
 			var gameId$count:uint = 0;
-			var playerId$count:uint = 0;
+			var territoryId$count:uint = 0;
 			while (input.bytesAvailable > bytesAfterSlice) {
 				var tag:uint = com.netease.protobuf.ReadUtils.read$TYPE_UINT32(input);
 				switch (tag >> 3) {
@@ -55,11 +55,11 @@ package communication.protos {
 					this.gameId = com.netease.protobuf.ReadUtils.read$TYPE_INT64(input);
 					break;
 				case 2:
-					if (playerId$count != 0) {
-						throw new flash.errors.IOError('Bad data format: PlayerRolledDice.playerId cannot be set twice.');
+					if (territoryId$count != 0) {
+						throw new flash.errors.IOError('Bad data format: PlayerRolledDice.territoryId cannot be set twice.');
 					}
-					++playerId$count;
-					this.playerId = com.netease.protobuf.ReadUtils.read$TYPE_INT32(input);
+					++territoryId$count;
+					this.territoryId = com.netease.protobuf.ReadUtils.read$TYPE_INT32(input);
 					break;
 				default:
 					super.readUnknown(input, tag);
