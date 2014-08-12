@@ -61,8 +61,8 @@ package wrappers {
 			_dices = null;
 		}
 		
-		private function getNextRandomNumber():void {
-			_randomGenerator.getNext(1, MAX_NUMBER_ON_DICE + 1);
+		private function getNextRandomNumber():int {
+			return _randomGenerator.getNext(1, MAX_NUMBER_ON_DICE + 1);
 		}
 		
 		private function getDicesResult():void {
