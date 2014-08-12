@@ -41,7 +41,7 @@ package wrappers {
 		
 		}
 		
-		public function get dices():Array {
+		public function dices():Array {
 			if (_dices == null) {
 				getDicesResult();
 			}

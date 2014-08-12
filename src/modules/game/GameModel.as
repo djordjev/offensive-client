@@ -387,7 +387,7 @@ package modules.game {
 			
 			for each(var command:CommandWrapper in _currentBattle.allCommands) {
 				if (command.sourceTerrotiry.id == attackFrom.id) {
-					command.dices; // generate numbers
+					command.dices(); // generate numbers
 					dispatchEvent(new DicesEvent(DicesEvent.DICES_ROLLED, command));
 					break;
 				}
