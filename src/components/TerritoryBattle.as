@@ -15,6 +15,7 @@ package components {
 	import modules.game.GameModel;
 	import starling.display.Quad;
 	import starling.events.Event;
+	import starling.textures.Texture;
 	import utils.Assets;
 	import utils.Colors;
 	
@@ -49,10 +50,13 @@ package components {
 			
 			
 			var mainGroup:LayoutGroup = new LayoutGroup();
+			mainGroup.x = 15;
+			mainGroup.y = 14;
 			this.addChild(mainGroup);
 			
 			mainGroup.layout = new VerticalLayout();
 			(mainGroup.layout as VerticalLayout).gap = 5;
+			(mainGroup.layout as VerticalLayout).horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_CENTER;
 			
 			_headerGroup.layout = new HorizontalLayout();
 			(_headerGroup.layout as HorizontalLayout).gap = 40;
@@ -61,6 +65,7 @@ package components {
 			rollButton.fontColor = Colors.WHITE;
 			rollButton.fontSize = 20;
 			rollButton.addEventListener(MouseClickEvent.CLICK, function (e:Event):void {
+				rollButton.isEnabled = false;
 				dispatchEvent(new RollDicesClickEvent(RollDicesClickEvent.ROLL_CLICKED, 
 								_territoryComponent.territory, true));
 			});
@@ -85,8 +90,14 @@ package components {
 				var diceImage:ImageLoader = new ImageLoader();
 				// set image
 				dices.push(diceImage);
+				dicesGroup.addChild(diceImage);
+				
 			}
 			
+		}
+		
+		public function enableRollButton():void {
+			rollButton.isEnabled = true;
 		}
 		
 		public function show(showRoll:Boolean = false):void {
@@ -121,14 +132,12 @@ package components {
 		}
 		
 		public function setDices(values:Array):void {
-			
 			for (var i:int; i < GameModel.MAX_DICES; i++) {
 				if (i < values.length) {
 					dices[i].source = Assets.getDice(values[i]);
 				} else {
 					dices[i].source = null;
 				}
-				
 			}
 		}
 	

@@ -53,7 +53,7 @@ package wrappers {
 			_numberOfRolledDices++;
 		}
 		
-		public function isAllDicesRolled():Boolean {
+		public function get isAllDicesRolled():Boolean {
 			return _numberOfRolledDices >= oneSide.length + otherSide.length;
 		}
 	

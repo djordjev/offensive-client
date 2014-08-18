@@ -235,28 +235,26 @@ package utils
 		
 		// Dices
 		[Embed(source="../../assets/gameAssets/dices/dice1.jpg")]
-		public static const Dice_1:Class;
+		private static const Dice_1:Class;
 		
 		[Embed(source="../../assets/gameAssets/dices/dice2.jpg")]
-		public static const Dice_2:Class;
+		private static const Dice_2:Class;
 		
 		[Embed(source="../../assets/gameAssets/dices/dice3.jpg")]
-		public static const Dice_3:Class;
+		private static const Dice_3:Class;
 		
 		[Embed(source="../../assets/gameAssets/dices/dice4.jpg")]
-		public static const Dice_4:Class;
+		private static const Dice_4:Class;
 		
 		[Embed(source="../../assets/gameAssets/dices/dice5.jpg")]
-		public static const Dice_5:Class;
+		private static const Dice_5:Class;
 		
 		[Embed(source="../../assets/gameAssets/dices/dice6.jpg")]
-		public static const Dice_6:Class;
+		private static const Dice_6:Class;
 		
-		public static function getDice(num:int):Class {
-			return Assets["Dice_" + num];
+		public static function getDice(num:int):Texture {
+			return Texture.fromBitmap(new Assets["Dice_" + num]());
 		}
-		
-		
 	}
 
 }

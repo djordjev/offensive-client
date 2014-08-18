@@ -387,7 +387,6 @@ package modules.game {
 		
 		private function opponentRolledDices(e:DicesEvent):void {
 			var territoryComponent:TerritoryVisual = view.getTerritoryVisual(e.command.sourceTerrotiry.id);
-			
 			territoryComponent.battleDisplay.setDices(e.command.dices());
 		}
 		
