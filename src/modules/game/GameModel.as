@@ -309,7 +309,7 @@ package modules.game {
 		public function singleAttacksReceived(singleAttacks:SingleAttacks):void {
 			if (_phase == GamePhase.BATTLE_PHASE) {
 				_subphaseBattles = singleAttacks.battleInfo;
-				dispatchEvent(new Event(MULTIPLE_ATTACKS_RECEIVED));
+				dispatchEvent(new Event(SINGLE_ATTACKS_RECEIVED));
 			} else {
 				trace("Received single attacks in phase that is not battle phase. Phase " + 
 					GamePhase.getPhaseName(_phase));
@@ -319,7 +319,7 @@ package modules.game {
 		public function spoilsOfWarReceived(spoilsOfWar:SpoilsOfWar):void {
 			if (_phase == GamePhase.BATTLE_PHASE) {
 				_subphaseBattles = spoilsOfWar.battleInfo;
-				dispatchEvent(new Event(MULTIPLE_ATTACKS_RECEIVED));
+				dispatchEvent(new Event(SPOILS_OF_WAR_RECEIVED));
 			} else {
 				trace("Received spoils of war in phase that is not battle phase. Phase " + 
 					GamePhase.getPhaseName(_phase));
