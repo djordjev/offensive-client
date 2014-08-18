@@ -225,7 +225,6 @@ package modules.game {
 		}
 		
 		private function gamePhaseCommited(e:Event):void {
-			trace("Game phase commited response OK");
 		}
 		
 		private function advancedToNextGamePhase(e:Event):void {

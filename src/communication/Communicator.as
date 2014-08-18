@@ -2,6 +2,7 @@ package communication {
 	import com.netease.protobuf.Message;
 	import feathers.controls.Callout;
 	import flash.events.TimerEvent;
+	import flash.utils.getQualifiedClassName;
 	import flash.utils.Timer;
 	import utils.Alert;
 	
@@ -120,42 +121,43 @@ package communication {
 			// read message 
 			var serializedMessage:ByteArray = new ByteArray();
 			
-			if (_protocolMessageInProgress == null && _messageInProgress == null) {
-				_protocolMessageInProgress = new ProtocolMessage();
-				// read header
-				_protocolMessageInProgress.handlerId = _socket.readInt();
-				_protocolMessageInProgress.ticketId = _socket.readInt();
-				_protocolMessageInProgress.dataLength = _socket.readInt();
-				_protocolMessageInProgress.status = _socket.readByte();
-				_protocolMessageInProgress.serialization = _socket.readByte();
+			while (_socket.bytesAvailable > 0) {
+				if (_protocolMessageInProgress == null && _messageInProgress == null) {
+					_protocolMessageInProgress = new ProtocolMessage();
+					// read header
+					_protocolMessageInProgress.handlerId = _socket.readInt();
+					_protocolMessageInProgress.ticketId = _socket.readInt();
+					_protocolMessageInProgress.dataLength = _socket.readInt();
+					_protocolMessageInProgress.status = _socket.readByte();
+					_protocolMessageInProgress.serialization = _socket.readByte();
+					
+					if (_socket.bytesAvailable >= _protocolMessageInProgress.dataLength) {
+						_socket.readBytes(serializedMessage, 0, _protocolMessageInProgress.dataLength);
+						wholeMessageIsReceived(_protocolMessageInProgress, serializedMessage);
+						_protocolMessageInProgress = null;
+						_messageInProgress = null;
+					} else {
+						_socket.readBytes(serializedMessage);
+						_messageInProgress = new ByteArray();
+						_messageInProgress.writeBytes(serializedMessage);
+					}
+				} else {
+					if (_socket.bytesAvailable >= _protocolMessageInProgress.dataLength - _messageInProgress.length) {
+						// all bytes are now read
+						_socket.readBytes(serializedMessage, 0, _protocolMessageInProgress.dataLength - _messageInProgress.length);
+						_messageInProgress.writeBytes(serializedMessage);
+						_messageInProgress.position = 0;
+						wholeMessageIsReceived(_protocolMessageInProgress, _messageInProgress);
+						_protocolMessageInProgress = null;
+						_messageInProgress = null;
+					} else {
+						// message is still not completely received
+						_socket.readBytes(serializedMessage);
+						_messageInProgress.writeBytes(serializedMessage);
+					}
+				}
 				
-				if (_socket.bytesAvailable >= _protocolMessageInProgress.dataLength) {
-					_socket.readBytes(serializedMessage, 0, _protocolMessageInProgress.dataLength);
-					wholeMessageIsReceived(_protocolMessageInProgress, serializedMessage);
-					_protocolMessageInProgress = null;
-					_messageInProgress = null;
-				} else {
-					_socket.readBytes(serializedMessage);
-					_messageInProgress = new ByteArray();
-					_messageInProgress.writeBytes(serializedMessage);
-				}
-			} else {
-				if (_socket.bytesAvailable >= _protocolMessageInProgress.dataLength - _messageInProgress.length) {
-					// all bytes are now read
-					_socket.readBytes(serializedMessage, 0, _protocolMessageInProgress.dataLength - _messageInProgress.length);
-					_messageInProgress.writeBytes(serializedMessage);
-					_messageInProgress.position = 0;
-					wholeMessageIsReceived(_protocolMessageInProgress, _messageInProgress);
-					_protocolMessageInProgress = null;
-					_messageInProgress = null;
-				} else {
-					// message is still not completely received
-					_socket.readBytes(serializedMessage);
-					_messageInProgress.writeBytes(serializedMessage);
-				}
 			}
-			
-			
 		}
 		
 		private function wholeMessageIsReceived(receivedMessage:ProtocolMessage, messageData:ByteArray):void {

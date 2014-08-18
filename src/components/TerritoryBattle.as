@@ -85,8 +85,6 @@ package components {
 				var diceImage:ImageLoader = new ImageLoader();
 				// set image
 				dices.push(diceImage);
-				
-				trace("dices init");
 			}
 			
 		}

@@ -331,7 +331,7 @@ package modules.game {
 			_currentBattleTimer = new Timer(Globals.ONE_SECOND, TIME_FOR_ROLL);
 			_currentBattleTimer.addEventListener(TimerEvent.TIMER, function tickTimer(e:TimerEvent):void {
 				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIMER_TICK, _currentBattle, 
-												TIME_FOR_ROLL - (e.currentTarget as Timer).repeatCount));
+												TIME_FOR_ROLL - (e.currentTarget as Timer).currentCount));
 			});
 			_currentBattleTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function rollTimeUp(e:TimerEvent):void {
 				roundFinished();
@@ -347,7 +347,7 @@ package modules.game {
 			var command:CommandWrapper;
 			
 			for each(command in _currentBattle.allCommands) {
-				if (command.sourceTerrotiry.owner.playerId.toString() == _me.playerId.toString()) {
+				if (command.sourceTerrotiry.owner.playerId.toString() == _me.playerId.toString() && !command.isRolled) {
 					rollMyDice(territories[command.sourceTerrotiry.id]);
 				}
 			}
@@ -367,7 +367,10 @@ package modules.game {
 		}
 		
 		public function rollMyDice(attackFrom:TerritoryWrapper):void {
-			Communicator.instance.send(HandlerCodes.ROLL_DICE, new RollDiceClicked(), null);
+			var rollDicesMessage:RollDiceClicked = new RollDiceClicked();
+			rollDicesMessage.gameId = _gameId;
+			rollDicesMessage.territoryId = attackFrom.id;
+			Communicator.instance.send(HandlerCodes.ROLL_DICE, rollDicesMessage, null);
 			rollDice(attackFrom);
 		}
 		
