@@ -69,6 +69,8 @@ package modules.game {
 		
 		private var _numberOfMyUnits:int;
 		
+		private var _subphase:int;
+		
 		/** All commands in battle phase */
 		private var _allCommands:Array;
 		
@@ -209,25 +211,28 @@ package modules.game {
 			var request:CommandsSubmittedRequest = new CommandsSubmittedRequest();
 			request.gameId = _gameId;
 			Communicator.instance.send(HandlerCodes.COMMANDS_SUBMIT, request, function phaseChanged(e:ProtocolMessage):void {
-				dispatchEvent(new Event(GAME_PHASE_COMMITED));
-			});
+					dispatchEvent(new Event(GAME_PHASE_COMMITED));
+				});
 		}
 		
 		public function advancedToNextPhase(response:AdvancePhaseNotification):void {
 			_phase = (_phase + 1) % 4;
 			_currentBattle = null;
-			switch(_phase) {
-				case GamePhase.TROOP_DEPLOYMENT_PHASE:
+			switch (_phase) {
+				case GamePhase.TROOP_DEPLOYMENT_PHASE: 
+					_subphase = GamePhase.SUBPHASE_NO_SUBPHASE;
 					advanceToTroopDeploymentPhase(response);
 					break;
-				case GamePhase.ATTACK_PHASE:
+				case GamePhase.ATTACK_PHASE: 
+					_subphase = GamePhase.SUBPHASE_NO_SUBPHASE;
 					advanceToAttackPhase(response);
 					break;
-				case GamePhase.BATTLE_PHASE:
+				case GamePhase.BATTLE_PHASE: 
 					break;
-				case GamePhase.TROOP_RELOCATION_PHASE:
+				case GamePhase.TROOP_RELOCATION_PHASE: 
+					_subphase = GamePhase.SUBPHASE_NO_SUBPHASE;
 					break;
-				default:
+				default: 
 					break;
 			}
 			dispatchEvent(new Event(ADVANCED_TO_NEXT_PHASE));
@@ -242,9 +247,9 @@ package modules.game {
 			request.command.destinationTerritory = territoryTo.id;
 			request.command.numberOfUnits = numberOfUnits;
 			Communicator.instance.send(HandlerCodes.ATTACK, request, function attackResponseReceived(message:ProtocolMessage):void {
-				territoryFrom.troopsOnIt -= numberOfUnits;
-				dispatchEvent(new AttackEvent(AttackEvent.TERRITORY_ATTACK, territoryFrom, territoryTo, numberOfUnits));
-			});
+					territoryFrom.troopsOnIt -= numberOfUnits;
+					dispatchEvent(new AttackEvent(AttackEvent.TERRITORY_ATTACK, territoryFrom, territoryTo, numberOfUnits));
+				});
 		}
 		
 		private function advanceToTroopDeploymentPhase(response:AdvancePhaseNotification):void {
@@ -253,7 +258,7 @@ package modules.game {
 		
 		private function advanceToAttackPhase(response:AdvancePhaseNotification):void {
 			// update number of units on territories
-			for each(var territory:Territory in response.territories) {
+			for each (var territory:Territory in response.territories) {
 				var playerOnIt:PlayerWrapper = getPlayerByPlayerId(territory.playerId);
 				(_territories[territory.id] as TerritoryWrapper).conquer(playerOnIt, territory.troopsOnIt);
 				dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, territory.id));
@@ -281,86 +286,197 @@ package modules.game {
 				_allCommands = allCommands.commands;
 				dispatchEvent(new Event(ALL_COMMANDS_RECEIVED));
 			} else {
-				trace("Received all commands in phase that is not battle phase. Phase " +
-					GamePhase.getPhaseName(_phase));
+				trace("Received all commands in phase that is not battle phase. Phase " + GamePhase.getPhaseName(_phase));
 			}
 		}
 		
 		public function borderClashesReceived(borderClashes:BorderClashes):void {
 			if (_phase == GamePhase.BATTLE_PHASE) {
+				_subphase = GamePhase.SUBPHASE_BORDER_CLASHES;
 				_subphaseBattles = borderClashes.battleInfo;
 				dispatchEvent(new Event(BORDER_CLASHES_RECEIVED));
 			} else {
-				trace("Received border clashes in phase that is not battle phase. Phase " +
-					GamePhase.getPhaseName(_phase));
+				trace("Received border clashes in phase that is not battle phase. Phase " + GamePhase.getPhaseName(_phase));
 			}
 		}
 		
 		public function multipleAttacksReceived(multipleAttacks:MultipleAttacks):void {
 			if (_phase == GamePhase.BATTLE_PHASE) {
+				_subphase = GamePhase.SUBPHASE_MULTIPLE_ATTACKS;
 				_subphaseBattles = multipleAttacks.battleInfo;
 				dispatchEvent(new Event(MULTIPLE_ATTACKS_RECEIVED));
 			} else {
-				trace("Received multiple attacks in phase that is not battle phase. Phase " + 
-					GamePhase.getPhaseName(_phase));
+				trace("Received multiple attacks in phase that is not battle phase. Phase " + GamePhase.getPhaseName(_phase));
 			}
 		}
 		
 		public function singleAttacksReceived(singleAttacks:SingleAttacks):void {
 			if (_phase == GamePhase.BATTLE_PHASE) {
+				_subphase = GamePhase.SUBPHASE_SINGLE_ATTACKS;
 				_subphaseBattles = singleAttacks.battleInfo;
 				dispatchEvent(new Event(SINGLE_ATTACKS_RECEIVED));
 			} else {
-				trace("Received single attacks in phase that is not battle phase. Phase " + 
-					GamePhase.getPhaseName(_phase));
+				trace("Received single attacks in phase that is not battle phase. Phase " + GamePhase.getPhaseName(_phase));
 			}
 		}
 		
 		public function spoilsOfWarReceived(spoilsOfWar:SpoilsOfWar):void {
 			if (_phase == GamePhase.BATTLE_PHASE) {
+				_subphase = GamePhase.SUBPHASE_SPOILS_OF_WAR;
 				_subphaseBattles = spoilsOfWar.battleInfo;
 				dispatchEvent(new Event(SPOILS_OF_WAR_RECEIVED));
 			} else {
-				trace("Received spoils of war in phase that is not battle phase. Phase " + 
-					GamePhase.getPhaseName(_phase));
+				trace("Received spoils of war in phase that is not battle phase. Phase " + GamePhase.getPhaseName(_phase));
 			}
 		}
 		
 		public function advanceToNextBattle(battleInfo:BattleInfo):void {
 			_currentBattle = BattleInfoWrapper.buildBattleInfoWrapper(battleInfo);
-			_currentBattleTimer = new Timer(Globals.ONE_SECOND, TIME_FOR_ROLL);
-			_currentBattleTimer.addEventListener(TimerEvent.TIMER, function tickTimer(e:TimerEvent):void {
-				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIMER_TICK, _currentBattle, 
-												TIME_FOR_ROLL - (e.currentTarget as Timer).currentCount));
-			});
-			_currentBattleTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function rollTimeUp(e:TimerEvent):void {
-				roundFinished();
-				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIME_UP, _currentBattle, 0));
-			});
-			
-			_currentBattleTimer.start();
+			setUpTimers();
 			dispatchEvent(new BattleEvent(BattleEvent.ADVANCE_NO_NEXT_BATTLE, _currentBattle, TIME_FOR_ROLL));
 		}
 		
-		private function roundFinished():void {
+		private function setUpTimers():void {
+			_currentBattleTimer = new Timer(Globals.ONE_SECOND, TIME_FOR_ROLL);
+			_currentBattleTimer.addEventListener(TimerEvent.TIMER, function tickTimer(e:TimerEvent):void {
+					dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIMER_TICK, _currentBattle, TIME_FOR_ROLL - (e.currentTarget as Timer).currentCount));
+				});
+			_currentBattleTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function rollTimeUp(e:TimerEvent):void {
+					roundFinished();
+					dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIME_UP, _currentBattle, 0));
+				});
 			
+			_currentBattleTimer.start();
+		}
+		
+		private function roundFinished():void {
 			var command:CommandWrapper;
 			
-			for each(command in _currentBattle.allCommands) {
+			for each (command in _currentBattle.allCommands) {
 				if (command.sourceTerrotiry.owner.playerId.toString() == _me.playerId.toString() && !command.isRolled) {
 					rollMyDice(territories[command.sourceTerrotiry.id]);
 				}
 			}
 			
-			calculateCasualties();
+			var isFinished = calculateCasualties();
 			
-			for each(command in _currentBattle.allCommands) {
+			if (isFinished) {
+				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_FINISHED, _currentBattle));
+			} else {
+				setUpTimers();
+			}
+			
+			for each (command in _currentBattle.allCommands) {
 				command.clearDices();
 			}
 		}
 		
-		private function calculateCasualties():void {
+		/** Returns whether battle is finished */
+		private function calculateCasualties():Boolean {
+			var isBattleFinished:Boolean;
 			
+			if (_subphase == GamePhase.SUBPHASE_BORDER_CLASHES) {
+				calculateCasualtiesBorderClash();
+			} else if (_subphase == GamePhase.SUBPHASE_SPOILS_OF_WAR) {
+				calculateCasualtiesSpoilsOfWar();
+			} else {
+				calculateCasualtiesTwoSidedBattle();
+			}
+			
+			var died:Array = _currentBattle.removeAllDeadParticipants();
+			for each(var command:CommandWrapper in died) {
+				dispatchEvent(new DicesEvent(DicesEvent.OPPONENT_DIED_IN_BATTLE, command));
+			}
+			
+			if (_subphase != GamePhase.SUBPHASE_SPOILS_OF_WAR) {
+				return _currentBattle.oneSide.length == 0 || _currentBattle.otherSide.length == 0;
+			} else {
+				return _currentBattle.oneSide.length == 1;
+			}
+		}
+		
+		private function calculateCasualtiesBorderClash():void {
+			var numberOfDicesInBattle:int = _currentBattle.minNumberOfDices();
+			
+			var firstCommand:CommandWrapper = _currentBattle.oneSide[0];
+			var secondCommand:CommandWrapper = _currentBattle.otherSide[0];
+			
+			for (var i:int = 0; i < numberOfDicesInBattle; i++) {
+				if (firstCommand.dices()[i] < secondCommand.dices()[i]) {
+					firstCommand.removeUnit();
+				} else if (firstCommand.dices()[i] > secondCommand.dices()[i]) {
+					secondCommand.removeUnit();
+				}
+			}
+		}
+		
+		private function calculateCasualtiesSpoilsOfWar():void {
+			var numberOfDicesInBattle:int = _currentBattle.minNumberOfDices();
+			var command:CommandWrapper;
+			
+			for (var i:int = 0; i < numberOfDicesInBattle; i++) {
+				var commandWithBiggestDice:CommandWrapper = null;
+				// find command with biggest dice
+				for each(command in _currentBattle.oneSide) {
+					if (commandWithBiggestDice == null || command.dices()[i] > commandWithBiggestDice) {
+						commandWithBiggestDice = command;
+					}
+				}
+				
+				// remove units to others
+				for each(command in _currentBattle.oneSide) {
+					if (commandWithBiggestDice.dices()[i] > command.dices()[i] && 
+						commandWithBiggestDice.sourceTerrotiry.id != command.sourceTerrotiry.id) {
+						command.removeUnit();
+					}
+				}
+				
+			}
+		}
+		
+		private function calculateCasualtiesTwoSidedBattle():void {
+			var sides:Object = determineAttackerDefender();
+			var numberOfDicesInBattle:int = _currentBattle.minNumberOfDices();
+			
+			var attackers:Array = sides.attacker;
+			var defender:CommandWrapper = sides.defender[0]; // there can be only one defender
+			
+			for (var i:int = 0; i < numberOfDicesInBattle; i++) {
+				// find attacker biggest dice
+				var biggestAttackerDice:int = 0;
+				var singleAttacker:CommandWrapper;
+				for each(singleAttacker in attackers) {
+					if (singleAttacker.dices()[i] > biggestAttackerDice) {
+						biggestAttackerDice = singleAttacker.dices()[i];
+					}
+				}
+				
+				if (biggestAttackerDice > defender.dices()[i]) {
+					defender.removeUnit();
+				} else {
+					for each(singleAttacker in attackers) {
+						singleAttacker.removeUnit();
+					}
+				}
+			}
+		}
+		
+		private function determineAttackerDefender():Object {
+			var result:Object = new Object();
+			
+			if (_currentBattle.oneSide.length == 1 && 
+				(_currentBattle.oneSide[0] as CommandWrapper).sourceTerrotiry.id == (_currentBattle.oneSide[0] as CommandWrapper).destionationTerritory.id) {
+				result.defender = _currentBattle.oneSide;
+				result.attacker = _currentBattle.otherSide;
+			} else if (_currentBattle.otherSide.length == 1 && 
+				(_currentBattle.otherSide[0] as CommandWrapper).sourceTerrotiry.id == (_currentBattle.otherSide[0] as CommandWrapper).destionationTerritory.id) {
+				result.defender = _currentBattle.otherSide;
+				result.attacker = _currentBattle.oneSide;
+			} else {
+				throw new Error("Unable to find defence command");
+			}
+			
+			return result;
 		}
 		
 		private function battleFinished():void {
@@ -379,9 +495,9 @@ package modules.game {
 		}
 		
 		private function rollDice(territoryFrom:TerritoryWrapper):void {
-			for each(var command:CommandWrapper in _currentBattle.allCommands) {
+			for each (var command:CommandWrapper in _currentBattle.allCommands) {
 				if (command.sourceTerrotiry.id == territoryFrom.id) {
-					command.dices();
+					command.throwDices();
 					_currentBattle.incrementNumberOfRolledDices();
 					dispatchEvent(new DicesEvent(DicesEvent.DICES_ROLLED, command));
 					break;

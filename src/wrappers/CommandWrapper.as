@@ -10,7 +10,7 @@ package wrappers {
 	public class CommandWrapper {
 		
 		private static const MAX_NUMBER_ON_DICE:int = 6;
-		private static const MAX_NUMBER_OF_DICES:int = 3;
+		public static const MAX_NUMBER_OF_DICES:int = 3;
 		
 		public static function buildCommandWrapper(command:Command):CommandWrapper {
 			var commandWrapper:CommandWrapper = new CommandWrapper();
@@ -50,10 +50,6 @@ package wrappers {
 		}
 		
 		public function dices():Array {
-			if (_dices == null) {
-				getDicesResult();
-			}
-			
 			return _dices;
 		}
 		
@@ -65,7 +61,7 @@ package wrappers {
 			return _randomGenerator.getNext(1, MAX_NUMBER_ON_DICE + 1);
 		}
 		
-		private function getDicesResult():void {
+		public function throwDices():void {
 			var numberOfDices:int = Math.min(MAX_NUMBER_OF_DICES, numberOfUnits);
 			
 			_dices = [];
@@ -79,7 +75,14 @@ package wrappers {
 			
 			_rolled = true;
 		}
-	
+		
+		public function removeUnit():void {
+			if (numberOfUnits > 0) {
+				numberOfUnits--;
+			} else {
+				throw new Error("Can't remove units from command where all units are already removed");
+			}
+		}
 	}
 
 }

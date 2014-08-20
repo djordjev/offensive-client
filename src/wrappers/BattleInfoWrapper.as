@@ -56,7 +56,49 @@ package wrappers {
 		public function get isAllDicesRolled():Boolean {
 			return _numberOfRolledDices >= oneSide.length + otherSide.length;
 		}
-	
+		
+		public function removeAllDeadParticipants():Array {
+			var i:int;
+			var command:CommandWrapper;
+			var deadParticipants:Array = [];
+			
+			for (i = oneSide.length - 1; i >= 0; i--) {
+				command = oneSide[i];
+				if (command.numberOfUnits == 0) {
+					deadParticipants.push(command);
+					oneSide.splice(i, 1);
+				}
+			}
+			
+			for (i = otherSide.length - 1; i >= 0; i--) {
+				command = otherSide[i];
+				if (command.numberOfUnits == 0) { 
+					deadParticipants.push(command);
+					otherSide.splice(i, 1);
+				}
+			}
+			
+			for (i = _allCommands.length - 1; i >= 0; i--) {
+				command = _allCommands[i];
+				if (command.numberOfUnits == 0) {
+					_allCommands.splice(i, 1);
+				}
+			}
+			
+			return deadParticipants;
+		}
+		
+		public function minNumberOfDices():int {
+			var min:int = 0;
+			for each(var command:CommandWrapper in _allCommands) {
+				var numberOfDices:int = Math.min(CommandWrapper.MAX_NUMBER_OF_DICES, command.numberOfUnits);
+				if (numberOfDices < min) {
+					min = numberOfDices;
+				}
+			}
+			
+			return min;
+		}
 	}
 
 }

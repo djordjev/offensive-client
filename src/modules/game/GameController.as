@@ -104,8 +104,10 @@ package modules.game {
 			model.addEventListener(BattleEvent.ADVANCE_NO_NEXT_BATTLE, advanceToBattle);
 			model.addEventListener(BattleEvent.BATTLE_TIME_UP, roundFinished);
 			model.addEventListener(BattleEvent.BATTLE_TIMER_TICK, battleTimerTick);
+			model.addEventListener(BattleEvent.BATTLE_FINISHED, battleFinished);
 			
 			model.addEventListener(DicesEvent.DICES_ROLLED, opponentRolledDices);
+			model.addEventListener(DicesEvent.OPPONENT_DIED_IN_BATTLE, participantDiedInBattle);
 			//model.addEventListener
 			
 			view.addEventListener(RollDicesClickEvent.ROLL_CLICKED, rollClicked);
@@ -382,7 +384,10 @@ package modules.game {
 		}
 		
 		private function roundFinished(e:BattleEvent):void {
-			//	battleFinished();
+			for each(var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
+				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
+				visualTerritory.battleDisplay.rollButton.isEnabled = true;
+			}
 		}
 		
 		private function opponentRolledDices(e:DicesEvent):void {
@@ -390,9 +395,16 @@ package modules.game {
 			territoryComponent.battleDisplay.setDices(e.command.dices());
 		}
 		
-		private function battleFinished():void {
+		private function participantDiedInBattle(e:DicesEvent):void {
+			var visualTerritory:TerritoryVisual = view.getTerritoryVisual(e.command.sourceTerrotiry.id);
+			visualTerritory.battleDisplay.hide();
+		}
+		
+		private function battleFinished(e:BattleEvent):void {
 			_territoriesInCurrentBattle = [];
 			removeAllBattleInfos();
+			
+			focusMap();
 		}
 		
 		/** @param territories - Array of TerritoryWrapper */

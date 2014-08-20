@@ -10,6 +10,13 @@ package modules.game.classes {
 		public static const BATTLE_PHASE:int = 2;
 		public static const TROOP_RELOCATION_PHASE:int = 3;
 		
+		
+		public static const SUBPHASE_NO_SUBPHASE:int = 1000;
+		public static const SUBPHASE_BORDER_CLASHES:int = 1001;
+		public static const SUBPHASE_MULTIPLE_ATTACKS:int = 1002;
+		public static const SUBPHASE_SINGLE_ATTACKS:int = 1003;
+		public static const SUBPHASE_SPOILS_OF_WAR:int = 1004;
+		
 		public function GamePhase() {
 		}
 		

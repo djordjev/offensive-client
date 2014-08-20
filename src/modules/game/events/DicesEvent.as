@@ -9,6 +9,7 @@ package modules.game.events {
 	public class DicesEvent extends Event {
 		
 		public static const DICES_ROLLED:String = "dices rolled";
+		public static const OPPONENT_DIED_IN_BATTLE:String = "opponent died in battle";
 		
 		private var _command:CommandWrapper;
 		
