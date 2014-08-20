@@ -105,6 +105,10 @@ package components {
 			_headerGroup.visible = showRoll;
 		}
 		
+		public function hide():void {
+			GameController.instance.view.battleInfoGroup.removeChild(this);
+		}
+		
 		private function addBattleInfoComponent():void {
 			var targetPoint:Point = new Point(_territoryComponent.x, _territoryComponent.y);
 			
