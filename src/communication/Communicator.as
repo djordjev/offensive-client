@@ -118,10 +118,12 @@ package communication {
 		private var _messageInProgress:ByteArray = null;
 		
 		private function receive(event:flash.events.Event):void {
-			// read message 
-			var serializedMessage:ByteArray = new ByteArray();
+			var twoMsgsInPackage:Boolean = false;
 			
 			while (_socket.bytesAvailable > 0) {
+				// read message 
+				var serializedMessage:ByteArray = new ByteArray();
+				
 				if (_protocolMessageInProgress == null && _messageInProgress == null) {
 					_protocolMessageInProgress = new ProtocolMessage();
 					// read header
@@ -131,15 +133,21 @@ package communication {
 					_protocolMessageInProgress.status = _socket.readByte();
 					_protocolMessageInProgress.serialization = _socket.readByte();
 					
-					if (_socket.bytesAvailable >= _protocolMessageInProgress.dataLength) {
-						_socket.readBytes(serializedMessage, 0, _protocolMessageInProgress.dataLength);
-						wholeMessageIsReceived(_protocolMessageInProgress, serializedMessage);
+					if(_protocolMessageInProgress.dataLength > 0) {
+						if (_socket.bytesAvailable >= _protocolMessageInProgress.dataLength) {
+							_socket.readBytes(serializedMessage, 0, _protocolMessageInProgress.dataLength);
+							wholeMessageIsReceived(_protocolMessageInProgress, serializedMessage);
+							_protocolMessageInProgress = null;
+							_messageInProgress = null;
+						} else {
+							_socket.readBytes(serializedMessage);
+							_messageInProgress = new ByteArray();
+							_messageInProgress.writeBytes(serializedMessage);
+						}
+					} else {
+						wholeMessageIsReceived(_protocolMessageInProgress, null);
 						_protocolMessageInProgress = null;
 						_messageInProgress = null;
-					} else {
-						_socket.readBytes(serializedMessage);
-						_messageInProgress = new ByteArray();
-						_messageInProgress.writeBytes(serializedMessage);
 					}
 				} else {
 					if (_socket.bytesAvailable >= _protocolMessageInProgress.dataLength - _messageInProgress.length) {
@@ -164,7 +172,9 @@ package communication {
 			var messageClass:Class = HandlerMapping.mapping[receivedMessage.handlerId];
 			var message:Message = new messageClass();
 			
-			message.mergeFrom(messageData);
+			if (messageData != null) {
+				message.mergeFrom(messageData);
+			}
 			receivedMessage.data = message;
 			
 			// call callback function for this ticket
