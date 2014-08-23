@@ -389,13 +389,13 @@ package modules.game {
 		}
 		
 		private function roundFinished(e:BattleEvent):void {
-			for each (var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
-				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
-				setTimeout(function clearPreviousRoundResults():void {
+			setTimeout(function clearPreviousRoundResults():void {
+				for each (var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
+					var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
 					visualTerritory.battleDisplay.rollButton.isEnabled = true;
 					visualTerritory.battleDisplay.clearDices();
-				}, 1800);
-			}
+				}
+			}, 1800);
 		}
 		
 		private function opponentRolledDices(e:DicesEvent):void {
