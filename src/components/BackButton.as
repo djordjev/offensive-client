@@ -48,6 +48,9 @@ package components {
 			_image.source = Assets.getBackNormal();
 			this.addChild(_image);
 		}
+		
+		public function changeToDisabled():void {
+		}
 	
 	}
 

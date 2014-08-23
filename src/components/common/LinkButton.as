@@ -5,6 +5,7 @@ package components.common {
 	import flash.geom.Rectangle;
 	import starling.filters.BlurFilter;
 	import utils.Colors;
+	import utils.States;
 	
 	/**
 	 * ...
@@ -17,7 +18,7 @@ package components.common {
 		private static const FONT_SIZE:int = 30;
 		
 		private var _labelForDisplay:OLabel = new OLabel();
-		private var _blurFilter:BlurFilter; 
+		private var _blurFilter:BlurFilter;
 		private var _statesAdapter:StatesAdapter;
 		
 		private var _fontSize:int = FONT_SIZE;
@@ -47,6 +48,11 @@ package components.common {
 			_labelForDisplay.filter = _blurFilter;
 		}
 		
+		public function changeToDisabled():void {
+			_labelForDisplay.fontColor = Colors.GREY;
+			_labelForDisplay.filter = null;
+		}
+		
 		public function set label(text:String):void {
 			_labelForDisplay.text = text;
 		}
@@ -72,6 +78,19 @@ package components.common {
 			this.addChild(_labelForDisplay);
 		}
 		
+		override public function get isEnabled():Boolean {
+			return super.isEnabled;
+		}
+		
+		override public function set isEnabled(value:Boolean):void {
+			//super.isEnabled = value;
+			if (value) {
+				_statesAdapter.currentState = States.UP;
+			} else {
+				_statesAdapter.currentState = States.DISABLED;
+			}
+		}
+	
 	}
 
 }

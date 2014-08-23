@@ -45,6 +45,9 @@ package components {
 			_image.filter = _glow;
 		}
 		
+		public function changeToDisabled():void {
+		}
+		
 		public function set direction(value:int):void {
 			this.scaleX = value;
 		}

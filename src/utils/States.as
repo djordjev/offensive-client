@@ -1,11 +1,10 @@
-package utils 
-{
+package utils {
+	
 	/**
 	 * ...
 	 * @author ...
 	 */
-	public class States 
-	{
+	public class States {
 		
 		public function States() {
 		}
@@ -13,7 +12,8 @@ package utils
 		public static const UP:int = 0;
 		public static const HOVERED:int = 1;
 		public static const DOWN:int = 2;
-		
+		public static const DISABLED:int = 3;
+	
 	}
 
 }

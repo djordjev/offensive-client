@@ -52,6 +52,9 @@ package components {
 			_label.fontColor = Colors.BLACK;
 		}
 		
+		public function changeToDisabled():void {
+		}
+		
 		public function set numberOfInvitations(value:int):void {
 			if (value > 0) {
 				this.visible = true;

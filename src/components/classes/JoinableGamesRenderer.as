@@ -65,6 +65,9 @@ package components.classes {
 			this.filter = _glow;
 		}
 		
+		public function changeToDisabled():void {
+		}
+		
 		override protected function initialize():void {
 			super.initialize();
 			

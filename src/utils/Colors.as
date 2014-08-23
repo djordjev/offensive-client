@@ -17,6 +17,7 @@ package utils {
 		public static const YELLOW:uint = 0xFFFF00;
 		public static const PURPLE:uint = 0x6600FF;
 		public static const BROWN:uint = 0x660000;
+		public static const GREY:uint = 0xACACAC;
 	
 	}
 

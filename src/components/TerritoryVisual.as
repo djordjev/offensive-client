@@ -127,6 +127,9 @@ package components {
 		public function changeToDown():void {
 		}
 		
+		public function changeToDisabled():void {
+		}
+		
 		public function changeToHovered():void {
 			this.filter = glow;
 			// move up front

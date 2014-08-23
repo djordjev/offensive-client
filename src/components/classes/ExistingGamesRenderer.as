@@ -75,6 +75,9 @@ package components.classes {
 			this.invalidate();
 		}
 		
+		public function changeToDisabled():void {
+		}
+		
 		override protected function initialize():void {
 			super.initialize();
 			this.width = WIDTH;

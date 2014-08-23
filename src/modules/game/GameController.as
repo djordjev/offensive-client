@@ -1,7 +1,9 @@
 package modules.game {
 	import com.netease.protobuf.Int64;
 	import communication.protos.Command;
+	import components.common.LinkButton;
 	import components.events.RollDicesClickEvent;
+	import components.TerritoryBattle;
 	import components.TerritoryVisual;
 	import feathers.core.FeathersControl;
 	import feathers.data.ListCollection;
@@ -436,6 +438,7 @@ package modules.game {
 		}
 		
 		private function rollClicked(e:RollDicesClickEvent):void {
+			(e.target as TerritoryBattle).rollButton.isEnabled = false;
 			var territory:TerritoryWrapper = e.territoryClicked;
 			
 			model.rollMyDice(territory);

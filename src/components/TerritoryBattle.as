@@ -65,7 +65,6 @@ package components {
 			rollButton.fontColor = Colors.WHITE;
 			rollButton.fontSize = 20;
 			rollButton.addEventListener(MouseClickEvent.CLICK, function (e:Event):void {
-				rollButton.isEnabled = false;
 				dispatchEvent(new RollDicesClickEvent(RollDicesClickEvent.ROLL_CLICKED, 
 								_territoryComponent.territory, true));
 			});
@@ -94,10 +93,6 @@ package components {
 				
 			}
 			
-		}
-		
-		public function enableRollButton():void {
-			rollButton.isEnabled = true;
 		}
 		
 		public function show(showRoll:Boolean = false):void {

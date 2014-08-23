@@ -12,6 +12,7 @@ package components.common
 		function changeToUp():void;
 		function changeToDown():void;
 		function changeToHovered():void;
+		function changeToDisabled():void;
 	}
 	
 }
