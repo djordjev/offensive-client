@@ -7,6 +7,7 @@ package modules.game {
 	import feathers.data.ListCollection;
 	import flash.geom.Point;
 	import flash.utils.Dictionary;
+	import flash.utils.setTimeout;
 	import modules.base.BaseController;
 	import modules.base.BaseModel;
 	import modules.game.classes.ActionPerformedAttack;
@@ -42,6 +43,7 @@ package modules.game {
 	public class GameController extends BaseController {
 		
 		private static const ZOOM_ANIMATION_DURATION:int = 1; // in seconds
+		private static const TIMEOUT_AFTER_BATTLE:int = 1500; // milliseconds
 		
 		private static var _instance:GameController;
 		
@@ -397,14 +399,17 @@ package modules.game {
 		
 		private function participantDiedInBattle(e:DicesEvent):void {
 			var visualTerritory:TerritoryVisual = view.getTerritoryVisual(e.command.sourceTerrotiry.id);
-			visualTerritory.battleDisplay.hide();
+			// TODO Display something showing that he's dead
 		}
 		
 		private function battleFinished(e:BattleEvent):void {
-			_territoriesInCurrentBattle = [];
-			removeAllBattleInfos();
+			setTimeout(function timeoutAfterBattleOver():void {
+				removeAllBattleInfos();
+				_territoriesInCurrentBattle = [];
+				focusMap();
+			}, TIMEOUT_AFTER_BATTLE);
 			
-			focusMap();
+			
 		}
 		
 		/** @param territories - Array of TerritoryWrapper */

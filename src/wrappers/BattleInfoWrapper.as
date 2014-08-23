@@ -89,7 +89,7 @@ package wrappers {
 		}
 		
 		public function minNumberOfDices():int {
-			var min:int = 0;
+			var min:int = CommandWrapper.MAX_NUMBER_OF_DICES;
 			for each(var command:CommandWrapper in _allCommands) {
 				var numberOfDices:int = Math.min(CommandWrapper.MAX_NUMBER_OF_DICES, command.numberOfUnits);
 				if (numberOfDices < min) {
