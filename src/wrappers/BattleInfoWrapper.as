@@ -54,6 +54,10 @@ package wrappers {
 			_numberOfRolledDices++;
 		}
 		
+		public function clearNumberOfRolledDices():void {
+			_numberOfRolledDices = 0;
+		}
+		
 		public function get isAllDicesRolled():Boolean {
 			return _numberOfRolledDices >= oneSide.length + otherSide.length;
 		}

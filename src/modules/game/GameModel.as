@@ -381,6 +381,7 @@ package modules.game {
 			for each (command in _currentBattle.allCommands) {
 				command.clearDices();
 			}
+			_currentBattle.clearNumberOfRolledDices();
 		}
 		
 		/** Returns whether battle is finished */

@@ -144,6 +144,12 @@ package components {
 				}
 			}
 		}
+		
+		public function clearDices():void {
+			for (var i:int = 0; i < GameModel.MAX_DICES; i++) {
+				dices[i].source = null;
+			}
+		}
 	
 	}
 
