@@ -14,7 +14,7 @@ package communication {
 	import communication.protos.JoinGameResponse;
 	import communication.protos.MultipleAttacks;
 	import communication.protos.PlayerRolledDice;
-	import communication.protos.RollDiceResponse;
+	import communication.protos.RollDiceClickedResponse;
 	import communication.protos.SingleAttacks;
 	import communication.protos.SpoilsOfWar;
 
@@ -35,7 +35,7 @@ package communication {
 			mapping[HandlerCodes.ALL_COMMANDS_BATTLE_PHASE] = AllCommands;
 			mapping[HandlerCodes.BORDER_CLASHES] = BorderClashes;
 			mapping[HandlerCodes.ADVANCE_TO_NEXT_BATTLE] = AdvanceToNextBattle;
-			mapping[HandlerCodes.ROLL_DICE] = RollDiceResponse;
+			mapping[HandlerCodes.ROLL_DICE] = RollDiceClickedResponse;
 			mapping[HandlerCodes.PLAYER_ROLLED_DICE] = PlayerRolledDice;
 			mapping[HandlerCodes.JOIN_GAME_NOTIFICATION] = JoinGameNotification;
 			mapping[HandlerCodes.ADVANCE_TO_NEXT_PHASE] = AdvancePhaseNotification;
