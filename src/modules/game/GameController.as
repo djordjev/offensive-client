@@ -391,7 +391,10 @@ package modules.game {
 		private function roundFinished(e:BattleEvent):void {
 			for each (var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
 				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
-				visualTerritory.battleDisplay.rollButton.isEnabled = true;
+				setTimeout(function clearPreviousRoundResults():void {
+					visualTerritory.battleDisplay.rollButton.isEnabled = true;
+					visualTerritory.battleDisplay.clearDices();
+				}, 1800);
 			}
 		}
 		

@@ -20,6 +20,7 @@ package modules.game {
 	import communication.protos.Territory;
 	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
+	import flash.utils.setTimeout;
 	import flash.utils.Timer;
 	import modules.base.BaseModel;
 	import modules.game.classes.GamePhase;
@@ -53,7 +54,8 @@ package modules.game {
 		
 		public static const MAX_DICES:int = 3;
 		
-		private static const TIME_FOR_ROLL:int = 8; // seconds
+		private static const TIME_FOR_ROLL:int = 10; // seconds
+		private static const TIME_FOR_DISPLAY_RESULTS:int = 2000; // milliseconds
 		
 		private var _gameName:String;
 		private var _gameId:Int64;
@@ -372,13 +374,17 @@ package modules.game {
 			
 			var isFinished = calculateCasualties();
 			
+			setTimeout(setUpNewRound, TIME_FOR_DISPLAY_RESULTS, isFinished);
+		}
+		
+		private function setUpNewRound(isFinished:Boolean):void {
 			if (isFinished) {
 				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_FINISHED, _currentBattle));
 			} else {
 				setUpTimers();
 			}
 			
-			for each (command in _currentBattle.allCommands) {
+			for each (var command:CommandWrapper in _currentBattle.allCommands) {
 				command.clearDices();
 			}
 			_currentBattle.clearNumberOfRolledDices();
