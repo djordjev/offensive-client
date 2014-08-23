@@ -1,6 +1,7 @@
 package wrappers {
 	import communication.protos.BattleInfo;
 	import communication.protos.Command;
+	import modules.game.classes.GamePhase;
 	
 	/**
 	 * ...
@@ -78,13 +79,6 @@ package wrappers {
 				}
 			}
 			
-			for (i = _allCommands.length - 1; i >= 0; i--) {
-				command = _allCommands[i];
-				if (command.numberOfUnits == 0) {
-					_allCommands.splice(i, 1);
-				}
-			}
-			
 			return deadParticipants;
 		}
 		
@@ -98,6 +92,34 @@ package wrappers {
 			}
 			
 			return min;
+		}
+		
+		public function isFinished(subphase:int):Boolean {
+			if (subphase = GamePhase.SUBPHASE_SPOILS_OF_WAR) {
+				var survivor:PlayerWrapper = null;
+				
+				for each(var command:CommandWrapper in oneSide) {
+					if (survivor == null || command.sourceTerrotiry.owner.playerId == survivor.playerId) {
+						survivor = command.sourceTerrotiry.owner;
+					} else {
+						return false;
+					}
+				}
+				
+				return true;
+			} else {
+				return isAllDead(oneSide) || isAllDead(otherSide);
+			}
+		}
+		
+		private function isAllDead(commands:Array):Boolean {
+			for each(var command:CommandWrapper in commands) {
+				if (command.isAlive) {
+					return false;
+				}
+			}
+			
+			return true;
 		}
 	}
 

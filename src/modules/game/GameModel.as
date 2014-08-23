@@ -392,11 +392,7 @@ package modules.game {
 				dispatchEvent(new DicesEvent(DicesEvent.OPPONENT_DIED_IN_BATTLE, command));
 			}
 			
-			if (_subphase != GamePhase.SUBPHASE_SPOILS_OF_WAR) {
-				return _currentBattle.oneSide.length == 0 || _currentBattle.otherSide.length == 0;
-			} else {
-				return _currentBattle.oneSide.length == 1;
-			}
+			return _currentBattle.isFinished(_subphase);
 		}
 		
 		private function calculateCasualtiesBorderClash():void {
