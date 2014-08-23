@@ -24,6 +24,8 @@ package wrappers {
 			commandWrapper._randomGenerator = new RandomGenerator();
 			commandWrapper._randomGenerator.initWithSeed(commandWrapper.seed);
 			
+			commandWrapper._isAlive = true;
+			
 			return commandWrapper;
 		}
 		
@@ -34,6 +36,8 @@ package wrappers {
 		
 		public var numberOfUnits:int;
 		public var seed:int;
+		
+		private var _isAlive:Boolean = true;
 		
 		private var _randomGenerator:RandomGenerator;
 		
@@ -47,6 +51,10 @@ package wrappers {
 		
 		public function get isRolled():Boolean {
 			return _rolled;
+		}
+		
+		public function get isAlive():Boolean {
+			return _isAlive;
 		}
 		
 		public function dices():Array {
@@ -82,6 +90,10 @@ package wrappers {
 			} else {
 				throw new Error("Can't remove units from command where all units are already removed");
 			}
+		}
+		
+		public function die():void {
+			_isAlive = false;
 		}
 	}
 

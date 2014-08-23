@@ -101,6 +101,10 @@ package modules.game {
 			return _phase;
 		}
 		
+		public function get subphase():int {
+			return _subphase;
+		}
+		
 		public function get me():PlayerWrapper {
 			return _me;
 		}
@@ -383,7 +387,7 @@ package modules.game {
 				calculateCasualtiesTwoSidedBattle();
 			}
 			
-			var died:Array = _currentBattle.removeAllDeadParticipants();
+			var died:Array = _currentBattle.killLosingParticipants();
 			for each(var command:CommandWrapper in died) {
 				dispatchEvent(new DicesEvent(DicesEvent.OPPONENT_DIED_IN_BATTLE, command));
 			}

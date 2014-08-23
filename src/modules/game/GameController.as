@@ -31,6 +31,7 @@ package modules.game {
 	import utils.PlayerColors;
 	import utils.Screens;
 	import utils.Utilities;
+	import wrappers.BattleInfoWrapper;
 	import wrappers.CommandWrapper;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
@@ -379,14 +380,14 @@ package modules.game {
 		}
 		
 		private function battleTimerTick(e:BattleEvent):void {
-			for each(var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
+			for each (var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
 				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
 				visualTerritory.battleDisplay.setRemainingTime(e.remainingTime);
 			}
 		}
 		
 		private function roundFinished(e:BattleEvent):void {
-			for each(var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
+			for each (var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
 				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
 				visualTerritory.battleDisplay.rollButton.isEnabled = true;
 			}
@@ -404,12 +405,12 @@ package modules.game {
 		
 		private function battleFinished(e:BattleEvent):void {
 			setTimeout(function timeoutAfterBattleOver():void {
-				removeAllBattleInfos();
-				_territoriesInCurrentBattle = [];
-				focusMap();
-			}, TIMEOUT_AFTER_BATTLE);
-			
-			
+					removeAllBattleInfos();
+					_territoriesInCurrentBattle = [];
+					updateViewAfterBattle(e.battleInfo);
+					focusMap();
+				}, TIMEOUT_AFTER_BATTLE);
+		
 		}
 		
 		/** @param territories - Array of TerritoryWrapper */
@@ -439,6 +440,74 @@ package modules.game {
 			
 			model.rollMyDice(territory);
 		}
+		
+		private function updateViewAfterBattle(battle:BattleInfoWrapper):void {
+			var command:CommandWrapper;
+			
+			if (model.subphase == GamePhase.SUBPHASE_BORDER_CLASHES) {
+				// border clashes
+				updateViewAfterBorderClash(battle);
+			} else {
+				var firstCommand:CommandWrapper = battle.allCommands[0];
+				// other phases
+				if (numberOfSurvivors(battle) == 1) {
+					// only one player survived so battle is over
+					if (isDefender(firstCommand)) {
+						var defendingCommand:CommandWrapper = battle.allCommands[0];
+						// only survivor is defender - return units from attack to territory
+						defendingCommand.sourceTerrotiry.troopsOnIt += defendingCommand.numberOfUnits;
+						view.getTerritoryVisual(defendingCommand.sourceTerrotiry.id).refreshNumberOfUnits();
+					} else {
+						// only survivor is attacker
+						var survivedUnits:int = 0;
+						for each(command in battle.allCommands) {
+							survivedUnits += command.numberOfUnits;
+						}
+						
+						firstCommand.destionationTerritory.conquer(firstCommand.sourceTerrotiry.owner, survivedUnits);
+					}
+				} else {
+					// more players survived - spoils of war will happen
+					firstCommand.destionationTerritory.troopsOnIt = 0;
+					view.getTerritoryVisual(firstCommand.destionationTerritory.id).refreshNumberOfUnits();
+				}
+			}
+		}
+		
+		private function updateViewAfterBorderClash(battle:BattleInfoWrapper):void {
+			var oneSide:CommandWrapper = battle.oneSide[0];
+			var otherSide:CommandWrapper = battle.otherSide[0];
+			
+			_arrowManager.removeDoubleArrow(oneSide.destionationTerritory, otherSide.destionationTerritory);
+			
+			if (oneSide.numberOfUnits == 0) {
+				_arrowManager.drawArrow(otherSide.sourceTerrotiry, otherSide.destionationTerritory, PlayerColors.getColor(otherSide.sourceTerrotiry.owner.color), _mapZoom);
+			} else {
+				_arrowManager.drawArrow(oneSide.sourceTerrotiry, oneSide.destionationTerritory, PlayerColors.getColor(oneSide.sourceTerrotiry.owner.color), _mapZoom);
+			}
+		}
+		
+		private function numberOfSurvivors(battle:BattleInfoWrapper):int {
+			var survivorsCount:int = 0;
+			var survivers:Dictionary = new Dictionary();
+			
+			for each(var command:CommandWrapper in battle.allCommands) {
+				if (command.isAlive) {
+					survivers[command.sourceTerrotiry.id] = true;
+				}
+			}
+			
+			for each(var cnt:Boolean in survivers) {
+				survivorsCount++;
+			}
+			
+			return survivorsCount;
+		}
+		
+		private function isDefender(command:CommandWrapper):Boolean {
+			return command.sourceTerrotiry.id == command.destionationTerritory.id;
+		}
+	
 	}
 
 }

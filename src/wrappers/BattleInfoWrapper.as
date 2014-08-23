@@ -57,7 +57,7 @@ package wrappers {
 			return _numberOfRolledDices >= oneSide.length + otherSide.length;
 		}
 		
-		public function removeAllDeadParticipants():Array {
+		public function killLosingParticipants():Array {
 			var i:int;
 			var command:CommandWrapper;
 			var deadParticipants:Array = [];
@@ -66,7 +66,7 @@ package wrappers {
 				command = oneSide[i];
 				if (command.numberOfUnits == 0) {
 					deadParticipants.push(command);
-					oneSide.splice(i, 1);
+					command.die();
 				}
 			}
 			
@@ -74,7 +74,7 @@ package wrappers {
 				command = otherSide[i];
 				if (command.numberOfUnits == 0) { 
 					deadParticipants.push(command);
-					otherSide.splice(i, 1);
+					command.die();
 				}
 			}
 			

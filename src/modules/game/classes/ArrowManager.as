@@ -3,7 +3,9 @@ package modules.game.classes {
 	import feathers.textures.Scale3Textures;
 	import flash.display.Bitmap;
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	import modules.game.GameView;
+	import starling.display.DisplayObject;
 	import starling.display.Sprite;
 	import starling.textures.Texture;
 	import starling.utils.HAlign;
@@ -21,6 +23,9 @@ package modules.game.classes {
 		private static const ARROW_ALPHA:Number = 0.5;
 		
 		private var _arrowSprite:Sprite;
+		
+		private var _arrows:Dictionary = new Dictionary();
+		private var _doubleArrows:Dictionary = new Dictionary();
 		
 		public function ArrowManager(view:GameView) {
 			_arrowSprite = view.arrowsSprite;
@@ -64,6 +69,8 @@ package modules.game.classes {
 			image.rotation = angle;
 			
 			_arrowSprite.addChild(image);
+			
+			_arrows[source.id + "->" + dest.id] = image;
 		}
 		
 		public function drawDoubleArrow(territory1:TerritoryWrapper, territory2:TerritoryWrapper, zoom:Number):void {
@@ -92,8 +99,12 @@ package modules.game.classes {
 			
 			image.rotation = angle;
 			
-			
 			_arrowSprite.addChild(image);
+			
+			var minTerritoryId:int = Math.min(territory1.id, territory2.id);
+			var maxTerritoryId:int = Math.max(territory1.id, territory2.id);
+			
+			_doubleArrows[minTerritoryId + "<->" + maxTerritoryId] = image;
 		}
 		
 		private function calculateTargetPosition(territory:TerritoryWrapper):Point {
@@ -106,7 +117,24 @@ package modules.game.classes {
 		
 		public function clearAllArrows():void {
 			_arrowSprite.removeChildren();
+			_arrows = new Dictionary();
+			_doubleArrows = new Dictionary();
 		}
+		
+		public function removeArrow(source:TerritoryWrapper, dest:TerritoryWrapper):void {
+			var arrow:DisplayObject = _arrows[source.id + "->" + dest.id];
+			_arrowSprite.removeChild(arrow);
+		}
+		
+		public function removeDoubleArrow(territory1:TerritoryWrapper, territory2:TerritoryWrapper):void {
+			var minTerritoryId:int = Math.min(territory1.id, territory2.id);
+			var maxTerritoryId:int = Math.max(territory1.id, territory2.id);
+			
+			var arrow:DisplayObject = _doubleArrows[minTerritoryId + "<->" + maxTerritoryId];
+			
+			_arrowSprite.removeChild(arrow);
+		}
+		
 	
 	}
 
