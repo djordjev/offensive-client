@@ -263,6 +263,8 @@ package modules.game {
 					// potential regular attack
 					regularCommands[source.id + "*" + dest.id] = command;
 				}
+				
+				view.getTerritoryVisual(source.id).refreshNumberOfUnits();
 			}
 			
 			// draw regular attack
@@ -448,20 +450,22 @@ package modules.game {
 				// border clashes
 				updateViewAfterBorderClash(battle);
 			} else {
-				var firstCommand:CommandWrapper = battle.allCommands[0];
+				var firstCommand:CommandWrapper = battle.getFirstLiveCommand();
 				// other phases
 				if (numberOfSurvivors(battle) == 1) {
 					// only one player survived so battle is over
 					if (isDefender(firstCommand)) {
-						var defendingCommand:CommandWrapper = battle.allCommands[0];
+						var defendingCommand:CommandWrapper = firstCommand;
 						// only survivor is defender - return units from attack to territory
-						defendingCommand.sourceTerrotiry.troopsOnIt += defendingCommand.numberOfUnits;
+						defendingCommand.sourceTerrotiry.troopsOnIt = defendingCommand.numberOfUnits;
 						view.getTerritoryVisual(defendingCommand.sourceTerrotiry.id).refreshNumberOfUnits();
 					} else {
 						// only survivor is attacker
 						var survivedUnits:int = 0;
 						for each(command in battle.allCommands) {
-							survivedUnits += command.numberOfUnits;
+							if (command.isAlive) {
+								survivedUnits += command.numberOfUnits;
+							}
 						}
 						
 						firstCommand.destionationTerritory.conquer(firstCommand.sourceTerrotiry.owner, survivedUnits);

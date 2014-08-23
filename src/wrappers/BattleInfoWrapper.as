@@ -121,6 +121,16 @@ package wrappers {
 			
 			return true;
 		}
+		
+		public function getFirstLiveCommand():CommandWrapper {
+			for (var i:int = 0; i < allCommands.length; i++) {
+				if ((allCommands[i] as CommandWrapper).isAlive) {
+					return allCommands[i];
+				}
+			}
+			
+			return null;
+		}
 	}
 
 }

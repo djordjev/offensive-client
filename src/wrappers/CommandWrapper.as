@@ -87,6 +87,8 @@ package wrappers {
 		public function removeUnit():void {
 			if (numberOfUnits > 0) {
 				numberOfUnits--;
+				
+				sourceTerrotiry.troopsOnIt--;
 			} else {
 				throw new Error("Can't remove units from command where all units are already removed");
 			}

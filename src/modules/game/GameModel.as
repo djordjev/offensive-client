@@ -288,6 +288,14 @@ package modules.game {
 		public function allCommandsReceived(allCommands:AllCommands):void {
 			if (_phase == GamePhase.BATTLE_PHASE) {
 				_allCommands = allCommands.commands;
+
+				for each(var command:Command in allCommands.commands) {
+					var issuerTerritory:TerritoryWrapper = getTerritory(command.sourceTerritory);
+					
+					if (issuerTerritory.owner.playerId != _me.playerId && command.sourceTerritory != command.destinationTerritory) {
+						issuerTerritory.troopsOnIt -= command.numberOfUnits;
+					}
+				}
 				dispatchEvent(new Event(ALL_COMMANDS_RECEIVED));
 			} else {
 				trace("Received all commands in phase that is not battle phase. Phase " + GamePhase.getPhaseName(_phase));
