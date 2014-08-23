@@ -54,8 +54,8 @@ package modules.game {
 		
 		public static const MAX_DICES:int = 3;
 		
-		private static const TIME_FOR_ROLL:int = 10; // seconds
-		private static const TIME_FOR_DISPLAY_RESULTS:int = 2000; // milliseconds
+		public static const TIME_FOR_ROLL:int = 10; // seconds
+		public static const TIME_FOR_DISPLAY_RESULTS:int = 2000; // milliseconds
 		
 		private var _gameName:String;
 		private var _gameId:Int64;

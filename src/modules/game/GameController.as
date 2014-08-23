@@ -353,10 +353,10 @@ package modules.game {
 		
 		private function advanceToBattle(event:BattleEvent):void {
 			var affectedTerritories:Dictionary = new Dictionary();
-			var myTerritory:TerritoryWrapper = null;
+			var myTerritories:Array = [];
 			var command:CommandWrapper
 			
-			for each (command in event.battleInfo.oneSide.concat(event.battleInfo.otherSide)) {
+			for each (command in event.battleInfo.allCommands) {
 				var source:TerritoryWrapper = command.sourceTerrotiry;
 				var destionation:TerritoryWrapper = command.destionationTerritory;
 				
@@ -364,12 +364,9 @@ package modules.game {
 				affectedTerritories[destionation.id.toString()] = destionation;
 				
 				if (source.owner.playerId == model.me.playerId) {
-					myTerritory = source;
+					myTerritories.push(source);
 				}
 				
-				if (destionation.owner.playerId == model.me.playerId) {
-					myTerritory = destionation;
-				}
 			}
 			
 			_territoriesInCurrentBattle = [];
@@ -378,7 +375,7 @@ package modules.game {
 				_territoriesInCurrentBattle.push(t);
 			}
 			
-			displayBattle(_territoriesInCurrentBattle, myTerritory);
+			displayBattle(_territoriesInCurrentBattle, myTerritories);
 		}
 		
 		private function battleTimerTick(e:BattleEvent):void {
@@ -395,7 +392,7 @@ package modules.game {
 					visualTerritory.battleDisplay.rollButton.isEnabled = true;
 					visualTerritory.battleDisplay.clearDices();
 				}
-			}, 1800);
+			}, GameModel.TIME_FOR_DISPLAY_RESULTS);
 		}
 		
 		private function opponentRolledDices(e:DicesEvent):void {
@@ -419,14 +416,12 @@ package modules.game {
 		}
 		
 		/** @param territories - Array of TerritoryWrapper */
-		private function displayBattle(territories:Array, myTerritory:TerritoryWrapper):void {
-			var myTerritoryComponent:TerritoryVisual = null;
-			
+		private function displayBattle(territories:Array, myTerritories:Array):void {
 			// focus on selected territories
 			focusOn(territories, function focusOnFinished():void {
 					for each (var territory:TerritoryWrapper in territories) {
 						var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
-						if (myTerritory != null && myTerritory.id.toString() == territory.id.toString()) {
+						if (myTerritories.indexOf(territory) >= 0) {
 							visualTerritory.battleDisplay.show(true);
 						} else {
 							visualTerritory.battleDisplay.show(false);
