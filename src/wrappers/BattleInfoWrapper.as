@@ -95,7 +95,7 @@ package wrappers {
 		}
 		
 		public function isFinished(subphase:int):Boolean {
-			if (subphase = GamePhase.SUBPHASE_SPOILS_OF_WAR) {
+			if (subphase == GamePhase.SUBPHASE_SPOILS_OF_WAR) {
 				var survivor:PlayerWrapper = null;
 				
 				for each(var command:CommandWrapper in oneSide) {
