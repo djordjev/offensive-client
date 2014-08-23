@@ -483,9 +483,6 @@ package modules.game {
 			return result;
 		}
 		
-		private function battleFinished():void {
-		}
-		
 		public function rollMyDice(attackFrom:TerritoryWrapper):void {
 			var rollDicesMessage:RollDiceClicked = new RollDiceClicked();
 			rollDicesMessage.gameId = _gameId;
