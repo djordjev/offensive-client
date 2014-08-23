@@ -469,6 +469,7 @@ package modules.game {
 						}
 						
 						firstCommand.destionationTerritory.conquer(firstCommand.sourceTerrotiry.owner, survivedUnits);
+						view.getTerritoryVisual(firstCommand.destionationTerritory.id).refreshWholeComponent();
 					}
 				} else {
 					// more players survived - spoils of war will happen
