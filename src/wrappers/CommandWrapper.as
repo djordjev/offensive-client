@@ -9,6 +9,10 @@ package wrappers {
 	 */
 	public class CommandWrapper {
 		
+		public static const DICE_WON:int = 0;
+		public static const DICE_LOST:int = 1;
+		public static const DICE_EQUAL:int = 3;
+		
 		private static const MAX_NUMBER_ON_DICE:int = 6;
 		public static const MAX_NUMBER_OF_DICES:int = 3;
 		
@@ -43,6 +47,8 @@ package wrappers {
 		
 		private var _dices:Array;
 		
+		private var _dicesResults:Array;
+		
 		private var _rolled:Boolean = false;
 		
 		public function CommandWrapper() {
@@ -61,8 +67,22 @@ package wrappers {
 			return _dices;
 		}
 		
+		public function get dicesResults():Array {
+			return _dicesResults;
+		}
+		
 		public function clearDices():void {
 			_dices = null;
+			_dicesResults = null;
+			trace("CLEAR");
+		}
+		
+		public function get isDefending():Boolean {
+			return sourceTerrotiry.id == destionationTerritory.id;
+		}
+		
+		public function get isAttacking():Boolean {
+			return !isDefending;
 		}
 		
 		private function getNextRandomNumber():int {
@@ -70,12 +90,15 @@ package wrappers {
 		}
 		
 		public function throwDices():void {
+			trace("THROW");
 			var numberOfDices:int = Math.min(MAX_NUMBER_OF_DICES, numberOfUnits);
 			
 			_dices = [];
+			_dicesResults = [];
 			
 			for (var i:int = 0; i < numberOfDices; i++) {
 				_dices.push(getNextRandomNumber());
+				_dicesResults.push(DICE_EQUAL);
 			}
 			
 			_dices.sort(Array.NUMERIC);
@@ -97,6 +120,11 @@ package wrappers {
 		public function die():void {
 			_isAlive = false;
 		}
+		
+		public function setDiceResult(diceIndex:int, diceResult:int):void {
+			_dicesResults[diceIndex] = diceResult;
+		}
+		
 	}
 
 }

@@ -107,7 +107,8 @@ package modules.game {
 			model.addEventListener(GameModel.SPOILS_OF_WAR_RECEIVED, displaySpoilsOfWar);
 			
 			model.addEventListener(BattleEvent.ADVANCE_NO_NEXT_BATTLE, advanceToBattle);
-			model.addEventListener(BattleEvent.BATTLE_TIME_UP, roundFinished);
+			model.addEventListener(BattleEvent.BATTLE_ROUND_FINISHED, roundFinished);
+			model.addEventListener(BattleEvent.BATTLE_VIEW_RESULTS_FINISHED, roundViewResultsFinished);
 			model.addEventListener(BattleEvent.BATTLE_TIMER_TICK, battleTimerTick);
 			model.addEventListener(BattleEvent.BATTLE_FINISHED, battleFinished);
 			
@@ -345,11 +346,11 @@ package modules.game {
 			trace("Multiple attacks");
 		}
 		
-		private function displaySingleAttacks(Event):void {
+		private function displaySingleAttacks(e:Event):void {
 			trace("Single attacks");
 		}
 		
-		private function displaySpoilsOfWar(Event):void {
+		private function displaySpoilsOfWar(e:Event):void {
 			trace("Spoils of War");
 		}
 		
@@ -377,7 +378,7 @@ package modules.game {
 				_territoriesInCurrentBattle.push(t);
 			}
 			
-			displayBattle(_territoriesInCurrentBattle, myTerritories);
+			displayBattle(_territoriesInCurrentBattle, myTerritories, event.battleInfo);
 		}
 		
 		private function battleTimerTick(e:BattleEvent):void {
@@ -388,13 +389,33 @@ package modules.game {
 		}
 		
 		private function roundFinished(e:BattleEvent):void {
-			setTimeout(function clearPreviousRoundResults():void {
-				for each (var territory:TerritoryWrapper in _territoriesInCurrentBattle) {
-					var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
-					visualTerritory.battleDisplay.rollButton.isEnabled = true;
-					visualTerritory.battleDisplay.clearDices();
+			trace("ROUND FINISHED");
+			// update number of remaining units
+			for each (var command:CommandWrapper in model.currentBattle.allCommands) {
+				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(command.sourceTerrotiry.id);
+				
+				visualTerritory.battleDisplay.numberOfUnits = command.numberOfUnits;
+				
+				for (var i:int = 0 ; i < command.dicesResults.length; i++) {
+					visualTerritory.battleDisplay.highlightDice(i, command.dicesResults[i]);
 				}
-			}, GameModel.TIME_FOR_DISPLAY_RESULTS);
+			}
+			
+		}
+		
+		private function roundViewResultsFinished(e:BattleEvent):void {
+			trace("VIEW FINISHED");
+			for each (var command:CommandWrapper in model.currentBattle.allCommands) {
+				
+				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(command.sourceTerrotiry.id);
+				
+				visualTerritory.battleDisplay.rollButton.isEnabled = true;
+				visualTerritory.battleDisplay.clearDices();
+				
+				if (!command.isAlive) {
+					visualTerritory.battleDisplay.hide();
+				}
+			}
 		}
 		
 		private function opponentRolledDices(e:DicesEvent):void {
@@ -418,16 +439,21 @@ package modules.game {
 		}
 		
 		/** @param territories - Array of TerritoryWrapper */
-		private function displayBattle(territories:Array, myTerritories:Array):void {
+		private function displayBattle(territories:Array, myTerritories:Array, battle:BattleInfoWrapper):void {
 			// focus on selected territories
 			focusOn(territories, function focusOnFinished():void {
-					for each (var territory:TerritoryWrapper in territories) {
+					for each (var command:CommandWrapper in battle.allCommands) {
+						var territory:TerritoryWrapper = command.sourceTerrotiry;
 						var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
+						
 						if (myTerritories.indexOf(territory) >= 0) {
 							visualTerritory.battleDisplay.show(true);
 						} else {
 							visualTerritory.battleDisplay.show(false);
 						}
+						
+						visualTerritory.battleDisplay.side = command.isAttacking ? "Attacker" : "Defender";
+						visualTerritory.battleDisplay.numberOfUnits = command.numberOfUnits;
 					}
 				});
 		
@@ -463,7 +489,7 @@ package modules.game {
 					} else {
 						// only survivor is attacker
 						var survivedUnits:int = 0;
-						for each(command in battle.allCommands) {
+						for each (command in battle.allCommands) {
 							if (command.isAlive) {
 								survivedUnits += command.numberOfUnits;
 							}
@@ -497,13 +523,13 @@ package modules.game {
 			var survivorsCount:int = 0;
 			var survivers:Dictionary = new Dictionary();
 			
-			for each(var command:CommandWrapper in battle.allCommands) {
+			for each (var command:CommandWrapper in battle.allCommands) {
 				if (command.isAlive) {
 					survivers[command.sourceTerrotiry.id] = true;
 				}
 			}
 			
-			for each(var cnt:Boolean in survivers) {
+			for each (var cnt:Boolean in survivers) {
 				survivorsCount++;
 			}
 			

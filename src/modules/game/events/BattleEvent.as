@@ -10,7 +10,8 @@ package modules.game.events {
 		
 		public static const ADVANCE_NO_NEXT_BATTLE:String = "advance to next battle event";
 		public static const BATTLE_TIMER_TICK:String = "battle timer tick";
-		public static const BATTLE_TIME_UP:String = "battle time up";
+		public static const BATTLE_ROUND_FINISHED:String = "battle round finished";
+		public static const BATTLE_VIEW_RESULTS_FINISHED:String = "battle view results finished";
 		public static const BATTLE_FINISHED:String = "battle finished";
 		
 		private var _battleInfo:BattleInfoWrapper;

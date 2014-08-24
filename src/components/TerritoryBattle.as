@@ -1,10 +1,8 @@
 package components {
-	import communication.protos.RollDiceClicked;
 	import components.common.LinkButton;
 	import components.common.OLabel;
 	import components.events.MouseClickEvent;
 	import components.events.RollDicesClickEvent;
-	import feathers.controls.Button;
 	import feathers.controls.ImageLoader;
 	import feathers.controls.LayoutGroup;
 	import feathers.layout.HorizontalLayout;
@@ -15,9 +13,10 @@ package components {
 	import modules.game.GameModel;
 	import starling.display.Quad;
 	import starling.events.Event;
-	import starling.textures.Texture;
+	import starling.filters.BlurFilter;
 	import utils.Assets;
 	import utils.Colors;
+	import wrappers.CommandWrapper;
 	
 	/**
 	 * ...
@@ -28,6 +27,10 @@ package components {
 		public var rollButton:LinkButton = new LinkButton();
 		
 		public var remainingTime:OLabel = new OLabel();
+		
+		public var sideLabel:OLabel = new OLabel();
+		
+		public var unitsLeft:OLabel = new OLabel();
 		
 		/** Array of ImageLoader's */
 		public var dices:Array = [];
@@ -44,18 +47,18 @@ package components {
 		override protected function initialize():void {
 			super.initialize();
 			
-			var background:Quad = new Quad(200, 110, Colors.BLACK);
+			var background:Quad = new Quad(200, 150, Colors.BLACK);
 			this.addChild(background);
 			background.alpha = 0.8;
 			
 			
 			var mainGroup:LayoutGroup = new LayoutGroup();
 			mainGroup.x = 15;
-			mainGroup.y = 14;
+			mainGroup.y = 3;
 			this.addChild(mainGroup);
 			
 			mainGroup.layout = new VerticalLayout();
-			(mainGroup.layout as VerticalLayout).gap = 5;
+			(mainGroup.layout as VerticalLayout).gap = 2;
 			(mainGroup.layout as VerticalLayout).horizontalAlign = VerticalLayout.HORIZONTAL_ALIGN_CENTER;
 			
 			_headerGroup.layout = new HorizontalLayout();
@@ -77,6 +80,14 @@ package components {
 			
 			mainGroup.addChild(_headerGroup);
 			
+			sideLabel.fontColor = Colors.WHITE;
+			sideLabel.fontSize = 15;
+			mainGroup.addChild(sideLabel);
+			
+			unitsLeft.fontColor = Colors.WHITE;
+			unitsLeft.fontSize = 15;
+			mainGroup.addChild(unitsLeft);
+			
 			var dicesGroup:LayoutGroup = new LayoutGroup();
 			dicesGroup.width = 170;
 			dicesGroup.height = 50;
@@ -90,7 +101,6 @@ package components {
 				// set image
 				dices.push(diceImage);
 				dicesGroup.addChild(diceImage);
-				
 			}
 			
 		}
@@ -142,7 +152,35 @@ package components {
 		
 		public function clearDices():void {
 			for (var i:int = 0; i < GameModel.MAX_DICES; i++) {
+				dices[i].filter = null;
 				dices[i].source = null;
+			}
+		}
+		
+		public function set side(value:String):void {
+			sideLabel.text = value;
+		}
+		
+		public function set numberOfUnits(value:int):void {
+			unitsLeft.text = "Units left " + value;
+		}
+		
+		public function highlightDice(diceNumber:int, diceResult:int):void {
+			var dice:ImageLoader = dices[diceNumber];
+			if (dice != null) {
+				switch(diceResult) {
+					case CommandWrapper.DICE_EQUAL:
+						dice.filter = null;
+						break;
+					case CommandWrapper.DICE_LOST:
+						dice.filter = BlurFilter.createGlow(Colors.RED);
+						break;
+					case CommandWrapper.DICE_WON:
+						dice.filter = BlurFilter.createGlow(Colors.GREEN);
+						break;
+					default:
+						throw new Error("Unknown dices result");
+				}
 			}
 		}
 	

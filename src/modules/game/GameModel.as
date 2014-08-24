@@ -357,7 +357,7 @@ package modules.game {
 				});
 			_currentBattleTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function rollTimeUp(e:TimerEvent):void {
 					roundFinished();
-					dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIME_UP, _currentBattle, 0));
+					dispatchEvent(new BattleEvent(BattleEvent.BATTLE_ROUND_FINISHED, _currentBattle, 0));
 				});
 			
 			_currentBattleTimer.start();
@@ -372,12 +372,13 @@ package modules.game {
 				}
 			}
 			
-			var isFinished = calculateCasualties();
+			var isFinished:Boolean = calculateCasualties();
 			
 			setTimeout(setUpNewRound, TIME_FOR_DISPLAY_RESULTS, isFinished);
 		}
 		
 		private function setUpNewRound(isFinished:Boolean):void {
+			dispatchEvent(new BattleEvent(BattleEvent.BATTLE_VIEW_RESULTS_FINISHED, _currentBattle));
 			if (isFinished) {
 				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_FINISHED, _currentBattle));
 			} else {
@@ -419,8 +420,15 @@ package modules.game {
 			for (var i:int = 0; i < numberOfDicesInBattle; i++) {
 				if (firstCommand.dices()[i] < secondCommand.dices()[i]) {
 					firstCommand.removeUnit();
+					firstCommand.setDiceResult(i, CommandWrapper.DICE_LOST);
+					secondCommand.setDiceResult(i, CommandWrapper.DICE_WON);
 				} else if (firstCommand.dices()[i] > secondCommand.dices()[i]) {
 					secondCommand.removeUnit();
+					firstCommand.setDiceResult(i, CommandWrapper.DICE_WON);
+					secondCommand.setDiceResult(i, CommandWrapper.DICE_LOST);
+				} else {
+					firstCommand.setDiceResult(i, CommandWrapper.DICE_EQUAL);
+					secondCommand.setDiceResult(i, CommandWrapper.DICE_EQUAL);
 				}
 			}
 		}
@@ -437,12 +445,14 @@ package modules.game {
 						commandWithBiggestDice = command;
 					}
 				}
+				commandWithBiggestDice.setDiceResult(i, CommandWrapper.DICE_WON);
 				
 				// remove units to others
 				for each(command in _currentBattle.oneSide) {
 					if (commandWithBiggestDice.dices()[i] > command.dices()[i] && 
 						commandWithBiggestDice.sourceTerrotiry.id != command.sourceTerrotiry.id) {
 						command.removeUnit();
+						command.setDiceResult(i, CommandWrapper.DICE_LOST);
 					}
 				}
 				
@@ -468,10 +478,17 @@ package modules.game {
 				
 				if (biggestAttackerDice > defender.dices()[i]) {
 					defender.removeUnit();
+					defender.setDiceResult(i, CommandWrapper.DICE_LOST);
+					for each(singleAttacker in attackers) {
+						singleAttacker.setDiceResult(i, CommandWrapper.DICE_WON);
+					}
 				} else {
 					for each(singleAttacker in attackers) {
 						singleAttacker.removeUnit();
+						singleAttacker.setDiceResult(i, CommandWrapper.DICE_LOST);
 					}
+					
+					defender.setDiceResult(i, CommandWrapper.DICE_WON);
 				}
 			}
 		}
@@ -503,6 +520,7 @@ package modules.game {
 		}
 		
 		public function opponentRolledDice(roll:PlayerRolledDice):void {
+			trace("OPPONENT ROLLED");
 			rollDice(_territories[roll.territoryId]);
 		}
 		
