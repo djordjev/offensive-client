@@ -55,7 +55,7 @@ package modules.game {
 		public static const MAX_DICES:int = 3;
 		
 		public static const TIME_FOR_ROLL:int = 10; // seconds
-		public static const TIME_FOR_DISPLAY_RESULTS:int = 2000; // milliseconds
+		public static const TIME_FOR_DISPLAY_RESULTS:int = 1500; // milliseconds
 		
 		private var _gameName:String;
 		private var _gameId:Int64;
@@ -355,10 +355,6 @@ package modules.game {
 			_currentBattleTimer.addEventListener(TimerEvent.TIMER, function tickTimer(e:TimerEvent):void {
 					dispatchEvent(new BattleEvent(BattleEvent.BATTLE_TIMER_TICK, _currentBattle, TIME_FOR_ROLL - (e.currentTarget as Timer).currentCount));
 				});
-			_currentBattleTimer.addEventListener(TimerEvent.TIMER_COMPLETE, function rollTimeUp(e:TimerEvent):void {
-					roundFinished();
-					dispatchEvent(new BattleEvent(BattleEvent.BATTLE_ROUND_FINISHED, _currentBattle, 0));
-				});
 			
 			_currentBattleTimer.start();
 		}
@@ -536,7 +532,8 @@ package modules.game {
 			
 			if (_currentBattle.isAllDicesRolled) {
 				_currentBattleTimer.stop();
-				_currentBattleTimer.dispatchEvent(new TimerEvent(TimerEvent.TIMER_COMPLETE));
+				roundFinished();
+				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_ROUND_FINISHED, _currentBattle, 0));
 			}
 		}
 	}
