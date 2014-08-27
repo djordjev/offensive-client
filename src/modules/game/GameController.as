@@ -46,7 +46,6 @@ package modules.game {
 	public class GameController extends BaseController {
 		
 		private static const ZOOM_ANIMATION_DURATION:int = 1; // in seconds
-		private static const TIMEOUT_AFTER_BATTLE:int = 1500; // milliseconds
 		
 		private static var _instance:GameController;
 		
@@ -389,7 +388,6 @@ package modules.game {
 		}
 		
 		private function roundFinished(e:BattleEvent):void {
-			trace("ROUND FINISHED");
 			// update number of remaining units
 			for each (var command:CommandWrapper in model.currentBattle.allCommands) {
 				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(command.sourceTerrotiry.id);
@@ -404,7 +402,6 @@ package modules.game {
 		}
 		
 		private function roundViewResultsFinished(e:BattleEvent):void {
-			trace("VIEW FINISHED");
 			for each (var command:CommandWrapper in model.currentBattle.allCommands) {
 				
 				var visualTerritory:TerritoryVisual = view.getTerritoryVisual(command.sourceTerrotiry.id);
@@ -429,13 +426,10 @@ package modules.game {
 		}
 		
 		private function battleFinished(e:BattleEvent):void {
-			setTimeout(function timeoutAfterBattleOver():void {
-					removeAllBattleInfos();
-					_territoriesInCurrentBattle = [];
-					updateViewAfterBattle(e.battleInfo);
-					focusMap();
-				}, TIMEOUT_AFTER_BATTLE);
-		
+			removeAllBattleInfos();
+			_territoriesInCurrentBattle = [];
+			updateViewAfterBattle(e.battleInfo);
+			focusMap();	
 		}
 		
 		/** @param territories - Array of TerritoryWrapper */
