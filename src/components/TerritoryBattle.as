@@ -127,8 +127,8 @@ package components {
 			targetPoint.x *= 1 / GameController.instance.view.mapScale;
 			targetPoint.y *= 1 / GameController.instance.view.mapScale;
 			
-			targetPoint.x -= Math.abs(GameController.instance.view.mapX);
-			targetPoint.y -= Math.abs(GameController.instance.view.mapY);
+			targetPoint.x += GameController.instance.view.mapX;
+			targetPoint.y += GameController.instance.view.mapY;
 			
 			x = targetPoint.x;
 			y = targetPoint.y;
@@ -173,10 +173,10 @@ package components {
 						dice.filter = null;
 						break;
 					case CommandWrapper.DICE_LOST:
-						dice.filter = BlurFilter.createGlow(Colors.RED);
+						dice.filter = BlurFilter.createGlow(Colors.RED, 1, 5);
 						break;
 					case CommandWrapper.DICE_WON:
-						dice.filter = BlurFilter.createGlow(Colors.GREEN);
+						dice.filter = BlurFilter.createGlow(Colors.GREEN, 1, 5);
 						break;
 					default:
 						throw new Error("Unknown dices result");
