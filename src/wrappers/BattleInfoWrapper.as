@@ -59,7 +59,13 @@ package wrappers {
 		}
 		
 		public function get isAllDicesRolled():Boolean {
-			return _numberOfRolledDices >= oneSide.length + otherSide.length;
+			var liveCommands:int = 0;
+			for each(var command:CommandWrapper in _allCommands) {
+				if (command.isAlive) {
+					liveCommands++;
+				}
+			}
+			return _numberOfRolledDices >= liveCommands;
 		}
 		
 		public function killLosingParticipants():Array {
@@ -89,10 +95,13 @@ package wrappers {
 		public function minNumberOfDices():int {
 			var min:int = CommandWrapper.MAX_NUMBER_OF_DICES;
 			for each(var command:CommandWrapper in _allCommands) {
-				var numberOfDices:int = Math.min(CommandWrapper.MAX_NUMBER_OF_DICES, command.numberOfUnits);
-				if (numberOfDices < min) {
-					min = numberOfDices;
+				if (command.isAlive) {
+					var numberOfDices:int = Math.min(CommandWrapper.MAX_NUMBER_OF_DICES, command.numberOfUnits);
+					if (numberOfDices < min) {
+						min = numberOfDices;
+					}
 				}
+				
 			}
 			
 			return min;

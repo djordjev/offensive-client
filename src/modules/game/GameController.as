@@ -354,6 +354,7 @@ package modules.game {
 		}
 		
 		private function advanceToBattle(event:BattleEvent):void {
+			trace("ADVANCE TO NEXT BATTLE......................................................");
 			var affectedTerritories:Dictionary = new Dictionary();
 			var myTerritories:Array = [];
 			var command:CommandWrapper
@@ -394,9 +395,12 @@ package modules.game {
 				
 				visualTerritory.battleDisplay.numberOfUnits = command.numberOfUnits;
 				
-				for (var i:int = 0 ; i < command.dicesResults.length; i++) {
-					visualTerritory.battleDisplay.highlightDice(i, command.dicesResults[i]);
+				if (command.dicesResults != null) {
+					for (var i:int = 0 ; i < command.dicesResults.length; i++) {
+						visualTerritory.battleDisplay.highlightDice(i, command.dicesResults[i]);
+					}
 				}
+				
 			}
 			
 		}

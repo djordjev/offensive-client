@@ -504,6 +504,14 @@ package modules.game {
 				throw new Error("Unable to find defence command");
 			}
 			
+			var i:int;
+			
+			for (i = result.attacker.length - 1; i >= 0; i--) {
+				if (!(result.attacker[i] as CommandWrapper).isAlive) {
+					result.attacker.splice(i, 1);
+				}
+			}
+			
 			return result;
 		}
 		
@@ -516,7 +524,6 @@ package modules.game {
 		}
 		
 		public function opponentRolledDice(roll:PlayerRolledDice):void {
-			trace("OPPONENT ROLLED");
 			rollDice(_territories[roll.territoryId]);
 		}
 		

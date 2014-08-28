@@ -74,7 +74,6 @@ package wrappers {
 		public function clearDices():void {
 			_dices = null;
 			_dicesResults = null;
-			trace("CLEAR");
 		}
 		
 		public function get isDefending():Boolean {
@@ -90,7 +89,6 @@ package wrappers {
 		}
 		
 		public function throwDices():void {
-			trace("THROW");
 			var numberOfDices:int = Math.min(MAX_NUMBER_OF_DICES, numberOfUnits);
 			
 			_dices = [];
