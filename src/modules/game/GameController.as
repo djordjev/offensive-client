@@ -473,7 +473,7 @@ package modules.game {
 			} else {
 				var firstCommand:CommandWrapper = battle.getFirstLiveCommand();
 				// other phases
-				if (numberOfSurvivors(battle) == 1) {
+				if (numberOfUniqueSurvivors(battle) == 1) {
 					// only one player survived so battle is over
 					if (isDefender(firstCommand)) {
 						var defendingCommand:CommandWrapper = firstCommand;
@@ -513,13 +513,13 @@ package modules.game {
 			}
 		}
 		
-		private function numberOfSurvivors(battle:BattleInfoWrapper):int {
+		private function numberOfUniqueSurvivors(battle:BattleInfoWrapper):int {
 			var survivorsCount:int = 0;
 			var survivers:Dictionary = new Dictionary();
 			
 			for each (var command:CommandWrapper in battle.allCommands) {
 				if (command.isAlive) {
-					survivers[command.sourceTerrotiry.id] = true;
+					survivers[command.sourceTerrotiry.owner.playerId.toString()] = true;
 				}
 			}
 			
