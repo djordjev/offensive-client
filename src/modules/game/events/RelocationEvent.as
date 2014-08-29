@@ -16,7 +16,7 @@ package modules.game.events {
 		
 		public function RelocationEvent(type:String, fromTerritory:TerritoryWrapper, toTerritory:TerritoryWrapper, numberOfUnits:int, bubbles:Boolean = false, data:Object = null) {
 			super(type, bubbles, data);
-			_fromTerritory = _fromTerritory;
+			_fromTerritory = fromTerritory;
 			_toTerritory = toTerritory;
 			_numberOfUnits = numberOfUnits;
 		}

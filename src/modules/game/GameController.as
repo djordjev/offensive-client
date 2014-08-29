@@ -549,7 +549,7 @@ package modules.game {
 			fromTerritoryVisual.refreshNumberOfUnits();
 			toTerritoryVisual.refreshNumberOfUnits();
 			
-			_arrowManager.drawArrow(e.fromTerritory, e.toTerritory, PlayerColors.getColor(e.fromTerritory.owner.playerId), _mapZoom);
+			_arrowManager.drawArrow(e.fromTerritory, e.toTerritory, PlayerColors.getColor(e.fromTerritory.owner.color), _mapZoom);
 		}
 	
 	}
