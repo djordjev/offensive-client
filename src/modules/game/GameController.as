@@ -230,6 +230,9 @@ package modules.game {
 				case GamePhase.ATTACK_PHASE: 
 					model.submitPhase();
 					break;
+				case GamePhase.TROOP_RELOCATION_PHASE:
+					model.submitPhase();
+					break;
 				default: 
 					return;
 			}
