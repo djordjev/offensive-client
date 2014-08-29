@@ -24,6 +24,7 @@ package modules.game {
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
 	import modules.game.events.DicesEvent;
+	import modules.game.events.RelocationEvent;
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
 	import starling.core.Starling;
@@ -111,6 +112,8 @@ package modules.game {
 			model.addEventListener(BattleEvent.BATTLE_TIMER_TICK, battleTimerTick);
 			model.addEventListener(BattleEvent.BATTLE_FINISHED, battleFinished);
 			
+			model.addEventListener(RelocationEvent.UNITS_RELOCATED, unitIsRelocated);
+			
 			model.addEventListener(DicesEvent.DICES_ROLLED, opponentRolledDices);
 			model.addEventListener(DicesEvent.OPPONENT_DIED_IN_BATTLE, participantDiedInBattle);
 			//model.addEventListener
@@ -147,6 +150,7 @@ package modules.game {
 		private function openingInTroopDeployment():void {
 			_actionPerformed = new ActionPerformedTroopDeployment();
 			
+			_arrowManager.clearAllArrows();
 			view.numberOfReinforcements.visible = true;
 			numberOfReinforcements = model.numberOfReinforcements;
 		}
@@ -536,6 +540,16 @@ package modules.game {
 		
 		private function isDefender(command:CommandWrapper):Boolean {
 			return command.sourceTerrotiry.id == command.destionationTerritory.id;
+		}
+		
+		private function unitIsRelocated(e:RelocationEvent):void {
+			var fromTerritoryVisual:TerritoryVisual = view.getTerritoryVisual(e.fromTerritory.id);
+			var toTerritoryVisual:TerritoryVisual = view.getTerritoryVisual(e.toTerritory.id);
+			
+			fromTerritoryVisual.refreshNumberOfUnits();
+			toTerritoryVisual.refreshNumberOfUnits();
+			
+			_arrowManager.drawArrow(e.fromTerritory, e.toTerritory, PlayerColors.getColor(e.fromTerritory.owner.playerId), _mapZoom);
 		}
 	
 	}

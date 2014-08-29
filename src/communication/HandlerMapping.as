@@ -12,6 +12,7 @@ package communication {
 	import communication.protos.GetUserDataResponse;
 	import communication.protos.JoinGameNotification;
 	import communication.protos.JoinGameResponse;
+	import communication.protos.MoveUnitsResponse;
 	import communication.protos.MultipleAttacks;
 	import communication.protos.PlayerRolledDice;
 	import communication.protos.RollDiceClickedResponse;
@@ -30,6 +31,7 @@ package communication {
 			mapping[HandlerCodes.FILTER_FRIENDS] = FilterFriendsResponse;
 			mapping[HandlerCodes.JOIN_GAME] = JoinGameResponse;
 			mapping[HandlerCodes.ADD_UNIT] = AddUnitResponse;
+			mapping[HandlerCodes.MOVE_UNITS] = MoveUnitsResponse;
 			mapping[HandlerCodes.ATTACK] = AttackResponse;
 			mapping[HandlerCodes.COMMANDS_SUBMIT] = CommandsSubmittedResponse;
 			mapping[HandlerCodes.ALL_COMMANDS_BATTLE_PHASE] = AllCommands;

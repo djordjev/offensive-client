@@ -7,6 +7,7 @@ package communication {
 		public static const OPEN_GAMES_LIST:int = 6;
 		public static const JOIN_GAME:int = 7;
 		public static const ADD_UNIT:int = 10;
+		public static const MOVE_UNITS:int = 11;
 		public static const ATTACK:int = 12;
 		public static const COMMANDS_SUBMIT:int = 13;
 		public static const ALL_COMMANDS_BATTLE_PHASE:int = 14;

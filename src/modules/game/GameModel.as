@@ -12,6 +12,8 @@ package modules.game {
 	import communication.protos.BorderClashes;
 	import communication.protos.Command;
 	import communication.protos.CommandsSubmittedRequest;
+	import communication.protos.MoveUnitsRequest;
+	import communication.protos.MoveUnitsResponse;
 	import communication.protos.MultipleAttacks;
 	import communication.protos.PlayerRolledDice;
 	import communication.protos.RollDiceClicked;
@@ -28,6 +30,7 @@ package modules.game {
 	import modules.game.events.BattleEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.DicesEvent;
+	import modules.game.events.RelocationEvent;
 	import starling.events.Event;
 	import utils.Globals;
 	import wrappers.BattleInfoWrapper;
@@ -259,12 +262,16 @@ package modules.game {
 		}
 		
 		private function advanceToTroopDeploymentPhase(response:AdvancePhaseNotification):void {
-			// should add effects of troop relocation phase
+			updateNumberOfUnits(response.territories);
 		}
 		
 		private function advanceToAttackPhase(response:AdvancePhaseNotification):void {
+			updateNumberOfUnits(response.territories);
+		}
+		
+		private function updateNumberOfUnits(territories:Array):void {
 			// update number of units on territories
-			for each (var territory:Territory in response.territories) {
+			for each (var territory:Territory in territories) {
 				var playerOnIt:PlayerWrapper = getPlayerByPlayerId(territory.playerId);
 				(_territories[territory.id] as TerritoryWrapper).conquer(playerOnIt, territory.troopsOnIt);
 				dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, territory.id));
@@ -542,6 +549,27 @@ package modules.game {
 				roundFinished();
 				dispatchEvent(new BattleEvent(BattleEvent.BATTLE_ROUND_FINISHED, _currentBattle, 0));
 			}
+		}
+		
+		public function moveUnits(territoryFrom:TerritoryWrapper, territoryTo:TerritoryWrapper, numberOfUnits:int):void {
+			var command:Command = new Command();
+			command.commandId = 1973;
+			command.sourceTerritory = territoryFrom.id;
+			command.destinationTerritory = territoryTo.id;
+			command.numberOfUnits = numberOfUnits;
+			command.seed = 1973;
+			
+			var move:MoveUnitsRequest = new MoveUnitsRequest();
+			move.gameId = _gameId;
+			move.command = command;
+			
+			Communicator.instance.send(HandlerCodes.MOVE_UNITS, command, function moveResponse(message:ProtocolMessage):void {
+				var response:MoveUnitsResponse = message.data as MoveUnitsResponse;
+				if (response.isSuccessfull) {
+					dispatchEvent(new RelocationEvent(RelocationEvent.UNITS_RELOCATED, territoryFrom, territoryTo, numberOfUnits));
+				}
+			});
+			
 		}
 	}
 }
