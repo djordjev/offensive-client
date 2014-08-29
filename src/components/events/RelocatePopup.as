@@ -165,6 +165,9 @@ package components.events {
 		}
 		
 		private function cancelClicked(e:MouseClickEvent):void {
+			if (this._callback != null) {
+				this._callback(0);
+			}
 			PopUpManager.removePopUp(this);
 		}
 		
