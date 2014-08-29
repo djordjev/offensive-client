@@ -565,9 +565,7 @@ package modules.game {
 			
 			Communicator.instance.send(HandlerCodes.MOVE_UNITS, move, function moveResponse(message:ProtocolMessage):void {
 				var response:MoveUnitsResponse = message.data as MoveUnitsResponse;
-				if (response.isSuccessfull) {
-					dispatchEvent(new RelocationEvent(RelocationEvent.UNITS_RELOCATED, territoryFrom, territoryTo, numberOfUnits));
-				}
+				dispatchEvent(new RelocationEvent(RelocationEvent.UNITS_RELOCATED, territoryFrom, territoryTo, numberOfUnits));
 			});
 			
 		}
