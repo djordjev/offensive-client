@@ -133,6 +133,9 @@ package components.events {
 			_cancelButton.fontSize = 25;
 			_cancelButton.label = "Cancel";
 			this.addChild(_cancelButton);
+			
+			_okButton.addEventListener(MouseClickEvent.CLICK, okClicked);
+			_cancelButton.addEventListener(MouseClickEvent.CLICK, cancelClicked);
 		}
 		
 		private function clickOnAdd(e:MouseClickEvent):void {
