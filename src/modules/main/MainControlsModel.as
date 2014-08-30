@@ -221,7 +221,7 @@ package modules.main {
 		
 		private function newCardReceived(e:ProtocolMessage):void {
 			var received:CardAwardedNotification = e.data as CardAwardedNotification;
-			var gameContext:GameContextWrapper = activeGamesDictionary[received.gameId];
+			var gameContext:GameContextWrapper = activeGamesDictionary[received.gameId.toString()];
 			if (GameModel.instance.gameId != null && received.gameId.toString() == GameModel.instance.gameId.toString()) {
 				// this game is currently opened
 				GameModel.instance.newCardAwarded(received.card);
@@ -234,7 +234,7 @@ package modules.main {
 		
 		private function cardCountStateChanged(e:ProtocolMessage):void {
 			var received:PlayerCardCountNotification = e.data as PlayerCardCountNotification;
-			var gameContext:GameContextWrapper = activeGamesDictionary[received.gameId];
+			var gameContext:GameContextWrapper = activeGamesDictionary[received.gameId.toString()];
 			
 			if (GameModel.instance.gameId != null && received.gameId.toString() == GameModel.instance.gameId.toString()) {
 				GameModel.instance.cardCountStateChanged(received);
