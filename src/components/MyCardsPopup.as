@@ -10,6 +10,7 @@ package components {
 	import feathers.layout.TiledColumnsLayout;
 	import modules.game.classes.CardRenderer;
 	import modules.game.events.CardSelectedEvent;
+	import starling.display.Quad;
 	import starling.events.Event;
 	import utils.Alert;
 	import utils.Colors;
@@ -50,6 +51,10 @@ package components {
 		override protected function initialize():void {
 			super.initialize();
 			
+			var background:Quad = new Quad(WIDTH, HEIGHT, Colors.BLACK);
+			background.alpha = 0.8;
+			this.addChild(background);
+			
 			_cardsList.x = 25;
 			_cardsList.y = 25;
 			_cardsList.width = 495;
@@ -63,7 +68,7 @@ package components {
 			
 			_cardsList.layout = listLayout;
 			_cardsList.itemRendererFactory = cardRendererItemFactory;
-			listLayout.addEventListener(Event.ADDED_TO_STAGE, function listAddedToStage(e:Event):void {
+			_cardsList.addEventListener(Event.ADDED_TO_STAGE, function listAddedToStage(e:Event):void {
 				_cardsList.backgroundSkin.alpha = 0;
 			});
 			
@@ -71,15 +76,15 @@ package components {
 			
 			_tradeButton.fontColor = Colors.WHITE;
 			_tradeButton.fontSize = 30;
-			_tradeButton.x = 550;
-			_tradeButton.y = 565;
+			_tradeButton.x = 423;
+			_tradeButton.y = 550;
 			_tradeButton.label = "Trade";
 			this.addChild(_tradeButton);
 			
 			_closeButton.fontColor = Colors.WHITE;
 			_closeButton.fontSize = 30;
 			_closeButton.x = 25;
-			_closeButton.y = 565;
+			_closeButton.y = 550;
 			_closeButton.label = "Close";
 			this.addChild(_closeButton);
 			
