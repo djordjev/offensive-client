@@ -15,7 +15,7 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
-		public static const ONESIDE:RepeatedFieldDescriptor$TYPE_MESSAGE = new RepeatedFieldDescriptor$TYPE_MESSAGE("communication.protos.BattleInfo.oneSide", "oneSide", (2 << 3) | com.netease.protobuf.WireType.LENGTH_DELIMITED, function():Class { return communication.protos.Command; });
+		public static const ONESIDE:RepeatedFieldDescriptor$TYPE_MESSAGE = new RepeatedFieldDescriptor$TYPE_MESSAGE("communication.protos.BattleInfo.oneSide", "oneSide", (1 << 3) | com.netease.protobuf.WireType.LENGTH_DELIMITED, function():Class { return communication.protos.Command; });
 
 		[ArrayElementType("communication.protos.Command")]
 		public var oneSide:Array = [];
@@ -23,7 +23,7 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
-		public static const OTHERSIDE:RepeatedFieldDescriptor$TYPE_MESSAGE = new RepeatedFieldDescriptor$TYPE_MESSAGE("communication.protos.BattleInfo.otherSide", "otherSide", (3 << 3) | com.netease.protobuf.WireType.LENGTH_DELIMITED, function():Class { return communication.protos.Command; });
+		public static const OTHERSIDE:RepeatedFieldDescriptor$TYPE_MESSAGE = new RepeatedFieldDescriptor$TYPE_MESSAGE("communication.protos.BattleInfo.otherSide", "otherSide", (2 << 3) | com.netease.protobuf.WireType.LENGTH_DELIMITED, function():Class { return communication.protos.Command; });
 
 		[ArrayElementType("communication.protos.Command")]
 		public var otherSide:Array = [];
@@ -33,11 +33,11 @@ package communication.protos {
 		 */
 		override com.netease.protobuf.used_by_generated_code final function writeToBuffer(output:com.netease.protobuf.WritingBuffer):void {
 			for (var oneSide$index:uint = 0; oneSide$index < this.oneSide.length; ++oneSide$index) {
-				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.LENGTH_DELIMITED, 2);
+				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.LENGTH_DELIMITED, 1);
 				com.netease.protobuf.WriteUtils.write$TYPE_MESSAGE(output, this.oneSide[oneSide$index]);
 			}
 			for (var otherSide$index:uint = 0; otherSide$index < this.otherSide.length; ++otherSide$index) {
-				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.LENGTH_DELIMITED, 3);
+				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.LENGTH_DELIMITED, 2);
 				com.netease.protobuf.WriteUtils.write$TYPE_MESSAGE(output, this.otherSide[otherSide$index]);
 			}
 			for (var fieldKey:* in this) {
@@ -52,10 +52,10 @@ package communication.protos {
 			while (input.bytesAvailable > bytesAfterSlice) {
 				var tag:uint = com.netease.protobuf.ReadUtils.read$TYPE_UINT32(input);
 				switch (tag >> 3) {
-				case 2:
+				case 1:
 					this.oneSide.push(com.netease.protobuf.ReadUtils.read$TYPE_MESSAGE(input, new communication.protos.Command()));
 					break;
-				case 3:
+				case 2:
 					this.otherSide.push(com.netease.protobuf.ReadUtils.read$TYPE_MESSAGE(input, new communication.protos.Command()));
 					break;
 				default:

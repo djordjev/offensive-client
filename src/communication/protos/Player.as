@@ -59,10 +59,9 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
-		public static const CARDS:RepeatedFieldDescriptor$TYPE_INT32 = new RepeatedFieldDescriptor$TYPE_INT32("communication.protos.Player.cards", "cards", (5 << 3) | com.netease.protobuf.WireType.VARINT);
+		public static const CARDCOUNT:FieldDescriptor$TYPE_INT32 = new FieldDescriptor$TYPE_INT32("communication.protos.Player.cardCount", "cardCount", (5 << 3) | com.netease.protobuf.WireType.VARINT);
 
-		[ArrayElementType("int")]
-		public var cards:Array = [];
+		public var cardCount:int;
 
 		/**
 		 *  @private
@@ -105,10 +104,8 @@ package communication.protos {
 			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.color);
 			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 4);
 			com.netease.protobuf.WriteUtils.write$TYPE_BOOL(output, this.isPlayedMove);
-			for (var cards$index:uint = 0; cards$index < this.cards.length; ++cards$index) {
-				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 5);
-				com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.cards[cards$index]);
-			}
+			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 5);
+			com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, this.cardCount);
 			if (hasNumberOfReinforcments) {
 				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 6);
 				com.netease.protobuf.WriteUtils.write$TYPE_INT32(output, numberOfReinforcments$field);
@@ -126,6 +123,7 @@ package communication.protos {
 			var user$count:uint = 0;
 			var color$count:uint = 0;
 			var isPlayedMove$count:uint = 0;
+			var cardCount$count:uint = 0;
 			var numberOfReinforcments$count:uint = 0;
 			while (input.bytesAvailable > bytesAfterSlice) {
 				var tag:uint = com.netease.protobuf.ReadUtils.read$TYPE_UINT32(input);
@@ -160,11 +158,11 @@ package communication.protos {
 					this.isPlayedMove = com.netease.protobuf.ReadUtils.read$TYPE_BOOL(input);
 					break;
 				case 5:
-					if ((tag & 7) == com.netease.protobuf.WireType.LENGTH_DELIMITED) {
-						com.netease.protobuf.ReadUtils.readPackedRepeated(input, com.netease.protobuf.ReadUtils.read$TYPE_INT32, this.cards);
-						break;
+					if (cardCount$count != 0) {
+						throw new flash.errors.IOError('Bad data format: Player.cardCount cannot be set twice.');
 					}
-					this.cards.push(com.netease.protobuf.ReadUtils.read$TYPE_INT32(input));
+					++cardCount$count;
+					this.cardCount = com.netease.protobuf.ReadUtils.read$TYPE_INT32(input);
 					break;
 				case 6:
 					if (numberOfReinforcments$count != 0) {
