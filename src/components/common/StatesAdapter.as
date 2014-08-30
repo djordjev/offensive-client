@@ -2,6 +2,7 @@ package components.common {
 	import components.events.MouseClickEvent;
 	import feathers.core.FeathersControl;
 	import flash.geom.Point;
+	import starling.core.Starling;
 	import starling.display.DisplayObject;
 	import starling.display.DisplayObjectContainer;
 	import starling.events.EventDispatcher;
@@ -77,7 +78,7 @@ package components.common {
 				touch = e.getTouch(targetDOC, TouchPhase.ENDED);
 				if (touch != null) {
 					touch.getLocation(targetDOC.stage, HELPER_POINT);
-					var isInBounds:Boolean = targetDOC.contains(targetDOC.stage.hitTest(HELPER_POINT, true));
+					var isInBounds:Boolean = targetDOC.contains(Starling.current.stage.hitTest(HELPER_POINT, true));
 					if (isInBounds) {
 						this.currentState = States.HOVERED;
 						if (_inDownState) {
