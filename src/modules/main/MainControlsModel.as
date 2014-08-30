@@ -7,6 +7,7 @@ package modules.main {
 	import communication.protos.AdvanceToNextBattle;
 	import communication.protos.AllCommands;
 	import communication.protos.BorderClashes;
+	import communication.protos.CardAwardedNotification;
 	import communication.protos.Command;
 	import communication.protos.CreateGameRequest;
 	import communication.protos.CreateGameResponse;
@@ -18,6 +19,7 @@ package modules.main {
 	import communication.protos.JoinGameRequest;
 	import communication.protos.JoinGameResponse;
 	import communication.protos.MultipleAttacks;
+	import communication.protos.PlayerCardCountNotification;
 	import communication.protos.PlayerRolledDice;
 	import communication.protos.SingleAttacks;
 	import communication.protos.SpoilsOfWar;
@@ -82,6 +84,9 @@ package modules.main {
 			
 			Communicator.instance.subscribe(HandlerCodes.ADVANCE_TO_NEXT_BATTLE, advanceToNextBattle);
 			Communicator.instance.subscribe(HandlerCodes.PLAYER_ROLLED_DICE, playerRolledDice);
+			
+			Communicator.instance.subscribe(HandlerCodes.NEW_CARD_AWARDED, newCardReceived);
+			Communicator.instance.subscribe(HandlerCodes.PLAYER_CARD_COUNT_CHANGED, cardCountStateChanged);
 		}
 		
 		public function createOpenGame(gameName:String, numberOfPlayers:int, gameType:int, callback:Function):void {
@@ -213,6 +218,79 @@ package modules.main {
 				GameModel.instance.opponentRolledDice(rolledDice);
 			}
 		}
+		
+		private function newCardReceived(e:ProtocolMessage):void {
+			var received:CardAwardedNotification = e.data as CardAwardedNotification;
+			var gameContext:GameContextWrapper = activeGamesDictionary[received.gameId];
+			if (GameModel.instance.gameId != null && received.gameId.toString() == GameModel.instance.gameId.toString()) {
+				// this game is currently opened
+				GameModel.instance.newCardAwarded(received.card);
+				
+			} 
+			
+			gameContext.myCards.push(received.card);
+			gameContext.me.cardsNumber++;
+		}
+		
+		private function cardCountStateChanged(e:ProtocolMessage):void {
+			var received:PlayerCardCountNotification = e.data as PlayerCardCountNotification;
+			var gameContext:GameContextWrapper = activeGamesDictionary[received.gameId];
+			
+			if (GameModel.instance.gameId != null && received.gameId.toString() == GameModel.instance.gameId.toString()) {
+				GameModel.instance.cardCountStateChanged(received);
+			}
+			
+			for each(var player:PlayerWrapper in gameContext.players) {
+				if (player.playerId == received.playerId) {
+					player.cardsNumber = received.cardCount;
+					break;
+				}
+			}
+			
+		}
 	}
+	
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 *  UPDATE GAME CONTEXT WHEN GAME IS OPENED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
 
 }

@@ -27,6 +27,7 @@ package wrappers {
 			wrapper.numberOfJoinedPlayers = gameContext.lightGameContext.gameDescription.numberOfJoinedPlayers;
 			wrapper.numberOfPlayers = gameContext.lightGameContext.gameDescription.numberOfPlayers;
 			wrapper.objective = gameContext.lightGameContext.gameDescription.objective;
+			wrapper.myCards = gameContext.myCards;
 			
 			// initialize wrapper types
 			wrapper.terrotiries = [];
@@ -39,6 +40,9 @@ package wrappers {
 			for each(var player:Player in gameContext.lightGameContext.playersInGame) {
 				var playerWrapper:PlayerWrapper = PlayerWrapper.buildPlayerWrapper(player);
 				wrapper.players.push(playerWrapper);
+				if (playerWrapper.isMe) {
+					wrapper.me = playerWrapper;
+				}
 			}
 			
 			return wrapper;
@@ -70,6 +74,10 @@ package wrappers {
 		public var numberOfJoinedPlayers:int;
 		
 		public var objective:int;
+		
+		public var myCards:Array;
+		
+		public var me:PlayerWrapper;
 	
 	}
 

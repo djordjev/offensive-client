@@ -10,16 +10,20 @@ package modules.game {
 	import communication.protos.AttackRequest;
 	import communication.protos.BattleInfo;
 	import communication.protos.BorderClashes;
+	import communication.protos.Card;
 	import communication.protos.Command;
 	import communication.protos.CommandsSubmittedRequest;
 	import communication.protos.MoveUnitsRequest;
 	import communication.protos.MoveUnitsResponse;
 	import communication.protos.MultipleAttacks;
+	import communication.protos.PlayerCardCountNotification;
 	import communication.protos.PlayerRolledDice;
 	import communication.protos.RollDiceClicked;
 	import communication.protos.SingleAttacks;
 	import communication.protos.SpoilsOfWar;
 	import communication.protos.Territory;
+	import communication.protos.TradeCardsRequest;
+	import communication.protos.TradeCardsResponse;
 	import flash.events.TimerEvent;
 	import flash.utils.Dictionary;
 	import flash.utils.setTimeout;
@@ -30,6 +34,7 @@ package modules.game {
 	import modules.game.events.BattleEvent;
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.DicesEvent;
+	import modules.game.events.NewCardAwardedEvent;
 	import modules.game.events.RelocationEvent;
 	import starling.events.Event;
 	import utils.Globals;
@@ -55,6 +60,8 @@ package modules.game {
 		public static const SINGLE_ATTACKS_RECEIVED:String = "single attacks received";
 		public static const SPOILS_OF_WAR_RECEIVED:String = "spoils of war received";
 		
+		public static const NUMBER_OF_CARDS_UPDATED:String = "number of cards updated";
+		
 		public static const MAX_DICES:int = 3;
 		
 		public static const TIME_FOR_ROLL:int = 10; // seconds
@@ -68,9 +75,11 @@ package modules.game {
 		private var _round:int;
 		private var _phase:int;
 		private var _allPlayers:Dictionary; // Dictionary playerId -> PlayerWrapper
+		private var _myCards:Array = [];
 		/** mapping territory id to TerritoryWrapper */
 		private var _territories:Dictionary;
 		private var _pendingCommands:Array;
+		
 		
 		private var _numberOfMyUnits:int;
 		
@@ -138,9 +147,14 @@ package modules.game {
 			return _currentBattle;
 		}
 		
+		public function get myCards():Array {
+			return _myCards;
+		}
+		
 		public function initForGame(gameContext:GameContextWrapper):void {
 			_gameName = gameContext.gameName;
 			_gameId = gameContext.gameId;
+			_myCards = gameContext.myCards;
 			_opponents = [];
 			_allPlayers = new Dictionary();
 			for each (var playerWrapper:PlayerWrapper in gameContext.players) {
@@ -287,6 +301,7 @@ package modules.game {
 			_allCommands = null;
 			_subphaseBattles = null;
 			_currentBattle = null;
+			_myCards = [];
 			if (_currentBattleTimer != null) {
 				_currentBattleTimer.stop();
 				_currentBattleTimer = null;
@@ -568,7 +583,56 @@ package modules.game {
 				territoryTo.troopsOnIt += numberOfUnits;
 				dispatchEvent(new RelocationEvent(RelocationEvent.UNITS_RELOCATED, territoryFrom, territoryTo, numberOfUnits));
 			});
-			
 		}
+		
+		public function tradeCards(card1:Card, card2:Card, card3:Card, callback:Function):void {
+			var request:TradeCardsRequest = new TradeCardsRequest();
+			
+			request.cardId1 = card1;
+			request.cardId2 = card2;
+			request.cardId3 = card3;
+			
+			request.gameId = _gameId;
+			
+			Communicator.instance.send(HandlerCodes.TRADE_CARDS, request, 
+				function tradeCardsResponse(e:ProtocolMessage):void {
+					var response:TradeCardsResponse = e.data as TradeCardsResponse;
+					
+					removeMyCards([card1, card2, card3]);
+					_me.numberOdReinforcements += response.numberOfReinforcements;
+					if (callback != null) {
+						callback();
+					}
+				});
+		}
+		
+		private function removeMyCards(cards:Array):void {
+			for (var i:int = _myCards.length - 1; i >= 0; i--) {
+				for (var j:int = 0; i < cards.length; j++) {
+					if (_myCards[i].territoryId == cards[j].territoryId) {
+						_myCards.splice(i, 1);
+						_me.cardsNumber--;
+						break;
+					}
+				}
+			}
+		}
+		
+		public function newCardAwarded(card:Card):void {
+			_myCards.push(card);
+			dispatchEvent(new NewCardAwardedEvent(NewCardAwardedEvent.NEW_CARD_RECEIVED, card));
+		}
+		
+		public function cardCountStateChanged(notification:PlayerCardCountNotification):void {
+			for each(var player:PlayerWrapper in _allPlayers) {
+				if (player.playerId == notification.playerId) {
+					player.cardsNumber = notification.cardCount;
+					break;
+				}
+			}
+			
+			dispatchEvent(new Event(NUMBER_OF_CARDS_UPDATED));
+		}
+		
 	}
 }

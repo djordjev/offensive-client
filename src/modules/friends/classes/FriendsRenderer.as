@@ -37,6 +37,11 @@ package modules.friends.classes {
 			}
 		}
 		
+		override public function set data(value:Object):void {
+			super.data = value;
+			_dirty = true;
+		}
+		
 		override protected function initialize():void {
 			super.initialize();
 			this.width = WIDTH;

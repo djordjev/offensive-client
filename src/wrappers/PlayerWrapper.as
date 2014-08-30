@@ -1,4 +1,5 @@
 package wrappers {
+	import communication.Me;
 	import communication.protos.Player;
 	
 	/**
@@ -10,7 +11,7 @@ package wrappers {
 		public var playerId:int;
 		public var color:int;
 		public var isPlayedMove:Boolean;
-		public var cards:Array;
+		public var cardsNumber:int;
 		public var numberOdReinforcements:int;
 		
 		public var numberOfTerritories:int;
@@ -24,7 +25,7 @@ package wrappers {
 			playerWrapper.playerId = player.playerId;
 			playerWrapper.color = player.color;
 			playerWrapper.isPlayedMove = player.isPlayedMove;
-			playerWrapper.cards = player.cards;
+			playerWrapper.cardsNumber = player.cardCount;
 			playerWrapper.numberOdReinforcements = player.numberOfReinforcments;
 			
 			if (player.hasUser) {
@@ -54,6 +55,10 @@ package wrappers {
 			} else {
 				return null;
 			}
+		}
+		
+		public function get isMe():Boolean {
+			return userIdAsString == Me.instance.userIdAsString;
 		}
 	
 	}

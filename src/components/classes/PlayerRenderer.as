@@ -68,7 +68,7 @@ package components.classes {
 				}
 				
 				_playerTerritories.text = "Territories: " + dataAsPlayersWrapper.numberOfTerritories;
-				_cards.text = "Cards: " + dataAsPlayersWrapper.cards.length;
+				_cards.text = "Cards: " + dataAsPlayersWrapper.cardsNumber;
 				_dirty = false;
 			}
 			super.commitData();

@@ -255,6 +255,28 @@ package utils
 		public static function getDice(num:int):Texture {
 			return Texture.fromBitmap(new Assets["Dice_" + num]());
 		}
+		
+		[Embed(source="../../assets/gameAssets/cards/cards.xml", mimeType="application/octet-stream")]
+		private static const cardsXML:Class;
+		
+		[Embed(source="../../assets/gameAssets/cards/cards.png")]
+		private static const cardsTextures:Class;
+		
+		private static var _cardsAtlas:TextureAtlas;
+		
+		public static function get cardsAtlas():TextureAtlas {
+			if (_cardsAtlas == null) {
+				var texture:Texture = Texture.fromBitmap(new cardsTextures());
+				var xml:XML = XML(new cardsXML());
+				_cardsAtlas = new TextureAtlas(texture, xml);
+			}
+			
+			return _cardsAtlas;
+		}
+		
+		public static function getCard(territoryId:int):Texture {
+			return cardsAtlas.getTexture("card_" + territoryId);
+		}
 	}
 
 }

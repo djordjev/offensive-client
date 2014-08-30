@@ -1,8 +1,12 @@
 package modules.game {
 	import com.netease.protobuf.Int64;
+	import communication.protos.Card;
 	import communication.protos.Command;
+	import communication.protos.PlayerCardCountNotification;
+	import components.CardPopup;
 	import components.common.LinkButton;
 	import components.events.RollDicesClickEvent;
+	import components.MyCardsPopup;
 	import components.TerritoryBattle;
 	import components.TerritoryVisual;
 	import feathers.core.FeathersControl;
@@ -24,6 +28,7 @@ package modules.game {
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.ClickOnTerritory;
 	import modules.game.events.DicesEvent;
+	import modules.game.events.NewCardAwardedEvent;
 	import modules.game.events.RelocationEvent;
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
@@ -92,9 +97,14 @@ package modules.game {
 		}
 		
 		override protected function addHandlers():void {
-			view.backButton.addEventListener(Event.TRIGGERED, goBack);
+			
 			view.addEventListener(ClickOnTerritory.CLICKED_ON_TERRITORY, clickOnTerritoryHandler);
+			
+			view.backButton.addEventListener(Event.TRIGGERED, goBack);
 			view.commitButton.addEventListener(Event.TRIGGERED, commitClickHandler);
+			view.cardsButton.addEventListener(Event.TRIGGERED, showMyCardsPopup);
+			
+			
 			model.addEventListener(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, changedNumberOfUnitsOnTerritory);
 			model.addEventListener(GameModel.GAME_PHASE_COMMITED, gamePhaseCommited);
 			model.addEventListener(GameModel.ADVANCED_TO_NEXT_PHASE, advancedToNextGamePhase);
@@ -113,6 +123,9 @@ package modules.game {
 			model.addEventListener(BattleEvent.BATTLE_FINISHED, battleFinished);
 			
 			model.addEventListener(RelocationEvent.UNITS_RELOCATED, unitIsRelocated);
+			
+			model.addEventListener(GameModel.NUMBER_OF_CARDS_UPDATED, numberOfCardsUpdated);
+			model.addEventListener(NewCardAwardedEvent.NEW_CARD_RECEIVED, newCardAwarded);
 			
 			model.addEventListener(DicesEvent.DICES_ROLLED, opponentRolledDices);
 			model.addEventListener(DicesEvent.OPPONENT_DIED_IN_BATTLE, participantDiedInBattle);
@@ -136,7 +149,7 @@ package modules.game {
 					
 					_arrowManager.clearAllArrows();
 					// populate players list
-					view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
+					updatePlayersListView();
 					
 					unitsCount = model.numberOfMyUnits;
 					
@@ -213,7 +226,7 @@ package modules.game {
 		public function newPlayerJoined(player:PlayerWrapper):void {
 			model.newPlayerJoined(player);
 			// redraw player list
-			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
+			updatePlayersListView();
 		}
 		
 		private function commitClickHandler(e:Event):void {
@@ -553,6 +566,34 @@ package modules.game {
 			toTerritoryVisual.refreshNumberOfUnits();
 			
 			_arrowManager.drawArrow(e.fromTerritory, e.toTerritory, PlayerColors.getColor(e.fromTerritory.owner.color), _mapZoom);
+		}
+		
+		private function showMyCardsPopup(e:Event):void {
+			MyCardsPopup.instance.showPopup(model.myCards, 
+				function cardsForTradeSelected(card1:Card, card2:Card, card3:Card):void {
+					if (card1 != null && card2 != null && card3 != null && 
+						model.phase == GamePhase.TROOP_DEPLOYMENT_PHASE) {
+							
+						model.tradeCards(card1, card2, card3, cardsSuccessfullyTraded);
+					} 
+				});
+		}
+		
+		private function cardsSuccessfullyTraded():void {
+			Alert.showMessage("Cards", "Cards successfully traded");
+			updatePlayersListView();
+		}
+		
+		public function newCardAwarded(e:NewCardAwardedEvent):void {
+			CardPopup.instance.showCard(e.card);
+		}
+		
+		public function numberOfCardsUpdated(e:Event):void {
+			updatePlayersListView();
+		}
+		
+		private function updatePlayersListView():void {
+			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
 		}
 	
 	}

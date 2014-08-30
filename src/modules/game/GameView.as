@@ -39,6 +39,7 @@ package modules.game {
 		
 		public var backButton:Button = new Button();
 		public var commitButton:Button = new Button();
+		public var cardsButton:Button = new Button();
 		public var playersList:List = new List();
 		
 		public var gamePhase:OLabel = new OLabel();
@@ -157,6 +158,13 @@ package modules.game {
 			commitButton.width = 70;
 			commitButton.height = 30;
 			controlPanel.addChild(commitButton);
+			
+			cardsButton.label = "My Cards";
+			cardsButton.x = 845;
+			cardsButton.y = 100;
+			cardsButton.width = 70;
+			cardsButton.height = 30;
+			controlPanel.addChild(cardsButton);
 			
 			this.addChild(controlPanel);
 		}

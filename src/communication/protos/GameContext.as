@@ -26,13 +26,6 @@ package communication.protos {
 		/**
 		 *  @private
 		 */
-		public static const ISPHASECOMMITED:FieldDescriptor$TYPE_BOOL = new FieldDescriptor$TYPE_BOOL("communication.protos.GameContext.isPhaseCommited", "isPhaseCommited", (2 << 3) | com.netease.protobuf.WireType.VARINT);
-
-		public var isPhaseCommited:Boolean;
-
-		/**
-		 *  @private
-		 */
 		public static const TERRITORIES:RepeatedFieldDescriptor$TYPE_MESSAGE = new RepeatedFieldDescriptor$TYPE_MESSAGE("communication.protos.GameContext.territories", "territories", (3 << 3) | com.netease.protobuf.WireType.LENGTH_DELIMITED, function():Class { return communication.protos.Territory; });
 
 		[ArrayElementType("communication.protos.Territory")]
@@ -68,8 +61,6 @@ package communication.protos {
 		override com.netease.protobuf.used_by_generated_code final function writeToBuffer(output:com.netease.protobuf.WritingBuffer):void {
 			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.LENGTH_DELIMITED, 1);
 			com.netease.protobuf.WriteUtils.write$TYPE_MESSAGE(output, this.lightGameContext);
-			com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.VARINT, 2);
-			com.netease.protobuf.WriteUtils.write$TYPE_BOOL(output, this.isPhaseCommited);
 			for (var territories$index:uint = 0; territories$index < this.territories.length; ++territories$index) {
 				com.netease.protobuf.WriteUtils.writeTag(output, com.netease.protobuf.WireType.LENGTH_DELIMITED, 3);
 				com.netease.protobuf.WriteUtils.write$TYPE_MESSAGE(output, this.territories[territories$index]);
@@ -96,7 +87,6 @@ package communication.protos {
 		 */
 		override com.netease.protobuf.used_by_generated_code final function readFromSlice(input:flash.utils.IDataInput, bytesAfterSlice:uint):void {
 			var lightGameContext$count:uint = 0;
-			var isPhaseCommited$count:uint = 0;
 			while (input.bytesAvailable > bytesAfterSlice) {
 				var tag:uint = com.netease.protobuf.ReadUtils.read$TYPE_UINT32(input);
 				switch (tag >> 3) {
@@ -107,13 +97,6 @@ package communication.protos {
 					++lightGameContext$count;
 					this.lightGameContext = new communication.protos.LightGameContext();
 					com.netease.protobuf.ReadUtils.read$TYPE_MESSAGE(input, this.lightGameContext);
-					break;
-				case 2:
-					if (isPhaseCommited$count != 0) {
-						throw new flash.errors.IOError('Bad data format: GameContext.isPhaseCommited cannot be set twice.');
-					}
-					++isPhaseCommited$count;
-					this.isPhaseCommited = com.netease.protobuf.ReadUtils.read$TYPE_BOOL(input);
 					break;
 				case 3:
 					this.territories.push(com.netease.protobuf.ReadUtils.read$TYPE_MESSAGE(input, new communication.protos.Territory()));

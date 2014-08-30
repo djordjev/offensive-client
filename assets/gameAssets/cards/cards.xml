@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:b707c982f1ae1fa07274ea5e761b959c:a2bd81e96eabf55c98a56bc10a6968f0:410f6b03b42fe913ee062d4b64408a1a$ -->
+<TextureAtlas imagePath="cards.png">
+    <SubTexture name="card_1" x="2" y="2" width="150" height="250"/>
+    <SubTexture name="card_10" x="2" y="254" width="150" height="250"/>
+    <SubTexture name="card_11" x="2" y="506" width="150" height="250"/>
+    <SubTexture name="card_12" x="2" y="758" width="150" height="250"/>
+    <SubTexture name="card_13" x="154" y="2" width="150" height="250"/>
+    <SubTexture name="card_14" x="154" y="254" width="150" height="250"/>
+    <SubTexture name="card_15" x="154" y="506" width="150" height="250"/>
+    <SubTexture name="card_16" x="154" y="758" width="150" height="250"/>
+    <SubTexture name="card_17" x="306" y="2" width="150" height="250"/>
+    <SubTexture name="card_18" x="306" y="254" width="150" height="250"/>
+    <SubTexture name="card_19" x="306" y="506" width="150" height="250"/>
+    <SubTexture name="card_2" x="306" y="758" width="150" height="250"/>
+    <SubTexture name="card_20" x="458" y="2" width="150" height="250"/>
+    <SubTexture name="card_21" x="458" y="254" width="150" height="250"/>
+    <SubTexture name="card_22" x="458" y="506" width="150" height="250"/>
+    <SubTexture name="card_23" x="458" y="758" width="150" height="250"/>
+    <SubTexture name="card_24" x="610" y="2" width="150" height="250"/>
+    <SubTexture name="card_25" x="610" y="254" width="150" height="250"/>
+    <SubTexture name="card_26" x="610" y="506" width="150" height="250"/>
+    <SubTexture name="card_27" x="610" y="758" width="150" height="250"/>
+    <SubTexture name="card_28" x="762" y="2" width="150" height="250"/>
+    <SubTexture name="card_29" x="762" y="254" width="150" height="250"/>
+    <SubTexture name="card_3" x="762" y="506" width="150" height="250"/>
+    <SubTexture name="card_30" x="762" y="758" width="150" height="250"/>
+    <SubTexture name="card_31" x="914" y="2" width="150" height="250"/>
+    <SubTexture name="card_32" x="1066" y="2" width="150" height="250"/>
+    <SubTexture name="card_33" x="1218" y="2" width="150" height="250"/>
+    <SubTexture name="card_34" x="1370" y="2" width="150" height="250"/>
+    <SubTexture name="card_35" x="1522" y="2" width="150" height="250"/>
+    <SubTexture name="card_36" x="914" y="254" width="150" height="250"/>
+    <SubTexture name="card_37" x="914" y="506" width="150" height="250"/>
+    <SubTexture name="card_38" x="914" y="758" width="150" height="250"/>
+    <SubTexture name="card_39" x="1066" y="254" width="150" height="250"/>
+    <SubTexture name="card_4" x="1066" y="506" width="150" height="250"/>
+    <SubTexture name="card_40" x="1066" y="758" width="150" height="250"/>
+    <SubTexture name="card_41" x="1218" y="254" width="150" height="250"/>
+    <SubTexture name="card_42" x="1370" y="254" width="150" height="250"/>
+    <SubTexture name="card_5" x="1522" y="254" width="150" height="250"/>
+    <SubTexture name="card_6" x="1218" y="506" width="150" height="250"/>
+    <SubTexture name="card_7" x="1218" y="758" width="150" height="250"/>
+    <SubTexture name="card_8" x="1370" y="506" width="150" height="250"/>
+    <SubTexture name="card_9" x="1370" y="758" width="150" height="250"/>
+</TextureAtlas>
