@@ -33,6 +33,7 @@ package modules.game {
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
 	import starling.core.Starling;
+	import starling.display.DisplayObjectContainer;
 	import starling.events.Event;
 	import utils.Alert;
 	import utils.Globals;
@@ -593,6 +594,8 @@ package modules.game {
 		}
 		
 		private function updatePlayersListView():void {
+			view.playersList.dataProvider = null;
+			view.playersList.validate();
 			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
 		}
 	
