@@ -126,7 +126,9 @@ package modules.game {
 			model.addEventListener(RelocationEvent.UNITS_RELOCATED, unitIsRelocated);
 			
 			model.addEventListener(GameModel.NUMBER_OF_CARDS_UPDATED, numberOfCardsUpdated);
+			model.addEventListener(GameModel.REINFORCEMENTS_RECEIVED, reinforcementsReceived);
 			model.addEventListener(NewCardAwardedEvent.NEW_CARD_RECEIVED, newCardAwarded);
+			
 			
 			model.addEventListener(DicesEvent.DICES_ROLLED, opponentRolledDices);
 			model.addEventListener(DicesEvent.OPPONENT_DIED_IN_BATTLE, participantDiedInBattle);
@@ -157,6 +159,8 @@ package modules.game {
 					switchToCurrentGamePhase();
 					
 					view.mapScale = GameView.NORMAL_SCALE;
+					
+					view.commitButton.isEnabled = !gameContext.isPlayedMove;
 				});
 			_territoriesInCurrentBattle = [];
 		}
@@ -597,6 +601,10 @@ package modules.game {
 			view.playersList.dataProvider = null;
 			view.playersList.validate();
 			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
+		}
+		
+		private function reinforcementsReceived(e:Event):void {
+			numberOfReinforcements = model.me.numberOdReinforcements;
 		}
 	
 	}

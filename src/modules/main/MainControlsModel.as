@@ -21,6 +21,7 @@ package modules.main {
 	import communication.protos.MultipleAttacks;
 	import communication.protos.PlayerCardCountNotification;
 	import communication.protos.PlayerRolledDice;
+	import communication.protos.ReinforcementsNotification;
 	import communication.protos.SingleAttacks;
 	import communication.protos.SpoilsOfWar;
 	import communication.protos.UserData;
@@ -87,6 +88,8 @@ package modules.main {
 			
 			Communicator.instance.subscribe(HandlerCodes.NEW_CARD_AWARDED, newCardReceived);
 			Communicator.instance.subscribe(HandlerCodes.PLAYER_CARD_COUNT_CHANGED, cardCountStateChanged);
+			
+			Communicator.instance.subscribe(HandlerCodes.REINFORCEMENTS_GAINED, reinforcementsReceived);
 		}
 		
 		public function createOpenGame(gameName:String, numberOfPlayers:int, gameType:int, callback:Function):void {
@@ -246,6 +249,17 @@ package modules.main {
 					break;
 				}
 			}
+		}
+		
+		private function reinforcementsReceived(e:ProtocolMessage):void {
+			var received:ReinforcementsNotification = e.data as ReinforcementsNotification;
+			var gameContext:GameContextWrapper = activeGamesDictionary[received.gameId.toString()];
+			
+			if (GameModel.instance.gameId != null && GameModel.instance.gameId.toString() == received.gameId.toString()) {
+				GameModel.instance.reinforcementsReceived(received.numberOfReinforcements);
+			}
+			
+			gameContext.me.numberOdReinforcements += received.numberOfReinforcements;
 			
 		}
 	}
@@ -266,7 +280,7 @@ package modules.main {
 	 * 
 	 *  UPDATE GAME CONTEXT WHEN GAME IS OPENED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	 * 
-	 * 
+	 *  Check is played move
 	 * 
 	 * 
 	 * 

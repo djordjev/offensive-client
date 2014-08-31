@@ -42,6 +42,7 @@ package wrappers {
 				wrapper.players.push(playerWrapper);
 				if (playerWrapper.isMe) {
 					wrapper.me = playerWrapper;
+					wrapper.isPlayedMove = player.isPlayedMove;
 				}
 			}
 			
@@ -78,6 +79,8 @@ package wrappers {
 		public var myCards:Array;
 		
 		public var me:PlayerWrapper;
+		
+		public var isPlayedMove:Boolean = false;
 	
 	}
 

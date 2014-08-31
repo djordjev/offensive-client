@@ -61,6 +61,7 @@ package modules.game {
 		public static const SPOILS_OF_WAR_RECEIVED:String = "spoils of war received";
 		
 		public static const NUMBER_OF_CARDS_UPDATED:String = "number of cards updated";
+		public static const REINFORCEMENTS_RECEIVED:String = "reinforcements received";
 		
 		public static const MAX_DICES:int = 3;
 		
@@ -632,6 +633,15 @@ package modules.game {
 			}
 			
 			dispatchEvent(new Event(NUMBER_OF_CARDS_UPDATED));
+		}
+		
+		public function reinforcementsReceived(numberOfReinforcements:int):void {
+			if (_phase != GamePhase.TROOP_DEPLOYMENT_PHASE) {
+				throw new Error("Received reinforcement in phase that is not troop deployment");
+			}
+			
+			_me.numberOdReinforcements += numberOfReinforcements;
+			dispatchEvent(new Event(REINFORCEMENTS_RECEIVED));
 		}
 		
 	}

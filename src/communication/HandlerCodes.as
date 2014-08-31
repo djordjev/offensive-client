@@ -23,5 +23,6 @@ package communication {
 		public static const SPOILS_OF_WAR:int = 23;
 		public static const NEW_CARD_AWARDED:int = 24;
 		public static const PLAYER_CARD_COUNT_CHANGED:int = 25;
+		public static const REINFORCEMENTS_GAINED:int = 26;
 	}
 }

@@ -17,6 +17,7 @@ package communication {
 	import communication.protos.MultipleAttacks;
 	import communication.protos.PlayerCardCountNotification;
 	import communication.protos.PlayerRolledDice;
+	import communication.protos.ReinforcementsNotification;
 	import communication.protos.RollDiceClickedResponse;
 	import communication.protos.SingleAttacks;
 	import communication.protos.SpoilsOfWar;
@@ -50,6 +51,7 @@ package communication {
 			mapping[HandlerCodes.SPOILS_OF_WAR] = SpoilsOfWar;
 			mapping[HandlerCodes.NEW_CARD_AWARDED] = CardAwardedNotification;
 			mapping[HandlerCodes.PLAYER_CARD_COUNT_CHANGED] = PlayerCardCountNotification;
+			mapping[HandlerCodes.REINFORCEMENTS_GAINED] = ReinforcementsNotification;
 		}
 	}
 }
