@@ -60,7 +60,6 @@ package modules.game.classes {
 		}
 		
 		private function clickHandler(e:MouseClickEvent):void {
-			_cardComponent.isSelected = !_cardComponent.isSelected;
 			dispatchEvent(new CardSelectedEvent(CardSelectedEvent.CARD_SELECTION_CHANGED, 
 												dataAsCard, _cardComponent.isSelected, true));
 		}

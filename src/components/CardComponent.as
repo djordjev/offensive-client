@@ -13,7 +13,7 @@ package components {
 	 * ...
 	 * @author Djordje
 	 */
-	public class CardComponent extends LayoutGroup implements ComponentWithStates{
+	public class CardComponent extends LayoutGroup implements ComponentWithStates {
 		
 		private static const WIDTH:int = 150;
 		private static const HEIGHT:int = 250;
@@ -46,15 +46,6 @@ package components {
 			return _card;
 		}
 		
-		public function set isSelected(value:Boolean):void {
-			_isSelected = value;
-			if (_isSelected) {
-				this.filter = _glow;
-			} else {
-				this.filter = null;
-			}
-		}
-		
 		public function get isSelected():Boolean {
 			return _isSelected;
 		}
@@ -65,16 +56,20 @@ package components {
 			this.addChild(_cardImage);
 			
 			this.addEventListener(MouseClickEvent.CLICK, clickHandler);
-			
+		
 		}
 		
 		private function clickHandler(e:MouseClickEvent):void {
 			if (selectionEnabled) {
-				this.isSelected = !this.isSelected;
+				_isSelected = !_isSelected;
+				if (_isSelected) {
+					this.filter = _glow;
+				} else {
+					this.filter = null;
+				}
 			}
 		}
 		
-			
 		public function changeToUp():void {
 		}
 		
