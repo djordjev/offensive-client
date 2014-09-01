@@ -162,12 +162,12 @@ package modules.main {
 			var game:GameContextWrapper = activeGamesDictionary[response.gameId.toString()];
 			if (game != null) {
 				game.phase++;
-					if (game.phase > GamePhase.TROOP_RELOCATION_PHASE) {
-						game.phase = GamePhase.TROOP_DEPLOYMENT_PHASE;
-					}
-					if (GameController.instance.currentGameId != null && GameController.instance.currentGameId.toString() == response.gameId.toString()) {
-						GameModel.instance.advancedToNextPhase(response);
-					}
+				if (game.phase > GamePhase.TROOP_RELOCATION_PHASE) {
+					game.phase = GamePhase.TROOP_DEPLOYMENT_PHASE;
+				}
+				if (GameController.instance.currentGameId != null && GameController.instance.currentGameId.toString() == response.gameId.toString()) {
+					GameModel.instance.advancedToNextPhase(response);
+				}
 			}
 		}
 		
@@ -229,10 +229,11 @@ package modules.main {
 				// this game is currently opened
 				GameModel.instance.newCardAwarded(received.card);
 				
-			} 
-			
-			gameContext.myCards.push(received.card);
-			gameContext.me.cardsNumber++;
+			} else {
+				gameContext.myCards.push(received.card);
+				gameContext.me.cardsNumber++;
+			}
+		
 		}
 		
 		private function cardCountStateChanged(e:ProtocolMessage):void {
@@ -241,14 +242,15 @@ package modules.main {
 			
 			if (GameModel.instance.gameId != null && received.gameId.toString() == GameModel.instance.gameId.toString()) {
 				GameModel.instance.cardCountStateChanged(received);
-			}
-			
-			for each(var player:PlayerWrapper in gameContext.players) {
-				if (player.playerId == received.playerId) {
-					player.cardsNumber = received.cardCount;
-					break;
+			} else {
+				for each (var player:PlayerWrapper in gameContext.players) {
+					if (player.playerId == received.playerId) {
+						player.cardsNumber = received.cardCount;
+						break;
+					}
 				}
 			}
+		
 		}
 		
 		private function reinforcementsReceived(e:ProtocolMessage):void {
@@ -257,54 +259,56 @@ package modules.main {
 			
 			if (GameModel.instance.gameId != null && GameModel.instance.gameId.toString() == received.gameId.toString()) {
 				GameModel.instance.reinforcementsReceived(received.numberOfReinforcements);
+			} else {
+				gameContext.me.numberOdReinforcements += received.numberOfReinforcements;
 			}
 			
-			gameContext.me.numberOdReinforcements += received.numberOfReinforcements;
 			
+		
 		}
 	}
-	
-	/*
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 *  UPDATE GAME CONTEXT WHEN GAME IS OPENED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	 * 
-	 *  Check is played move
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 */
+
+/*
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *  UPDATE GAME CONTEXT WHEN GAME IS OPENED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ *
+ *  Check is played move
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ */
 
 }
