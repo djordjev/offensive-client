@@ -15,8 +15,8 @@ package components {
 	 */
 	public class CardComponent extends LayoutGroup implements ComponentWithStates {
 		
-		private static const WIDTH:int = 150;
-		private static const HEIGHT:int = 250;
+		public static const WIDTH:int = 150;
+		public static const HEIGHT:int = 250;
 		
 		private var _statesAdapter:StatesAdapter;
 		

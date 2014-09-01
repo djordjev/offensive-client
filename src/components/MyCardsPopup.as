@@ -8,6 +8,7 @@ package components {
 	import feathers.core.PopUpManager;
 	import feathers.data.ListCollection;
 	import feathers.layout.TiledColumnsLayout;
+	import feathers.layout.TiledRowsLayout;
 	import modules.game.classes.CardRenderer;
 	import modules.game.events.CardSelectedEvent;
 	import starling.display.Quad;
@@ -57,13 +58,15 @@ package components {
 			
 			_cardsList.x = 25;
 			_cardsList.y = 25;
-			_cardsList.width = 495;
+			_cardsList.width = 515;
 			_cardsList.height = 515;
 			
 			var listLayout:TiledColumnsLayout = new TiledColumnsLayout();
-			listLayout.horizontalGap = 15;
-			listLayout.verticalGap = 15;
-			listLayout.useVirtualLayout = false;
+			listLayout.paging = TiledColumnsLayout.PAGING_VERTICAL;
+			listLayout.gap = 15
+			listLayout.verticalAlign = TiledColumnsLayout.VERTICAL_ALIGN_TOP;
+			listLayout.horizontalAlign = TiledColumnsLayout.HORIZONTAL_ALIGN_LEFT;
+			listLayout.useVirtualLayout = true;
 			listLayout.useSquareTiles = false;
 			
 			_cardsList.layout = listLayout;
