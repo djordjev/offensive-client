@@ -576,10 +576,13 @@ package modules.game {
 		private function showMyCardsPopup(e:Event):void {
 			MyCardsPopup.instance.showPopup(model.myCards, 
 				function cardsForTradeSelected(card1:Card, card2:Card, card3:Card):void {
-					if (card1 != null && card2 != null && card3 != null && 
-						model.phase == GamePhase.TROOP_DEPLOYMENT_PHASE) {
+					if (card1 != null && card2 != null && card3 != null) {
+						if (model.phase == GamePhase.TROOP_DEPLOYMENT_PHASE) {
+							model.tradeCards(card1, card2, card3, cardsSuccessfullyTraded);
+						} else {
+							Alert.showMessage("Trade Cards", "You can't trade cards in game phase that is not troop deployment");
+						}
 							
-						model.tradeCards(card1, card2, card3, cardsSuccessfullyTraded);
 					} 
 				});
 		}

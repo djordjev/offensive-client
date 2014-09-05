@@ -7,8 +7,8 @@ package components {
 	import feathers.controls.renderers.IListItemRenderer;
 	import feathers.core.PopUpManager;
 	import feathers.data.ListCollection;
-	import feathers.layout.TiledColumnsLayout;
-	import feathers.layout.TiledRowsLayout;
+	import feathers.layout.HorizontalLayout;
+	import feathers.layout.VerticalLayout;
 	import modules.game.classes.CardRenderer;
 	import modules.game.events.CardSelectedEvent;
 	import starling.display.Quad;
@@ -22,8 +22,8 @@ package components {
 	 */
 	public class MyCardsPopup extends LayoutGroup {
 		
-		private static const WIDTH:int = 545;
-		private static const HEIGHT:int = 595;
+		private static const WIDTH:int = 860;
+		private static const HEIGHT:int = 350;
 		
 		private static var _instance:MyCardsPopup = null;
 		
@@ -58,16 +58,13 @@ package components {
 			
 			_cardsList.x = 25;
 			_cardsList.y = 25;
-			_cardsList.width = 515;
-			_cardsList.height = 515;
+			_cardsList.width = 830;
+			_cardsList.height = 280;
 			
-			var listLayout:TiledColumnsLayout = new TiledColumnsLayout();
-			listLayout.paging = TiledColumnsLayout.PAGING_VERTICAL;
-			listLayout.gap = 15
-			listLayout.verticalAlign = TiledColumnsLayout.VERTICAL_ALIGN_TOP;
-			listLayout.horizontalAlign = TiledColumnsLayout.HORIZONTAL_ALIGN_LEFT;
-			listLayout.useVirtualLayout = true;
-			listLayout.useSquareTiles = false;
+			var listLayout:HorizontalLayout = new HorizontalLayout();
+			listLayout.gap = 15;
+			listLayout.horizontalAlign = HorizontalLayout.HORIZONTAL_ALIGN_CENTER;
+			listLayout.useVirtualLayout = false;
 			
 			_cardsList.layout = listLayout;
 			_cardsList.itemRendererFactory = cardRendererItemFactory;
@@ -79,15 +76,15 @@ package components {
 			
 			_tradeButton.fontColor = Colors.WHITE;
 			_tradeButton.fontSize = 30;
-			_tradeButton.x = 423;
-			_tradeButton.y = 550;
+			_tradeButton.x = 735;
+			_tradeButton.y = 300;
 			_tradeButton.label = "Trade";
 			this.addChild(_tradeButton);
 			
 			_closeButton.fontColor = Colors.WHITE;
 			_closeButton.fontSize = 30;
 			_closeButton.x = 25;
-			_closeButton.y = 550;
+			_closeButton.y = 300;
 			_closeButton.label = "Close";
 			this.addChild(_closeButton);
 			
@@ -127,6 +124,8 @@ package components {
 		/** @param myCards - array of Card */
 		public function showPopup(myCards:Array, callback:Function):void {
 			PopUpManager.addPopUp(this);
+			_cardsList.dataProvider = null;
+			_cardsList.validate();
 			_cardsList.dataProvider = new ListCollection(myCards);
 			_selectedCards = [];
 			_callback = callback;
