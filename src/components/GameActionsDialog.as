@@ -191,7 +191,7 @@ package components {
 		private function initializeLeftGroup():void {
 			_gamesManipulationGroup.removeChildren();
 			var gamesManipulationLayout:VerticalLayout = new VerticalLayout();
-			gamesManipulationLayout.gap = 20;
+			gamesManipulationLayout.gap = 35;
 			_gamesManipulationGroup.layout = gamesManipulationLayout;
 			_gamesManipulationGroup.x = 30;
 			_gamesManipulationGroup.y = 30;
@@ -260,7 +260,7 @@ package components {
 			mission.toggleGroup = _gameType;
 			gameTypeGroup.addChild(mission);
 			
-			_gamesManipulationGroup.addChild(gameTypeGroup);
+			//_gamesManipulationGroup.addChild(gameTypeGroup);
 		
 		}
 		
