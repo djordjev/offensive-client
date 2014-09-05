@@ -9,7 +9,6 @@ package modules.game.classes {
 	public class Territories {
 		public static const NUMBER_OF_TERRITORIES:int = 42;
 		
-		
 		public static const ALASKA:int = 1;
 		public static const ALBERTA:int = 2;
 		public static const CENTRAL_AMERICA:int = 3;
@@ -269,6 +268,195 @@ package modules.game.classes {
 			}
 			
 			return _unitsPositions[id];
+		}
+		
+		private static var _connectionMatrix:Array = null;
+		
+		public static function isConnected(territoryId1:int, territoryId2:int):Boolean {
+			// create matrix
+			if (_connectionMatrix == null) {
+				_connectionMatrix = new Array(NUMBER_OF_TERRITORIES + 1);
+				for (var i:int = 0; i < NUMBER_OF_TERRITORIES + 1; i++) {
+					_connectionMatrix[i] = new Array(NUMBER_OF_TERRITORIES + 1);
+					for (var j:int = 0; j < NUMBER_OF_TERRITORIES + 1; j++) {
+						_connectionMatrix[i][j] = false;
+					}
+				}
+				
+				// AMERICAS
+				_connectionMatrix[ALASKA][NORTHWEST_TERRITORY] = true;
+				_connectionMatrix[ALASKA][ALBERTA] = true;
+				_connectionMatrix[ALASKA][KAMCHATKA] = true;
+				_connectionMatrix[NORTHWEST_TERRITORY][ALASKA] = true;
+				_connectionMatrix[NORTHWEST_TERRITORY][ALBERTA] = true;
+				_connectionMatrix[NORTHWEST_TERRITORY][ONTARIO] = true;
+				_connectionMatrix[NORTHWEST_TERRITORY][GREENLAND] = true;
+				_connectionMatrix[GREENLAND][ICELAND] = true;
+				_connectionMatrix[GREENLAND][NORTHWEST_TERRITORY] = true;
+				_connectionMatrix[GREENLAND][ONTARIO] = true;
+				_connectionMatrix[GREENLAND][QUEBEC] = true;
+				_connectionMatrix[ALBERTA][ALASKA] = true;
+				_connectionMatrix[ALBERTA][NORTHWEST_TERRITORY] = true;
+				_connectionMatrix[ALBERTA][ONTARIO] = true;
+				_connectionMatrix[ALBERTA][WESTERN_US] = true;
+				_connectionMatrix[ONTARIO][ALBERTA] = true;
+				_connectionMatrix[ONTARIO][NORTHWEST_TERRITORY] = true;
+				_connectionMatrix[ONTARIO][GREENLAND] = true;
+				_connectionMatrix[ONTARIO][QUEBEC] = true;
+				_connectionMatrix[ONTARIO][EASTERN_US] = true;
+				_connectionMatrix[ONTARIO][WESTERN_US];
+				_connectionMatrix[QUEBEC][ONTARIO] = true;
+				_connectionMatrix[QUEBEC][GREENLAND] = true;
+				_connectionMatrix[QUEBEC][EASTERN_US] = true;
+				_connectionMatrix[WESTERN_US][ALBERTA] = true;
+				_connectionMatrix[WESTERN_US][ONTARIO] = true;
+				_connectionMatrix[WESTERN_US][EASTERN_US] = true;
+				_connectionMatrix[WESTERN_US][CENTRAL_AMERICA] = true;
+				_connectionMatrix[EASTERN_US][ONTARIO] = true;
+				_connectionMatrix[EASTERN_US][QUEBEC] = true;
+				_connectionMatrix[EASTERN_US][WESTERN_US] = true;
+				_connectionMatrix[EASTERN_US][CENTRAL_AMERICA] = true;
+				_connectionMatrix[CENTRAL_AMERICA][WESTERN_US] = true;
+				_connectionMatrix[CENTRAL_AMERICA][EASTERN_US] = true;
+				_connectionMatrix[CENTRAL_AMERICA][VENEZUELA] = true;
+				_connectionMatrix[VENEZUELA][CENTRAL_AMERICA] = true;
+				_connectionMatrix[VENEZUELA][BRAZIL] = true;
+				_connectionMatrix[VENEZUELA][PERU] = true;
+				_connectionMatrix[PERU][VENEZUELA] = true;
+				_connectionMatrix[PERU][BRAZIL] = true;
+				_connectionMatrix[PERU][ARGENTINA] = true;
+				_connectionMatrix[BRAZIL][VENEZUELA] = true;
+				_connectionMatrix[BRAZIL][PERU] = true;
+				_connectionMatrix[BRAZIL][ARGENTINA] = true;
+				_connectionMatrix[BRAZIL][NORTH_AFRICA] = true;
+				_connectionMatrix[ARGENTINA][PERU] = true;
+				_connectionMatrix[ARGENTINA][BRAZIL] = true;
+				
+				// AFRICA
+				_connectionMatrix[NORTH_AFRICA][BRAZIL] = true;
+				_connectionMatrix[NORTH_AFRICA][WESTERN_EUROPE] = true;
+				_connectionMatrix[NORTH_AFRICA][SOUTHERN_EUROPE] = true;
+				_connectionMatrix[NORTH_AFRICA][EGYPT] = true;
+				_connectionMatrix[NORTH_AFRICA][EAST_AFRICA] = true;
+				_connectionMatrix[EGYPT][NORTH_AFRICA] = true;
+				_connectionMatrix[EGYPT][SOUTHERN_EUROPE] = true;
+				_connectionMatrix[EGYPT][MIDDLE_EAST] = true;
+				_connectionMatrix[EGYPT][EAST_AFRICA] = true;
+				_connectionMatrix[EAST_AFRICA][NORTH_AFRICA] = true;
+				_connectionMatrix[EAST_AFRICA][EGYPT] = true;
+				_connectionMatrix[EAST_AFRICA][MIDDLE_EAST] = true;
+				_connectionMatrix[EAST_AFRICA][CONGO] = true;
+				_connectionMatrix[EAST_AFRICA][SOUTH_AFRICA] = true;
+				_connectionMatrix[EAST_AFRICA][MADAGASCAR] = true;
+				_connectionMatrix[CONGO][NORTH_AFRICA] = true;
+				_connectionMatrix[CONGO][EAST_AFRICA] = true;
+				_connectionMatrix[CONGO][SOUTH_AFRICA] = true;
+				_connectionMatrix[MADAGASCAR][EAST_AFRICA] = true;
+				_connectionMatrix[MADAGASCAR][SOUTH_AFRICA] = true;
+				_connectionMatrix[SOUTH_AFRICA][CONGO] = true;
+				_connectionMatrix[SOUTH_AFRICA][EAST_AFRICA] = true;
+				_connectionMatrix[SOUTH_AFRICA][MADAGASCAR] = true;
+				
+				// AUSTRALIA
+				_connectionMatrix[INDONESIA][NEW_GUINEA] = true;
+				_connectionMatrix[INDONESIA][SIAM] = true;
+				_connectionMatrix[INDONESIA][WESTERN_AUSTRALIA] = true;
+				_connectionMatrix[NEW_GUINEA][INDONESIA] = true;
+				_connectionMatrix[NEW_GUINEA][EASTERN_AUSTRALIA] = true;
+				_connectionMatrix[NEW_GUINEA][WESTERN_AUSTRALIA] = true;
+				_connectionMatrix[EASTERN_AUSTRALIA][INDONESIA] = true;
+				_connectionMatrix[EASTERN_AUSTRALIA][NEW_GUINEA] = true;
+				_connectionMatrix[EASTERN_AUSTRALIA][WESTERN_AUSTRALIA] = true;
+				_connectionMatrix[WESTERN_AUSTRALIA][EASTERN_AUSTRALIA] = true;
+				_connectionMatrix[WESTERN_AUSTRALIA][NEW_GUINEA] = true;
+				
+				// EUROPE
+				_connectionMatrix[ICELAND][GREAT_BRITAIN] = true;
+				_connectionMatrix[ICELAND][SCANDINAVIA] = true;
+				_connectionMatrix[GREAT_BRITAIN][ICELAND] = true;
+				_connectionMatrix[GREAT_BRITAIN][SCANDINAVIA] = true;
+				_connectionMatrix[GREAT_BRITAIN][WESTERN_EUROPE] = true;
+				_connectionMatrix[GREAT_BRITAIN][NORTHERN_EUROPE] = true;
+				_connectionMatrix[SCANDINAVIA][ICELAND] = true;
+				_connectionMatrix[SCANDINAVIA][GREAT_BRITAIN] = true;
+				_connectionMatrix[SCANDINAVIA][NORTHERN_EUROPE] = true;
+				_connectionMatrix[SCANDINAVIA][UKRAINE] = true;
+				_connectionMatrix[WESTERN_EUROPE][GREAT_BRITAIN] = true;
+				_connectionMatrix[WESTERN_EUROPE][NORTHERN_EUROPE] = true;
+				_connectionMatrix[WESTERN_EUROPE][SOUTHERN_EUROPE] = true;
+				_connectionMatrix[WESTERN_EUROPE][NORTH_AFRICA] = true;
+				_connectionMatrix[NORTHERN_EUROPE][GREAT_BRITAIN] = true;
+				_connectionMatrix[NORTHERN_EUROPE][WESTERN_EUROPE] = true;
+				_connectionMatrix[NORTHERN_EUROPE][SCANDINAVIA] = true;
+				_connectionMatrix[NORTHERN_EUROPE][UKRAINE] = true;
+				_connectionMatrix[NORTHERN_EUROPE][SOUTHERN_EUROPE] = true;
+				_connectionMatrix[UKRAINE][NORTHERN_EUROPE] = true;
+				_connectionMatrix[UKRAINE][SCANDINAVIA] = true;
+				_connectionMatrix[UKRAINE][SOUTHERN_EUROPE] = true;
+				_connectionMatrix[UKRAINE][URAL] = true;
+				_connectionMatrix[UKRAINE][AFGHANISTAN] = true;
+				_connectionMatrix[UKRAINE][MIDDLE_EAST] = true;
+				_connectionMatrix[SOUTHERN_EUROPE][WESTERN_EUROPE] = true;
+				_connectionMatrix[SOUTHERN_EUROPE][NORTHERN_EUROPE] = true;
+				_connectionMatrix[SOUTHERN_EUROPE][UKRAINE] = true;
+				_connectionMatrix[SOUTHERN_EUROPE][NORTH_AFRICA] = true;
+				_connectionMatrix[SOUTHERN_EUROPE][EGYPT] = true;
+				
+				// ASIA
+				_connectionMatrix[URAL][UKRAINE] = true;
+				_connectionMatrix[URAL][AFGHANISTAN] = true;
+				_connectionMatrix[URAL][SIBERIA] = true;
+				_connectionMatrix[URAL][CHINA] = true;
+				_connectionMatrix[SIBERIA][URAL] = true;
+				_connectionMatrix[SIBERIA][CHINA] = true;
+				_connectionMatrix[SIBERIA][MONGOLIA] = true;
+				_connectionMatrix[SIBERIA][IRKUTSK] = true;
+				_connectionMatrix[SIBERIA][YAKUTSK] = true;
+				_connectionMatrix[YAKUTSK][SIBERIA] = true;
+				_connectionMatrix[YAKUTSK][IRKUTSK] = true;
+				_connectionMatrix[YAKUTSK][KAMCHATKA] = true;
+				_connectionMatrix[IRKUTSK][SIBERIA] = true;
+				_connectionMatrix[IRKUTSK][YAKUTSK] = true;
+				_connectionMatrix[IRKUTSK][KAMCHATKA] = true;
+				_connectionMatrix[IRKUTSK][MONGOLIA] = true;
+				_connectionMatrix[KAMCHATKA][ALASKA] = true;
+				_connectionMatrix[KAMCHATKA][YAKUTSK] = true;
+				_connectionMatrix[KAMCHATKA][IRKUTSK] = true;
+				_connectionMatrix[KAMCHATKA][JAPAN] = true;
+				_connectionMatrix[KAMCHATKA][MONGOLIA] = true;
+				_connectionMatrix[MONGOLIA][IRKUTSK] = true;
+				_connectionMatrix[MONGOLIA][KAMCHATKA] = true;
+				_connectionMatrix[MONGOLIA][JAPAN] = true;
+				_connectionMatrix[MONGOLIA][SIBERIA] = true;
+				_connectionMatrix[MONGOLIA][CHINA] = true;
+				_connectionMatrix[JAPAN][KAMCHATKA] = true;
+				_connectionMatrix[JAPAN][MONGOLIA] = true;
+				_connectionMatrix[AFGHANISTAN][URAL] = true;
+				_connectionMatrix[AFGHANISTAN][CHINA] = true;
+				_connectionMatrix[AFGHANISTAN][INDIA] = true;
+				_connectionMatrix[AFGHANISTAN][MIDDLE_EAST] = true;
+				_connectionMatrix[MIDDLE_EAST][AFGHANISTAN] = true;
+				_connectionMatrix[MIDDLE_EAST][UKRAINE] = true;
+				_connectionMatrix[MIDDLE_EAST][SOUTHERN_EUROPE] = true;
+				_connectionMatrix[MIDDLE_EAST][EGYPT] = true;
+				_connectionMatrix[MIDDLE_EAST][EAST_AFRICA] = true;
+				_connectionMatrix[MIDDLE_EAST][INDIA] = true;
+				_connectionMatrix[INDIA][AFGHANISTAN] = true;
+				_connectionMatrix[INDIA][MIDDLE_EAST] = true;
+				_connectionMatrix[INDIA][CHINA] = true;
+				_connectionMatrix[INDIA][SIAM] = true;
+				_connectionMatrix[CHINA][MONGOLIA] = true;
+				_connectionMatrix[CHINA][SIBERIA] = true;
+				_connectionMatrix[CHINA][URAL] = true;
+				_connectionMatrix[CHINA][AFGHANISTAN] = true;
+				_connectionMatrix[CHINA][INDIA] = true;
+				_connectionMatrix[CHINA][SIAM] = true;
+				_connectionMatrix[SIAM][CHINA] = true;
+				_connectionMatrix[SIAM][INDIA] = true;
+				_connectionMatrix[SIAM][INDONESIA] = true;
+			}
+			
+			return _connectionMatrix[territoryId1][territoryId2];
 		}
 	
 	}

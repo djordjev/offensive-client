@@ -65,6 +65,8 @@ package modules.game {
 		
 		public static const MAX_DICES:int = 3;
 		
+		private static const ADDING_UNITS_ON_TRADE:int = 2;
+		
 		public static const TIME_FOR_ROLL:int = 10; // seconds
 		public static const TIME_FOR_DISPLAY_RESULTS:int = 1500; // milliseconds
 		
@@ -593,9 +595,11 @@ package modules.game {
 			
 			Communicator.instance.send(HandlerCodes.TRADE_CARDS, request, function tradeCardsResponse(e:ProtocolMessage):void {
 					var response:TradeCardsResponse = e.data as TradeCardsResponse;
+					var cards:Array = [card1, card2, card3];
 					
 					if (response.numberOfReinforcements > 0) {
-						removeMyCards([card1, card2, card3]);
+						removeMyCards(cards);
+						addUnitsOnTrade(cards);
 						_me.numberOdReinforcements += response.numberOfReinforcements;
 						
 					}
@@ -603,6 +607,16 @@ package modules.game {
 						callback(response.numberOfReinforcements);
 					}
 				});
+		}
+		
+		private function addUnitsOnTrade(cards:Array):void {
+			for each (var card:Card in cards) {
+				var territory:TerritoryWrapper = _territories[card.territoryId] 
+				if (territory.owner.playerId == _me.playerId) {
+					territory.troopsOnIt += ADDING_UNITS_ON_TRADE;
+					dispatchEvent(new ChangedNumberOfUnits(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, territory.id));
+				}
+			}
 		}
 		
 		private function removeMyCards(cards:Array):void {

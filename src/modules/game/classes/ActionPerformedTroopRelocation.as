@@ -32,7 +32,7 @@ package modules.game.classes {
 			} else if (_selectedTerritory.troopsOnIt <= 1) {
 				Alert.showMessage("Not enough troops", "You can't leave territory empty");
 				_selectedTerritory = null;
-			} else {
+			} else if(Territories.isConnected(_selectedTerritory.id, territory.id)){
 				// it's OK to relocate
 				RelocatePopup.instance.showRelocationPopup(_selectedTerritory, territory, function unitsAdded(numberOfMoving:int):void {
 					if (numberOfMoving > 0) {
@@ -40,6 +40,8 @@ package modules.game.classes {
 					}
 					_selectedTerritory = null;
 				});
+			} else {
+				Alert.showMessage("Illegal move", "You can't move to territory that is not connected");
 			}
 		}
 	

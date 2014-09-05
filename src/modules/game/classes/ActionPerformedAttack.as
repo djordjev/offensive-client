@@ -34,7 +34,7 @@ package modules.game.classes {
 			} else if (_selectedTerritory.troopsOnIt <= 1) {
 				Alert.showMessage("Not enough troops", "You can't attack from territory that has less than 2 units on it");
 				_selectedTerritory = null;
-			} else {
+			} else if(Territories.isConnected(_selectedTerritory.id, territory.id)){
 				// it's OK to attack
 				AttackPopup.instance.showAttackDialog(_selectedTerritory, territory, function attackResolution(numberOfUnitsInAttack:int):void {
 						if (numberOfUnitsInAttack != AttackPopup.ATTACK_CANCELED) {
@@ -42,6 +42,8 @@ package modules.game.classes {
 						}
 						_selectedTerritory = null;
 					});
+			} else {
+				Alert.showMessage("Illegal attack", "You can't attack territory that is not connected");
 			}
 		}
 	}
