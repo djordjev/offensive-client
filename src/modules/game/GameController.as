@@ -592,6 +592,7 @@ package modules.game {
 				Alert.showMessage("Cards", "Cards successfully traded");
 			}
 			updatePlayersListView();
+			reinforcementsReceived();
 		}
 		
 		public function newCardAwarded(e:NewCardAwardedEvent):void {
@@ -608,7 +609,7 @@ package modules.game {
 			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
 		}
 		
-		private function reinforcementsReceived(e:Event):void {
+		private function reinforcementsReceived(e:Event=null):void {
 			numberOfReinforcements = model.me.numberOdReinforcements;
 		}
 	
