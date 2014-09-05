@@ -81,7 +81,6 @@ package modules.game {
 		private var _territories:Dictionary;
 		private var _pendingCommands:Array;
 		
-		
 		private var _numberOfMyUnits:int;
 		
 		private var _subphase:int;
@@ -313,8 +312,8 @@ package modules.game {
 		public function allCommandsReceived(allCommands:AllCommands):void {
 			if (_phase == GamePhase.BATTLE_PHASE) {
 				_allCommands = allCommands.commands;
-
-				for each(var command:Command in allCommands.commands) {
+				
+				for each (var command:Command in allCommands.commands) {
 					var issuerTerritory:TerritoryWrapper = getTerritory(command.sourceTerritory);
 					
 					if (issuerTerritory.owner.playerId != _me.playerId && command.sourceTerritory != command.destinationTerritory) {
@@ -423,7 +422,7 @@ package modules.game {
 			}
 			
 			var died:Array = _currentBattle.killLosingParticipants();
-			for each(var command:CommandWrapper in died) {
+			for each (var command:CommandWrapper in died) {
 				dispatchEvent(new DicesEvent(DicesEvent.OPPONENT_DIED_IN_BATTLE, command));
 			}
 			
@@ -459,7 +458,7 @@ package modules.game {
 			for (var i:int = 0; i < numberOfDicesInBattle; i++) {
 				var commandWithBiggestDice:CommandWrapper = null;
 				// find command with biggest dice
-				for each(command in _currentBattle.oneSide) {
+				for each (command in _currentBattle.oneSide) {
 					if (commandWithBiggestDice == null || command.dices()[i] > commandWithBiggestDice) {
 						commandWithBiggestDice = command;
 					}
@@ -467,9 +466,8 @@ package modules.game {
 				commandWithBiggestDice.setDiceResult(i, CommandWrapper.DICE_WON);
 				
 				// remove units to others
-				for each(command in _currentBattle.oneSide) {
-					if (commandWithBiggestDice.dices()[i] > command.dices()[i] && 
-						commandWithBiggestDice.sourceTerrotiry.id != command.sourceTerrotiry.id) {
+				for each (command in _currentBattle.oneSide) {
+					if (commandWithBiggestDice.dices()[i] > command.dices()[i] && commandWithBiggestDice.sourceTerrotiry.id != command.sourceTerrotiry.id) {
 						command.removeUnit();
 						command.setDiceResult(i, CommandWrapper.DICE_LOST);
 					}
@@ -489,7 +487,7 @@ package modules.game {
 				// find attacker biggest dice
 				var biggestAttackerDice:int = 0;
 				var singleAttacker:CommandWrapper;
-				for each(singleAttacker in attackers) {
+				for each (singleAttacker in attackers) {
 					if (singleAttacker.dices()[i] > biggestAttackerDice) {
 						biggestAttackerDice = singleAttacker.dices()[i];
 					}
@@ -498,11 +496,11 @@ package modules.game {
 				if (biggestAttackerDice > defender.dices()[i]) {
 					defender.removeUnit();
 					defender.setDiceResult(i, CommandWrapper.DICE_LOST);
-					for each(singleAttacker in attackers) {
+					for each (singleAttacker in attackers) {
 						singleAttacker.setDiceResult(i, CommandWrapper.DICE_WON);
 					}
 				} else {
-					for each(singleAttacker in attackers) {
+					for each (singleAttacker in attackers) {
 						singleAttacker.removeUnit();
 						singleAttacker.setDiceResult(i, CommandWrapper.DICE_LOST);
 					}
@@ -515,12 +513,10 @@ package modules.game {
 		private function determineAttackerDefender():Object {
 			var result:Object = new Object();
 			
-			if (_currentBattle.oneSide.length == 1 && 
-				(_currentBattle.oneSide[0] as CommandWrapper).sourceTerrotiry.id == (_currentBattle.oneSide[0] as CommandWrapper).destionationTerritory.id) {
+			if (_currentBattle.oneSide.length == 1 && (_currentBattle.oneSide[0] as CommandWrapper).sourceTerrotiry.id == (_currentBattle.oneSide[0] as CommandWrapper).destionationTerritory.id) {
 				result.defender = _currentBattle.oneSide;
 				result.attacker = _currentBattle.otherSide;
-			} else if (_currentBattle.otherSide.length == 1 && 
-				(_currentBattle.otherSide[0] as CommandWrapper).sourceTerrotiry.id == (_currentBattle.otherSide[0] as CommandWrapper).destionationTerritory.id) {
+			} else if (_currentBattle.otherSide.length == 1 && (_currentBattle.otherSide[0] as CommandWrapper).sourceTerrotiry.id == (_currentBattle.otherSide[0] as CommandWrapper).destionationTerritory.id) {
 				result.defender = _currentBattle.otherSide;
 				result.attacker = _currentBattle.oneSide;
 			} else {
@@ -580,10 +576,10 @@ package modules.game {
 			move.command = command;
 			
 			Communicator.instance.send(HandlerCodes.MOVE_UNITS, move, function moveResponse(message:ProtocolMessage):void {
-				territoryFrom.troopsOnIt -= numberOfUnits;
-				territoryTo.troopsOnIt += numberOfUnits;
-				dispatchEvent(new RelocationEvent(RelocationEvent.UNITS_RELOCATED, territoryFrom, territoryTo, numberOfUnits));
-			});
+					territoryFrom.troopsOnIt -= numberOfUnits;
+					territoryTo.troopsOnIt += numberOfUnits;
+					dispatchEvent(new RelocationEvent(RelocationEvent.UNITS_RELOCATED, territoryFrom, territoryTo, numberOfUnits));
+				});
 		}
 		
 		public function tradeCards(card1:Card, card2:Card, card3:Card, callback:Function):void {
@@ -595,21 +591,23 @@ package modules.game {
 			
 			request.gameId = _gameId;
 			
-			Communicator.instance.send(HandlerCodes.TRADE_CARDS, request, 
-				function tradeCardsResponse(e:ProtocolMessage):void {
+			Communicator.instance.send(HandlerCodes.TRADE_CARDS, request, function tradeCardsResponse(e:ProtocolMessage):void {
 					var response:TradeCardsResponse = e.data as TradeCardsResponse;
 					
-					removeMyCards([card1, card2, card3]);
-					_me.numberOdReinforcements += response.numberOfReinforcements;
+					if (response.numberOfReinforcements > 0) {
+						removeMyCards([card1, card2, card3]);
+						_me.numberOdReinforcements += response.numberOfReinforcements;
+						
+					}
 					if (callback != null) {
-						callback();
+						callback(response.numberOfReinforcements);
 					}
 				});
 		}
 		
 		private function removeMyCards(cards:Array):void {
 			for (var i:int = _myCards.length - 1; i >= 0; i--) {
-				for (var j:int = 0; i < cards.length; j++) {
+				for (var j:int = 0; j < cards.length; j++) {
 					if (_myCards[i].territoryId == cards[j].territoryId) {
 						_myCards.splice(i, 1);
 						_me.cardsNumber--;
@@ -625,7 +623,7 @@ package modules.game {
 		}
 		
 		public function cardCountStateChanged(notification:PlayerCardCountNotification):void {
-			for each(var player:PlayerWrapper in _allPlayers) {
+			for each (var player:PlayerWrapper in _allPlayers) {
 				if (player.playerId == notification.playerId) {
 					player.cardsNumber = notification.cardCount;
 					break;
@@ -643,6 +641,6 @@ package modules.game {
 			_me.numberOdReinforcements += numberOfReinforcements;
 			dispatchEvent(new Event(REINFORCEMENTS_RECEIVED));
 		}
-		
+	
 	}
 }

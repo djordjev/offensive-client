@@ -587,8 +587,10 @@ package modules.game {
 				});
 		}
 		
-		private function cardsSuccessfullyTraded():void {
-			Alert.showMessage("Cards", "Cards successfully traded");
+		private function cardsSuccessfullyTraded(numberOfReinforcements:int):void {
+			if (numberOfReinforcements > 0) {
+				Alert.showMessage("Cards", "Cards successfully traded");
+			}
 			updatePlayersListView();
 		}
 		
