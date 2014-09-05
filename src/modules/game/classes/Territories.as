@@ -369,6 +369,7 @@ package modules.game.classes {
 				_connectionMatrix[EASTERN_AUSTRALIA][WESTERN_AUSTRALIA] = true;
 				_connectionMatrix[WESTERN_AUSTRALIA][EASTERN_AUSTRALIA] = true;
 				_connectionMatrix[WESTERN_AUSTRALIA][NEW_GUINEA] = true;
+				_connectionMatrix[WESTERN_AUSTRALIA][INDONESIA] = true;
 				
 				// EUROPE
 				_connectionMatrix[ICELAND][GREAT_BRITAIN] = true;

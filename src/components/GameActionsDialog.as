@@ -191,7 +191,7 @@ package components {
 		private function initializeLeftGroup():void {
 			_gamesManipulationGroup.removeChildren();
 			var gamesManipulationLayout:VerticalLayout = new VerticalLayout();
-			gamesManipulationLayout.gap = 35;
+			gamesManipulationLayout.gap = 26;
 			_gamesManipulationGroup.layout = gamesManipulationLayout;
 			_gamesManipulationGroup.x = 30;
 			_gamesManipulationGroup.y = 30;
