@@ -15,7 +15,7 @@ package components.events {
 	 */
 	public class RelocatePopup extends LayoutGroup {
 		
-		private static const RELOCATION_POPUP_WIDTH:int = 300;
+		private static const RELOCATION_POPUP_WIDTH:int = 350;
 		private static const RELOCATION_POPUP_HEIGHT:int = 150;
 		
 		private static var _instance:RelocatePopup = null;
@@ -82,11 +82,14 @@ package components.events {
 			_unitsMove.fontSize = 16;
 			
 			var completeView:LayoutGroup = new LayoutGroup();
+			completeView.x = 12;
+			completeView.y = 5;
 			completeView.layout = new HorizontalLayout();
 			(completeView.layout as HorizontalLayout).gap = 10;
 			this.addChild(completeView);
 			
 			var fromTerritoryGroup:LayoutGroup = new LayoutGroup();
+			fromTerritoryGroup.alignPivot("left", "top");
 			fromTerritoryGroup.layout = new VerticalLayout();
 			(fromTerritoryGroup.layout as VerticalLayout).gap = 10;
 			completeView.addChild(fromTerritoryGroup);
@@ -110,6 +113,7 @@ package components.events {
 			middleGroup.addChild(_unitsMove);
 			
 			var opponentTerritoryGroup:LayoutGroup = new LayoutGroup();
+			opponentTerritoryGroup.alignPivot("right", "top");
 			opponentTerritoryGroup.layout = new VerticalLayout();
 			(opponentTerritoryGroup.layout as VerticalLayout).gap = 10;
 			completeView.addChild(opponentTerritoryGroup);
