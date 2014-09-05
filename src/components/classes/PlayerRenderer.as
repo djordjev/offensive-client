@@ -115,7 +115,7 @@ package components.classes {
 			_alliance.y = 104;
 			_alliance.x = 10;
 			_alliance.label = "Alliance";
-			this.addChild(_alliance);
+			//this.addChild(_alliance);
 		}
 	
 	}

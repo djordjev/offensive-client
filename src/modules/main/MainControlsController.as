@@ -52,7 +52,7 @@ package modules.main {
 			view.currentUserInfoDisplay.inviteToPrivateGame.numberOfInvitations = 3;
 			view.currentUserInfoDisplay.playerJoined.text = "JOINED";
 			view.currentUserInfoDisplay.playerLocation.text = "BEOGRAD";
-			view.currentUserInfoDisplay.stats.text = "Some stupid statistics".toUpperCase();
+			//view.currentUserInfoDisplay.stats.text = "Some stupid statistics".toUpperCase();
 			if (FacebookCommunicator.instance.me != null) {
 				view.currentUserInfoDisplay.userImage.userImageSource = FacebookCommunicator.instance.me.largeImageURL;
 				if (FacebookCommunicator.instance.me.name != null) {

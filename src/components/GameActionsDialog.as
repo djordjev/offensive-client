@@ -92,7 +92,7 @@ package components {
 			createPrivateGameButton.height = 80;
 			createPrivateGameButton.label = "Create private game";
 			createPrivateGameButton.addEventListener(MouseClickEvent.CLICK, createPrivateGame);
-			_gamesManipulationGroup.addChild(createPrivateGameButton);
+			//_gamesManipulationGroup.addChild(createPrivateGameButton);
 			
 			var joinGameButton:LinkButton = new LinkButton();
 			joinGameButton.width = 300;
@@ -131,7 +131,7 @@ package components {
 			inviteButton.height = 50;
 			inviteButton.width = 200;
 			inviteButton.fontSize = 20;
-			_gamesManipulationGroup.addChild(inviteButton);
+			//_gamesManipulationGroup.addChild(inviteButton);
 			
 			var createPrivateGameButton:LinkButton = new LinkButton();
 			createPrivateGameButton.label = "CREATE NEW PRIVATE GAME";

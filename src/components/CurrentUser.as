@@ -85,7 +85,7 @@ package components {
 			inviteToPrivateGame.width = 670;
 			inviteToPrivateGame.y = 170;
 			inviteToPrivateGame.height = 25;
-			this.addChild(inviteToPrivateGame);
+			//this.addChild(inviteToPrivateGame);
 		}
 	
 	}
