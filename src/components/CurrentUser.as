@@ -1,4 +1,5 @@
 package components {
+	import communication.protos.UserStatistics;
 	import components.common.OLabel;
 	import feathers.controls.Button;
 	import feathers.controls.LayoutGroup;
@@ -86,6 +87,23 @@ package components {
 			inviteToPrivateGame.y = 170;
 			inviteToPrivateGame.height = 25;
 			//this.addChild(inviteToPrivateGame);
+		}
+		
+		public function setStats(statistics:UserStatistics):void {
+			if (stats != null) {
+				var winRate:Number;
+				if (statistics.numberOfWins == 0) {
+					winRate = 0;
+				} else {
+					winRate = Math.round((statistics.numberOfWins / statistics.numberOfGames) * 100);
+				}
+				var display:String = "";
+				display += "PLAYED " + statistics.numberOfGames + "\n";
+				display += "WON " + statistics.numberOfWins + "\n";
+				display += "WIN RATE " + winRate.toFixed(1);
+				
+				stats.text = display;
+			}
 		}
 	
 	}

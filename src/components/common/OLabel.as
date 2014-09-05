@@ -59,7 +59,7 @@ package components.common {
 		private function isAsciiOnly(str:String):Boolean {
 			for (var i:int = 0; i < str.length; i++) {
 				var ch:Number = str.charCodeAt(i);
-				if (ch < 32 || ch > 126) {
+				if (ch > 126) {
 					return false;
 				}
 			}

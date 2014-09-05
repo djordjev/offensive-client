@@ -25,6 +25,7 @@ package modules.main {
 	import communication.protos.SingleAttacks;
 	import communication.protos.SpoilsOfWar;
 	import communication.protos.UserData;
+	import communication.protos.UserStatistics;
 	import components.CurrentPlayerImage;
 	import flash.sampler.NewObjectSample;
 	import flash.utils.Dictionary;
@@ -60,13 +61,20 @@ package modules.main {
 		/** Array of open games that are available for joining. Array of GameDescription */
 		public var openGamesAvailableForJoin:Array = [];
 		
+		private var _stats:UserStatistics;
+		
 		public function MainControlsModel() {
 			super();
+		}
+		
+		public function get stats():UserStatistics {
+			return _stats;
 		}
 		
 		public function initialize(myUserInfo:UserData):void {
 			activeGames = [];
 			activeGamesDictionary = new Dictionary();
+			_stats = myUserInfo.statistics;
 			for each (var gameContext:GameContext in myUserInfo.joinedGames) {
 				var game:GameContextWrapper = GameContextWrapper.buildGameContext(gameContext);
 				activeGames.push(game);
