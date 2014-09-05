@@ -242,6 +242,7 @@ package modules.game {
 						model.submitPhase();
 					} else {
 						// can't commit round
+						view.commitButton.isEnabled = true;
 						Alert.showMessage("Can't commit operation", "You can't commit reinforcements phase until you place all reinforcements");
 					}
 					break;
