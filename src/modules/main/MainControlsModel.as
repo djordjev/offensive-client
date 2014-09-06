@@ -290,6 +290,18 @@ package modules.main {
 				gameContext.me.numberOdReinforcements += received.numberOfReinforcements;
 			}
 		}
+		
+		
+		public function gameOver(gameId:Int64):void {
+			for (var i:int = 0; i < activeGames.length; i++) {
+				if (activeGames[i].gameId.toString() == gameId.toString()) {
+					activeGames.splice(i, 1);
+					break;
+				}
+			}
+			
+			delete activeGamesDictionary[gameId.toString()];
+		}
 	}
 
 }

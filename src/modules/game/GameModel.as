@@ -35,6 +35,7 @@ package modules.game {
 	import modules.game.events.ChangedNumberOfUnits;
 	import modules.game.events.DicesEvent;
 	import modules.game.events.NewCardAwardedEvent;
+	import modules.game.events.PlayerDefeatedEvent;
 	import modules.game.events.RelocationEvent;
 	import starling.events.Event;
 	import utils.Globals;
@@ -151,6 +152,10 @@ package modules.game {
 		
 		public function get myCards():Array {
 			return _myCards;
+		}
+		
+		public function get opponents():Array {
+			return _opponents;
 		}
 		
 		public function initForGame(gameContext:GameContextWrapper):void {
@@ -288,6 +293,23 @@ package modules.game {
 		
 		private function advanceToRelocationPhase(response:AdvancePhaseNotification):void {
 			updateNumberOfUnits(response.territories);
+			
+			for (var i:int = _opponents.length - 1; i >= 0; i--) {
+				if (_opponents[i].numberOfTerritories == 0) {
+					var event:PlayerDefeatedEvent = new PlayerDefeatedEvent(PlayerDefeatedEvent.OPPONEND_DEFEATED, _opponents[i]);
+					// this player is dead
+					delete _allPlayers[_opponents[i].playerId.toString()];
+					_opponents.splice(i, 1);
+					
+					dispatchEvent(event);
+				}
+			}
+			
+			// check is game finished
+			if (_me.numberOfTerritories == 0) {
+				// I'm dead
+				dispatchEvent(new PlayerDefeatedEvent(PlayerDefeatedEvent.OPPONEND_DEFEATED, _me));
+			}
 		}
 		
 		private function updateNumberOfUnits(territories:Array):void {

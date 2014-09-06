@@ -1,4 +1,5 @@
 package modules.main {
+	import com.netease.protobuf.Int64;
 	import communication.protos.GameDescription;
 	import components.events.CreateGameEvent;
 	import components.events.GameManipulationEvent;
@@ -114,7 +115,7 @@ package modules.main {
 			if (gameToJoin != null) {
 				model.joinToGame(gameToJoin, function joinedToGame():void {
 					// joined to game
-						view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
+						refreshActiveGamesList();
 						view.gameActionsDialog.state = GameActionsDialog.STATE_MENU;
 					});
 			}
@@ -125,6 +126,17 @@ package modules.main {
 				GameController.instance.currentGameId.toString() == e.game.gameId.toString()) {
 				GameController.instance.newPlayerJoined(e.player);
 			}
+		}
+		
+		public function gameOver(gameId:Int64):void {
+			model.gameOver(gameId);
+			refreshActiveGamesList();
+		}
+		
+		private function refreshActiveGamesList():void {
+			view.gameActionsDialog.existingGamesList.dataProvider = null;
+			view.gameActionsDialog.existingGamesList.validate();
+			view.gameActionsDialog.existingGamesList.dataProvider = new ListCollection(model.activeGames);
 		}
 	
 	}

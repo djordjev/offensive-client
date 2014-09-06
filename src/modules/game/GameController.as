@@ -29,7 +29,9 @@ package modules.game {
 	import modules.game.events.ClickOnTerritory;
 	import modules.game.events.DicesEvent;
 	import modules.game.events.NewCardAwardedEvent;
+	import modules.game.events.PlayerDefeatedEvent;
 	import modules.game.events.RelocationEvent;
+	import modules.main.MainControlsController;
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
 	import starling.core.Starling;
@@ -53,6 +55,8 @@ package modules.game {
 	public class GameController extends BaseController {
 		
 		private static const ZOOM_ANIMATION_DURATION:int = 1; // in seconds
+		
+		private static const GAME_RESULT_DISPLAY:int = 5000;
 		
 		private static var _instance:GameController;
 		
@@ -105,7 +109,6 @@ package modules.game {
 			view.commitButton.addEventListener(Event.TRIGGERED, commitClickHandler);
 			view.cardsButton.addEventListener(Event.TRIGGERED, showMyCardsPopup);
 			
-			
 			model.addEventListener(ChangedNumberOfUnits.CHANGED_NUMBER_OF_UNITS, changedNumberOfUnitsOnTerritory);
 			model.addEventListener(GameModel.GAME_PHASE_COMMITED, gamePhaseCommited);
 			model.addEventListener(GameModel.ADVANCED_TO_NEXT_PHASE, advancedToNextGamePhase);
@@ -129,6 +132,7 @@ package modules.game {
 			model.addEventListener(GameModel.REINFORCEMENTS_RECEIVED, reinforcementsReceived);
 			model.addEventListener(NewCardAwardedEvent.NEW_CARD_RECEIVED, newCardAwarded);
 			
+			model.addEventListener(PlayerDefeatedEvent.OPPONEND_DEFEATED, playerDefeated);
 			
 			model.addEventListener(DicesEvent.DICES_ROLLED, opponentRolledDices);
 			model.addEventListener(DicesEvent.OPPONENT_DIED_IN_BATTLE, participantDiedInBattle);
@@ -137,7 +141,7 @@ package modules.game {
 			view.addEventListener(RollDicesClickEvent.ROLL_CLICKED, rollClicked);
 		}
 		
-		private function goBack(e:Event):void {
+		private function goBack(e:Event = null):void {
 			model.disposeModel();
 			mainScreenNavigator.showScreen(Screens.MENUS);
 		}
@@ -249,7 +253,7 @@ package modules.game {
 				case GamePhase.ATTACK_PHASE: 
 					model.submitPhase();
 					break;
-				case GamePhase.TROOP_RELOCATION_PHASE:
+				case GamePhase.TROOP_RELOCATION_PHASE: 
 					model.submitPhase();
 					break;
 				default: 
@@ -422,13 +426,13 @@ package modules.game {
 				visualTerritory.battleDisplay.numberOfUnits = command.numberOfUnits;
 				
 				if (command.dicesResults != null) {
-					for (var i:int = 0 ; i < command.dicesResults.length; i++) {
+					for (var i:int = 0; i < command.dicesResults.length; i++) {
 						visualTerritory.battleDisplay.highlightDice(i, command.dicesResults[i]);
 					}
 				}
 				
 			}
-			
+		
 		}
 		
 		private function roundViewResultsFinished(e:BattleEvent):void {
@@ -459,7 +463,7 @@ package modules.game {
 			removeAllBattleInfos();
 			_territoriesInCurrentBattle = [];
 			updateViewAfterBattle(e.battleInfo);
-			focusMap();	
+			focusMap();
 		}
 		
 		/** @param territories - Array of TerritoryWrapper */
@@ -575,16 +579,15 @@ package modules.game {
 		}
 		
 		private function showMyCardsPopup(e:Event):void {
-			MyCardsPopup.instance.showPopup(model.myCards, 
-				function cardsForTradeSelected(card1:Card, card2:Card, card3:Card):void {
+			MyCardsPopup.instance.showPopup(model.myCards, function cardsForTradeSelected(card1:Card, card2:Card, card3:Card):void {
 					if (card1 != null && card2 != null && card3 != null) {
 						if (model.phase == GamePhase.TROOP_DEPLOYMENT_PHASE) {
 							model.tradeCards(card1, card2, card3, cardsSuccessfullyTraded);
 						} else {
 							Alert.showMessage("Trade Cards", "You can't trade cards in game phase that is not troop deployment");
 						}
-							
-					} 
+						
+					}
 				});
 		}
 		
@@ -610,8 +613,30 @@ package modules.game {
 			view.playersList.dataProvider = new ListCollection(model.getAllPlayers());
 		}
 		
-		private function reinforcementsReceived(e:Event=null):void {
+		private function reinforcementsReceived(e:Event = null):void {
 			numberOfReinforcements = model.me.numberOdReinforcements;
+		}
+		
+		private function playerDefeated(e:PlayerDefeatedEvent):void {
+			if (e.opponent.playerId == model.me.playerId) {
+				// game over
+				Alert.showMessage("Game Over", "You have been defeated");
+				setTimeout(function meDefeated():void {
+					goBack();
+					MainControlsController.instance.gameOver(model.gameId);
+				}, GAME_RESULT_DISPLAY);
+			} else {
+				updatePlayersListView();
+				// opponent defeated
+				if (model.opponents.length == 0) {
+					// I won
+					Alert.showMessage("Victory", "You have defeated all opponents");
+					setTimeout(function meDefeated():void {
+						goBack();
+						MainControlsController.instance.gameOver(model.gameId);
+					}, GAME_RESULT_DISPLAY);
+				}
+			}
 		}
 	
 	}
