@@ -3,6 +3,8 @@ package components.events {
 	import components.common.OLabel;
 	import feathers.controls.LayoutGroup;
 	import feathers.core.PopUpManager;
+	import feathers.layout.AnchorLayout;
+	import feathers.layout.AnchorLayoutData;
 	import feathers.layout.HorizontalLayout;
 	import feathers.layout.VerticalLayout;
 	import starling.display.Quad;
@@ -82,56 +84,49 @@ package components.events {
 			_unitsMove.fontSize = 16;
 			
 			var completeView:LayoutGroup = new LayoutGroup();
+			completeView.layout = new AnchorLayout();
 			completeView.x = 12;
 			completeView.y = 5;
-			completeView.layout = new HorizontalLayout();
-			(completeView.layout as HorizontalLayout).gap = 10;
+			completeView.width = 325;
+			completeView.height = 90;
 			this.addChild(completeView);
 			
-			var fromTerritoryGroup:LayoutGroup = new LayoutGroup();
-			fromTerritoryGroup.alignPivot("left", "top");
-			fromTerritoryGroup.layout = new VerticalLayout();
-			(fromTerritoryGroup.layout as VerticalLayout).gap = 10;
-			completeView.addChild(fromTerritoryGroup);
-			
-			fromTerritoryGroup.addChild(_fromTerritoryName);
-			fromTerritoryGroup.addChild(_fromTerritoryNumberOfUnits);
-			
-			var middleGroup:LayoutGroup = new LayoutGroup();
-			middleGroup.layout = new VerticalLayout();
-			(middleGroup.layout as VerticalLayout).gap = 10;
-			completeView.addChild(middleGroup);
+			completeView.addChild(_fromTerritoryName);
+			completeView.addChild(_fromTerritoryNumberOfUnits);
 			
 			var controlsGroup:LayoutGroup = new LayoutGroup();
 			controlsGroup.layout = new HorizontalLayout();
 			(controlsGroup.layout as HorizontalLayout).gap = 5;
-			middleGroup.addChild(controlsGroup);
 			
-			controlsGroup.addChild(_addUnit);
+			_toTerritoryName.layoutData = new AnchorLayoutData(0, 0);
+			_toTerritoryNumberOfUnits.layoutData = new AnchorLayoutData(20, 0);
+			
+			_fromTerritoryName.layoutData = new AnchorLayoutData(0, NaN, NaN, 0);
+			_fromTerritoryNumberOfUnits.layoutData = new AnchorLayoutData(20, NaN, NaN, 0);
+			
+			controlsGroup.layoutData = new AnchorLayoutData(30, NaN, NaN, NaN, 0);
+			_unitsMove.layoutData = new AnchorLayoutData(65, NaN, NaN, NaN, 0);
+			
 			controlsGroup.addChild(_removeUnit);
+			controlsGroup.addChild(_addUnit);
 			
-			middleGroup.addChild(_unitsMove);
+			completeView.addChild(controlsGroup);
+			completeView.addChild(_unitsMove);
 			
-			var opponentTerritoryGroup:LayoutGroup = new LayoutGroup();
-			opponentTerritoryGroup.alignPivot("right", "top");
-			opponentTerritoryGroup.layout = new VerticalLayout();
-			(opponentTerritoryGroup.layout as VerticalLayout).gap = 10;
-			completeView.addChild(opponentTerritoryGroup);
-			
-			opponentTerritoryGroup.addChild(_toTerritoryName);
-			opponentTerritoryGroup.addChild(_toTerritoryNumberOfUnits);
+			completeView.addChild(_toTerritoryName);
+			completeView.addChild(_toTerritoryNumberOfUnits);
 			
 			_addUnit.addEventListener(MouseClickEvent.CLICK, clickOnAdd);
 			_removeUnit.addEventListener(MouseClickEvent.CLICK, clickOnRemove);
 			
-			_okButton.x = 30;
+			_okButton.x = 270;
 			_okButton.y = 100;
 			_okButton.fontColor = Colors.WHITE;
 			_okButton.fontSize = 25;
 			_okButton.label = "Move";
 			this.addChild(_okButton);
 			
-			_cancelButton.x = 200;
+			_cancelButton.x = 5;
 			_cancelButton.y = 100;
 			_cancelButton.fontColor = Colors.WHITE;
 			_cancelButton.fontSize = 25;
