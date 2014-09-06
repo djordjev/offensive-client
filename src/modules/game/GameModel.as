@@ -256,6 +256,7 @@ package modules.game {
 					break;
 				case GamePhase.TROOP_RELOCATION_PHASE: 
 					_subphase = GamePhase.SUBPHASE_NO_SUBPHASE;
+					advanceToRelocationPhase(response);
 					break;
 				default: 
 					break;
@@ -282,6 +283,10 @@ package modules.game {
 		}
 		
 		private function advanceToAttackPhase(response:AdvancePhaseNotification):void {
+			updateNumberOfUnits(response.territories);
+		}
+		
+		private function advanceToRelocationPhase(response:AdvancePhaseNotification):void {
 			updateNumberOfUnits(response.territories);
 		}
 		

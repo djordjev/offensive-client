@@ -24,6 +24,7 @@ package modules.main {
 	import communication.protos.ReinforcementsNotification;
 	import communication.protos.SingleAttacks;
 	import communication.protos.SpoilsOfWar;
+	import communication.protos.Territory;
 	import communication.protos.UserData;
 	import communication.protos.UserStatistics;
 	import components.CurrentPlayerImage;
@@ -37,6 +38,7 @@ package modules.main {
 	import utils.Alert;
 	import wrappers.GameContextWrapper;
 	import wrappers.PlayerWrapper;
+	import wrappers.TerritoryWrapper;
 	
 	/**
 	 * ...
@@ -175,6 +177,23 @@ package modules.main {
 				}
 				if (GameController.instance.currentGameId != null && GameController.instance.currentGameId.toString() == response.gameId.toString()) {
 					GameModel.instance.advancedToNextPhase(response);
+				} else {
+					for each(var territory:Territory in response.territories) {
+						var owner:PlayerWrapper;
+						
+						for each(var player:PlayerWrapper in game.players) {
+							if (player.playerId == territory.playerId) {
+								owner = player;
+								break;
+							}
+						}
+						
+						for each(var existingTerritory:TerritoryWrapper in game.terrotiries) {
+							if (existingTerritory.id == territory.id) {
+								existingTerritory.conquer(owner, territory.troopsOnIt);
+							}
+						}
+					}
 				}
 			}
 		}
@@ -270,53 +289,7 @@ package modules.main {
 			} else {
 				gameContext.me.numberOdReinforcements += received.numberOfReinforcements;
 			}
-			
-			
-		
 		}
 	}
-
-/*
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *  UPDATE GAME CONTEXT WHEN GAME IS OPENED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- *
- *  Check is played move
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- *
- */
 
 }
