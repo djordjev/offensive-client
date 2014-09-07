@@ -90,23 +90,23 @@ package components.classes {
 			_playerImage.height = 50;
 			this.addChild(_playerImage);
 			
-			_playerName.fontSize = 12;
+			_playerName.fontSize = 10;
 			_playerName.x = 5;
 			_playerName.y = 58;
 			_playerName.width = WIDTH - 10;
 			_playerName.textAlign = TextFormatAlign.CENTER;
 			this.addChild(_playerName);
 			
-			_playerTerritories.fontSize = 12;
+			_playerTerritories.fontSize = 10;
 			_playerTerritories.x = 5;
-			_playerTerritories.y = 72;
+			_playerTerritories.y = 77;
 			_playerTerritories.width = WIDTH - 10;
 			_playerTerritories.textAlign = TextFormatAlign.LEFT;
 			this.addChild(_playerTerritories);
 			
-			_cards.fontSize = 12;
+			_cards.fontSize = 10;
 			_cards.x = 5;
-			_cards.y = 86;
+			_cards.y = 96;
 			_cards.width = WIDTH - 10;
 			_cards.textAlign = TextFormatAlign.LEFT;
 			this.addChild(_cards);

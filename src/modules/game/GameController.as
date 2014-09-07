@@ -192,7 +192,7 @@ package modules.game {
 		
 		private function openingInTroopRelocationPhase():void {
 			_actionPerformed = new ActionPerformedTroopRelocation();
-			
+			_arrowManager.clearAllArrows();
 			focusMap();
 		}
 		

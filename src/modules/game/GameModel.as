@@ -232,6 +232,13 @@ package modules.game {
 				if ((_opponents[i] as PlayerWrapper).playerId == player.playerId) {
 					_opponents[i] = player;
 					_allPlayers[player.playerId.toString()] = player;
+					
+					for each(var territory:TerritoryWrapper in _territories) {
+						if (territory.playerId == player.playerId) {
+							territory.conquer(player, territory.troopsOnIt);
+							player.numberOfTerritories++;
+						}
+					}
 					break;
 				}
 			}
