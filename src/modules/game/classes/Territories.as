@@ -338,6 +338,7 @@ package modules.game.classes {
 				_connectionMatrix[NORTH_AFRICA][SOUTHERN_EUROPE] = true;
 				_connectionMatrix[NORTH_AFRICA][EGYPT] = true;
 				_connectionMatrix[NORTH_AFRICA][EAST_AFRICA] = true;
+				_connectionMatrix[NORTH_AFRICA][CONGO] = true;
 				_connectionMatrix[EGYPT][NORTH_AFRICA] = true;
 				_connectionMatrix[EGYPT][SOUTHERN_EUROPE] = true;
 				_connectionMatrix[EGYPT][MIDDLE_EAST] = true;
@@ -402,6 +403,7 @@ package modules.game.classes {
 				_connectionMatrix[SOUTHERN_EUROPE][UKRAINE] = true;
 				_connectionMatrix[SOUTHERN_EUROPE][NORTH_AFRICA] = true;
 				_connectionMatrix[SOUTHERN_EUROPE][EGYPT] = true;
+				_connectionMatrix[SOUTHERN_EUROPE][MIDDLE_EAST] = true;
 				
 				// ASIA
 				_connectionMatrix[URAL][UKRAINE] = true;

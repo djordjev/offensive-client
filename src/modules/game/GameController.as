@@ -384,7 +384,7 @@ package modules.game {
 		}
 		
 		private function advanceToBattle(event:BattleEvent):void {
-			trace("ADVANCE TO NEXT BATTLE......................................................");
+			trace("Advance to next battle");
 			var affectedTerritories:Dictionary = new Dictionary();
 			var myTerritories:Array = [];
 			var command:CommandWrapper
@@ -474,7 +474,7 @@ package modules.game {
 						var territory:TerritoryWrapper = command.sourceTerrotiry;
 						var visualTerritory:TerritoryVisual = view.getTerritoryVisual(territory.id);
 						
-						if (myTerritories.indexOf(territory) >= 0) {
+						if (model.isMyTerritoryOnTheStartOfPhase(territory.id)) {
 							visualTerritory.battleDisplay.show(true);
 						} else {
 							visualTerritory.battleDisplay.show(false);

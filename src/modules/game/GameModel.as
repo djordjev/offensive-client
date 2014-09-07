@@ -97,6 +97,8 @@ package modules.game {
 		
 		private var _currentBattleTimer:Timer;
 		
+		private var _myTerritoriesWhenPhaseStart:Dictionary;
+		
 		private static var _instance:GameModel;
 		
 		public static function get instance():GameModel {
@@ -265,6 +267,7 @@ package modules.game {
 					advanceToAttackPhase(response);
 					break;
 				case GamePhase.BATTLE_PHASE: 
+					advanceToBattlePhase(response);
 					break;
 				case GamePhase.TROOP_RELOCATION_PHASE: 
 					_subphase = GamePhase.SUBPHASE_NO_SUBPHASE;
@@ -291,14 +294,27 @@ package modules.game {
 		}
 		
 		private function advanceToTroopDeploymentPhase(response:AdvancePhaseNotification):void {
+			_myTerritoriesWhenPhaseStart = null;
 			updateNumberOfUnits(response.territories);
 		}
 		
 		private function advanceToAttackPhase(response:AdvancePhaseNotification):void {
+			_myTerritoriesWhenPhaseStart = null;
 			updateNumberOfUnits(response.territories);
 		}
 		
+		private function advanceToBattlePhase(response:AdvancePhaseNotification):void {
+			_myTerritoriesWhenPhaseStart = new Dictionary();
+			
+			for each(var territory:TerritoryWrapper in _territories) {
+				if (territory.owner.playerId == _me.playerId) {
+					_myTerritoriesWhenPhaseStart[territory.id.toString()] = territory;
+				}
+			}
+		}
+		
 		private function advanceToRelocationPhase(response:AdvancePhaseNotification):void {
+			_myTerritoriesWhenPhaseStart = null;
 			updateNumberOfUnits(response.territories);
 			
 			for (var i:int = _opponents.length - 1; i >= 0; i--) {
@@ -338,6 +354,7 @@ package modules.game {
 			_subphaseBattles = null;
 			_currentBattle = null;
 			_myCards = [];
+			_myTerritoriesWhenPhaseStart = null;
 			if (_currentBattleTimer != null) {
 				_currentBattleTimer.stop();
 				_currentBattleTimer = null;
@@ -688,6 +705,14 @@ package modules.game {
 			
 			_me.numberOdReinforcements += numberOfReinforcements;
 			dispatchEvent(new Event(REINFORCEMENTS_RECEIVED));
+		}
+		
+		public function isMyTerritoryOnTheStartOfPhase(id:int):Boolean {
+			if (_myTerritoriesWhenPhaseStart != null) {
+				return _myTerritoriesWhenPhaseStart[id.toString()];
+			} else {
+				return false;
+			}
 		}
 	
 	}
