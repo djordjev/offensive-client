@@ -89,16 +89,9 @@ package utils
 		
 		public function requestFBUserInfo(facebookId:String, callback:Function):void {
 			if (facebookId != null && facebookId != "" && _fbUserCallbacks[facebookId] == null) {
-				if (FacebookUser.facebookUserLightInfo[facebookId] == null) {
-					ExternalInterface.addCallback("facebookUserInfoReceived", facebookUserInfoReceived);
-					_fbUserCallbacks[facebookId] = callback;
-					ExternalInterface.call("getFBUserInfo", facebookId);
-				} else {
-					if (callback == null) {
-						callback(FacebookUser.facebookUserLightInfo[facebookId]);
-					}
-				}
-				
+				ExternalInterface.addCallback("facebookUserInfoReceived", facebookUserInfoReceived);
+				_fbUserCallbacks[facebookId] = callback;
+				ExternalInterface.call("getFBUserInfo", facebookId);
 			}
 		}
 		
